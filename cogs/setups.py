@@ -7,6 +7,13 @@ import random
 import json
 import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from other.customCooldown import CustomCooldown
+with open("./json/upvoteData.json","r") as f:
+  file= json.load(f)
+arr = file.keys()
+d =[]
+for a in arr:
+  d.append(int(a))
 
 
 class Setups(commands.Cog):
@@ -32,18 +39,18 @@ class Setups(commands.Cog):
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
     embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast``", value = "Gives a random roast. (40 possibilities)\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``roast``", value = "Gives a random roast. (40 possibilities)\n**6**s cooldown.",inline = False)
     
-    embedVar.add_field(name = "``swear``", value = "The bot will swear at you. (15 possibilities)\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dmthreaten``", value = "The bot dm a user and threaten them. (10 possibilities)\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``swear``", value = "The bot will swear at you. (15 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``dmthreaten``", value = "The bot dm a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
        
-    embedVar.set_footer(text="Page 1/4")
+    
 
     
     embedVar2 = discord.Embed(color = color)
-    embedVar2.set_author(name="Annoybot commands (math)")
+    embedVar2.set_author(name="Annoybot commands (math)\n All commands have a 10s cooldown.")
         
     embedVar2.add_field(name = "``calc``", value = "Evaluates your expression. Functions include:\n `+`,`-`,`*`,`/`,`sqrt`,`log`,`sin`,`cos`,`tan`.",inline = False)
         
@@ -53,26 +60,29 @@ class Setups(commands.Cog):
     embedVar2.add_field(name = "``form pythagoras``", value = "Returns the length of hypotenuse of triangle base x and height y.",inline = True)
     embedVar2.add_field(name = "``form sphereVol``", value = "Returns volume of sphere with radius x.",inline = True)
     embedVar2.add_field(name = "``form sphereArea``", value = "Returns surface area of sphere with radius x.",inline = True)
-    embedVar2.set_footer(text="Page 2/4")
+    
     
 
     embedVar3 = discord.Embed(color = color)
     embedVar3.set_author(name="Annoybot commands (misc)")
-    embedVar3.add_field(name = "``pick``", value = "Randomly chooses from a list of arguments the user provides.\n**3**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``predict``", value = "Predicts the answer to a yes/no question.\n**3**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.",inline = False)
-    embedVar3.add_field(name = "``meme``", value = "Sends a meme.",inline = False)
+    embedVar3.add_field(name = "``pick``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
+    embedVar3.add_field(name = "``predict``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
+    embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
+    embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
     embedVar3.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` \nTo show menu, '$settings menu'.",inline = False)
     embedVar3.add_field(name = "``changeprefix``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar3.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
-    embedVar3.set_footer(text="Page 3/4")
+    embedVar3.add_field(name = "``snipe``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
+    
+    
+    
 
     embedVar4 = discord.Embed(color = color)
     embedVar4.set_author(name="Annoybot commands (trolls)\n All troll commands have a 10s cooldown.")
     
     embedVar4.add_field(name = "``channeltroll``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
     embedVar4.add_field(name = "``nicktroll``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
-    embedVar4.add_field(name = "``dmtroll``", value = "Ping the affected user 1 time in their dms, then deletes it.",inline = False)
+    embedVar4.add_field(name = "``dmtroll``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
 
     embedVar4.add_field(name = "``ghosttroll``", value = "Ghost pings the user in 3 different channels.",inline = False)
     
@@ -82,10 +92,11 @@ class Setups(commands.Cog):
     embedVar4.add_field(name = "``fakemute``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
 
 
+    embedVar5 = discord.Embed(color = color)
+    embedVar4.set_author(name="Annoybot commands (games)\n All games commands have a 10s cooldown.")
+    embedVar4.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
 
-    embedVar4.set_footer(text="Page 4/4")
-
-    paginationList = [embedVar,embedVar2,embedVar3,embedVar4]
+    paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5]
     
     current = 0
     

@@ -2,8 +2,15 @@ import discord
 from discord.ext import commands
 import math
 import numexpr
+import json
 from other.asyncCmds import colorSetup
-
+from other.customCooldown import CustomCooldown
+with open("./json/upvoteData.json","r") as f:
+  file= json.load(f)
+arr = file.keys()
+d =[]
+for a in arr:
+  d.append(int(a))
 
 
 class Math(commands.Cog):
@@ -12,6 +19,7 @@ class Math(commands.Cog):
         self.bot = bot
 
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   async def calc(self,ctx,*args):
     question = ''
     for arg in args:
@@ -40,6 +48,7 @@ class Math(commands.Cog):
 
 
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   async def form(self,ctx,op,*args):
     argList = []
     for arg in args:

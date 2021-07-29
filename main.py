@@ -10,7 +10,8 @@ import datetime
 import asyncio
 import json
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
-
+from other.upvoteExpiration import upvoteCheck
+from threading import Thread
 
 
 
@@ -100,6 +101,22 @@ async def on_message(message):
       await message.channel.send("Hey, use $cmds to show my list of commands!")
   except Exception:
     pass
+  
+  if message.channel.id == 864467615891324938:
+    data = message.content.split(" ")
+    data = list(data)[1]
+    data = str(data)[2:-1]
+
+    
+    with open("./json/upvoteData.json","r") as f:
+      file= json.load(f)
+  
+    file[data] = 720
+    
+    with open("./json/upvoteData.json","w") as f:
+      json.dump(file,f)
+      f.close()
+    
 
 
 
@@ -148,7 +165,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.4.0 patch", value = "-Removed spam command since it's considered api abuse.\n-New command- fakeban\n-New command - dmthreaten\n-Updated all main features with new command possibilities\n-Form has 2 new subcommands\n-typos fixed\n-Most troll commands nerfed to prevent api abuse.\nHotfix 25/7 -fixed fakemute not working",inline = False)
+  em.add_field(name = "1.5.0 patch", value = "-New command: memorygame (This is the first command of a new 'games' category)\n-Vote for the bot op top.gg today to get reduced cooldowns for 12h! https://top.gg/bot/844757192313536522\n-pagination for help command\n -buffed dmtroll command as it was becoming irrelevant\n -Increased cooldowns for most commands by a few seconds. ",inline = False)
   await ctx.send(embed = em)
 
 
@@ -162,5 +179,12 @@ for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     bot.load_extension(f'cogs.{filename[:-3]}')
 
-keep_alive()       
+
+
+Thread(target=upvoteCheck).start()
+
+
+keep_alive() 
+
+
 bot.run(os.getenv('TOKEN'))

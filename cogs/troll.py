@@ -7,7 +7,13 @@ import random
 import json
 import asyncio
 import string
-
+from other.customCooldown import CustomCooldown
+with open("./json/upvoteData.json","r") as f:
+  file= json.load(f)
+arr = file.keys()
+d =[]
+for a in arr:
+  d.append(int(a))
 
 class Troll(commands.Cog):
   
@@ -15,8 +21,9 @@ class Troll(commands.Cog):
         self.bot = bot
 
         
-  @commands.cooldown(1,10)
+  
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   @commands.bot_has_guild_permissions(manage_channels=True)
   async def channeltroll(self,ctx,user: discord.Member = None):
     if user:
@@ -76,8 +83,9 @@ class Troll(commands.Cog):
         break
 
 
-  @commands.cooldown(1,10)
+  
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   @commands.bot_has_guild_permissions(manage_nicknames=True)
   async def nicktroll(self,ctx, member: discord.Member, *args):
     if member:
@@ -102,8 +110,8 @@ class Troll(commands.Cog):
 
       
 
-  @commands.cooldown(1,10)
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   async def dmtroll(self,ctx, user : discord.Member):
     uid = user.id
     users = await getDataU()
@@ -115,15 +123,15 @@ class Troll(commands.Cog):
       channel = await user.create_dm()
       
         
-      message = await channel.send(user.mention + "you've been trolled")
-      await asyncio.sleep(3)
-      await message.delete()
+      await channel.send(user.mention + " imagine getting pinged in dms moron.")
       
-      await channel.send("Imagine getting pinged in dm s.")
+      
+      
       
     try:
       if users[str(uid)]["dmblocker"] == 0:
-        await command()
+        for i in range(3):
+          await command()
 
 
         
@@ -136,11 +144,13 @@ class Troll(commands.Cog):
       users[str(uid)]["dmblocker"] = 0
       with open("./json/userSettings.json","w") as f:
         json.dump(users,f)
-      await command()
+      for i in range(3):
+        await command()
       
 
-  @commands.cooldown(1,10)
+  
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   async def ghosttroll(self,ctx,user: discord.Member):
     
 
@@ -175,8 +185,10 @@ class Troll(commands.Cog):
       except Exception:
         pass
 
-  @commands.cooldown(1,10)
+  
+
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   async def fakemute(self,ctx,user: discord.Member,*args):
     
 
@@ -198,8 +210,9 @@ class Troll(commands.Cog):
     em.set_footer(text="sike you thought")
     await ctx.send(embed=em)
 
-  @commands.cooldown(1,10)
+  
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
   @commands.bot_has_guild_permissions(create_instant_invite=True,kick_members=True)
   @has_permissions(kick_members = True)
   async def fakeban(self,ctx,user: discord.Member):

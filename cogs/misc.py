@@ -7,6 +7,13 @@ import random
 import json
 
 import aiohttp
+from other.customCooldown import CustomCooldown
+with open("./json/upvoteData.json","r") as f:
+  file= json.load(f)
+arr = file.keys()
+d =[]
+for a in arr:
+  d.append(int(a))
 
 class Misc(commands.Cog):
   
@@ -15,8 +22,9 @@ class Misc(commands.Cog):
   
 
 
-  @commands.cooldown(1,3)
+  
   @commands.command()
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=d))
   async def pick(self,ctx,*args):
     
         argList = []
@@ -28,8 +36,9 @@ class Misc(commands.Cog):
         
 
 
-  @commands.cooldown(1,3)
+  
   @commands.command(name = "predict",aliases = ["8ball"])
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=d))
   async def predict(self,ctx,*args):
         question = ""
         predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
@@ -47,6 +56,7 @@ class Misc(commands.Cog):
         
 
   @commands.command(name = "autoresponse")
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=d))
   @has_permissions(manage_messages=True)  
   async def autoresponse(self,ctx,arg=None):
     guildId = ctx.message.guild.id
@@ -117,6 +127,7 @@ class Misc(commands.Cog):
       #print state
 
   @commands.command()
+  @commands.check(CustomCooldown(1, 14, 1, 7, commands.BucketType.user, elements=d))
   async def meme(self,ctx):
   
 
@@ -137,6 +148,7 @@ class Misc(commands.Cog):
 
 
   @commands.command()
+  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=d))
   async def snipe(self,ctx, user: discord.Member):
 
 

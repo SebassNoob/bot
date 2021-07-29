@@ -103,3 +103,7 @@ async def getDataSnipe():
 
 
 
+def getDataUpvote():
+  with open("./json/upvoteData.json","r") as f:
+    users = json.load(f)
+  return users
