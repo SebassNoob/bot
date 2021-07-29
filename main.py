@@ -9,7 +9,7 @@ from keep_alive import keep_alive
 import datetime
 import asyncio
 import json
-
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 
 
 
@@ -20,13 +20,13 @@ def get_prefix(bot, message):
       prefixes = json.load(f) 
     return prefixes[str(message.guild.id)]['Prefix']
   except KeyError:
-    return '%'
+    return '$'
 
     
 bot = commands.Bot(command_prefix=get_prefix, help_command = None)
 
 
-
+DiscordComponents(bot)
 
 @bot.event
 async def on_ready():
