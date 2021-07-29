@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import os 
 
-from asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU
+from other.asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU
 
 import random
 import json

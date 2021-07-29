@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from asyncCmds import colorSetup,addData,getDataU,addDataU
+from other.asyncCmds import colorSetup,addData,getDataU,addDataU
 import random
 import json
 import asyncio

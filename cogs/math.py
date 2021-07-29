@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import math
 import numexpr
-from asyncCmds import colorSetup
+from other.asyncCmds import colorSetup
 
 
 

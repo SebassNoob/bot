@@ -1,7 +1,7 @@
 import os
 import numexpr
 import discord
-from asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
+from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
 import math
 from discord.ext import commands
 from discord.ext.commands import has_permissions

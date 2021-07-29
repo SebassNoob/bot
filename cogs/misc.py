@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 
-from asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU
+from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU
 import random
 import json
 

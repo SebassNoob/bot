@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import asyncio
 import random
-from asyncCmds import colorSetup
+from other.asyncCmds import colorSetup
 
 class Games(commands.Cog):
   
