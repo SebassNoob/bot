@@ -8,12 +8,7 @@ import json
 import asyncio
 import string
 from other.customCooldown import CustomCooldown
-with open("./json/upvoteData.json","r") as f:
-  file= json.load(f)
-arr = file.keys()
-d =[]
-for a in arr:
-  d.append(int(a))
+from other.upvoteExpiration import getUserUpvoted
 
 class Troll(commands.Cog):
   
@@ -23,7 +18,7 @@ class Troll(commands.Cog):
         
   
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   @commands.bot_has_guild_permissions(manage_channels=True)
   async def channeltroll(self,ctx,user: discord.Member = None):
     if user:
@@ -85,7 +80,7 @@ class Troll(commands.Cog):
 
   
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   @commands.bot_has_guild_permissions(manage_nicknames=True)
   async def nicktroll(self,ctx, member: discord.Member, *args):
     if member:
@@ -111,7 +106,7 @@ class Troll(commands.Cog):
       
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def dmtroll(self,ctx, user : discord.Member):
     uid = user.id
     users = await getDataU()
@@ -150,7 +145,7 @@ class Troll(commands.Cog):
 
   
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def ghosttroll(self,ctx,user: discord.Member):
     
 
@@ -188,7 +183,7 @@ class Troll(commands.Cog):
   
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def fakemute(self,ctx,user: discord.Member,*args):
     
 
@@ -212,7 +207,7 @@ class Troll(commands.Cog):
 
   
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   @commands.bot_has_guild_permissions(create_instant_invite=True,kick_members=True)
   @has_permissions(kick_members = True)
   async def fakeban(self,ctx,user: discord.Member):

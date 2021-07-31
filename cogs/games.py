@@ -6,12 +6,9 @@ import random
 import json
 from other.asyncCmds import colorSetup
 from other.customCooldown import CustomCooldown
-with open("./json/upvoteData.json","r") as f:
-  file= json.load(f)
-arr = file.keys()
-d =[]
-for a in arr:
-  d.append(int(a))
+from other.upvoteExpiration import getUserUpvoted
+
+
 
 class Games(commands.Cog):
   
@@ -19,7 +16,7 @@ class Games(commands.Cog):
         self.bot = bot
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=d))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def memorygame(self,ctx):
     
     failed = 0

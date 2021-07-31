@@ -3,7 +3,7 @@ import numexpr
 import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
 import math
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import has_permissions
 from keep_alive import keep_alive
 import datetime
@@ -12,8 +12,10 @@ import json
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
+import topgg
 
-
+intents = discord.Intents.default()
+intents.members = True
 
 def get_prefix(bot, message): 
   try:
@@ -24,7 +26,7 @@ def get_prefix(bot, message):
     return '$'
 
     
-bot = commands.Bot(command_prefix=get_prefix, help_command = None)
+bot = commands.Bot(command_prefix=get_prefix, help_command = None, intents=intents)
 
 
 DiscordComponents(bot)
@@ -102,7 +104,7 @@ async def on_message(message):
   except Exception:
     pass
   
-  if message.channel.id == 864467615891324938:
+  if message.channel.id == 864467615891324938 and "ty" in message.content and "for" in message.content and "upvoting" in message.content:
     data = message.content.split(" ")
     data = list(data)[1]
     data = str(data)[2:-1]
@@ -115,7 +117,13 @@ async def on_message(message):
     
     with open("./json/upvoteData.json","w") as f:
       json.dump(file,f)
-      f.close()
+      f.close
+      
+    print(data)
+    user = bot.get_user(int(data))
+    
+    
+    await user.send("Thanks for upvoting! You received lower cooldowns for all commands.")
     
 
 
@@ -168,6 +176,19 @@ async def patchnotes(ctx):
   em.add_field(name = "1.5.0 patch", value = "-New command: memorygame (This is the first command of a new 'games' category)\n-Vote for the bot op top.gg today to get reduced cooldowns for 12h! https://top.gg/bot/844757192313536522\n-pagination for help command\n -buffed dmtroll command as it was becoming irrelevant\n -Increased cooldowns for most commands by a few seconds. ",inline = False)
   await ctx.send(embed = em)
 
+dbl_token = os.environ['top-gg token']
+
+bot.topggpy = topgg.DBLClient(bot, dbl_token)
+
+
+@tasks.loop(minutes=1)
+async def update_stats():
+    
+    try:
+        await bot.topggpy.post_guild_count()
+        print(f"Posted server count ({bot.topggpy.guild_count})")
+    except Exception as e:
+        print(f"Failed to post server count\n{e.__class__.__name__}: {e}")
 
 
 
@@ -182,6 +203,7 @@ for filename in os.listdir('./cogs'):
 
 
 Thread(target=upvoteCheck).start()
+
 
 
 keep_alive() 

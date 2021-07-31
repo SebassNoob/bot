@@ -8,13 +8,7 @@ import json
 import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 from other.customCooldown import CustomCooldown
-with open("./json/upvoteData.json","r") as f:
-  file= json.load(f)
-arr = file.keys()
-d =[]
-for a in arr:
-  d.append(int(a))
-
+from other.upvoteExpiration import getUserUpvoted
 
 class Setups(commands.Cog):
   
@@ -22,13 +16,13 @@ class Setups(commands.Cog):
         self.bot = bot
 
   
-  @commands.command(name = "credits")
+  @commands.command(name = "credits",aliases = ["vote"])
   async def credit(self,ctx):
     guilds = len(self.bot.guilds)
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.4.0", value = "Made by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl invite](https://discordbotlist.com/bots/annoybot-4074)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.5.0", value = "Made by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------
@@ -69,9 +63,6 @@ class Setups(commands.Cog):
     embedVar3.add_field(name = "``predict``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
     embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
     embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` \nTo show menu, '$settings menu'.",inline = False)
-    embedVar3.add_field(name = "``changeprefix``", value = "Changes the bot's prefix in the server.",inline = False)
-    embedVar3.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
     embedVar3.add_field(name = "``snipe``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
     
     
@@ -93,10 +84,17 @@ class Setups(commands.Cog):
 
 
     embedVar5 = discord.Embed(color = color)
-    embedVar4.set_author(name="Annoybot commands (games)\n All games commands have a 10s cooldown.")
-    embedVar4.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
+    embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
+    embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
 
-    paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5]
+    embedVar6 = discord.Embed(color = color)
+    embedVar6.set_author(name="Annoybot commands (setup)")
+    embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
+    embedVar6.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` \nTo show menu, '$settings menu'.",inline = False)
+    embedVar6.add_field(name = "``changeprefix``", value = "Changes the bot's prefix in the server.",inline = False)
+    embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
+
+    paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
     
     current = 0
     
