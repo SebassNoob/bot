@@ -276,9 +276,11 @@ class Games(commands.Cog):
         try:
               interaction = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"], 
+                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"] and i.user.id == ctx.author.id, 
                   timeout = 30.0 
               )
+
+              
 
               labels = {}
               for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
