@@ -12,7 +12,7 @@ import json
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
-import topgg
+
 
 intents = discord.Intents.default()
 intents.members = True
@@ -48,10 +48,15 @@ async def on_command_error(ctx, error):
     
     if isinstance(error, discord.ext.commands.MissingRequiredArgument):
         await ctx.reply("You're missing an argument in that command, dumbass.")
+        pass
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.reply('This command is on a **%.1fs** cooldown, not sorry.' % error.retry_after)
+        pass
     if isinstance(error, commands.MissingPermissions):
         await ctx.reply(":redTick: You don't have permission to use that command.")
+        pass
+
+    
     else:
       raise error
 
@@ -176,19 +181,6 @@ async def patchnotes(ctx):
   em.add_field(name = "1.5.0 patch", value = "-New command: memorygame (This is the first command of a new 'games' category)\n-Vote for the bot op top.gg today to get reduced cooldowns for 12h! https://top.gg/bot/844757192313536522\n-pagination for help command\n -buffed dmtroll command as it was becoming irrelevant\n -Increased cooldowns for most commands by a few seconds. ",inline = False)
   await ctx.send(embed = em)
 
-dbl_token = os.environ['top-gg token']
-
-bot.topggpy = topgg.DBLClient(bot, dbl_token)
-
-
-@tasks.loop(minutes=1)
-async def update_stats():
-    
-    try:
-        await bot.topggpy.post_guild_count()
-        print(f"Posted server count ({bot.topggpy.guild_count})")
-    except Exception as e:
-        print(f"Failed to post server count\n{e.__class__.__name__}: {e}")
 
 
 
