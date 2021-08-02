@@ -410,7 +410,7 @@ class Games(commands.Cog):
           timer = timerMem
           break
 
-    expectedTime = ((level*level+1)/2)*5
+    expectedTime = ((level*level+1)/2)*(5+level)
     
     bonus = expectedTime/timer
     if bonus <1:

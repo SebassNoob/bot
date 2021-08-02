@@ -178,7 +178,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.5.0 patch", value = "-New command: memorygame (This is the first command of a new 'games' category)\n-Vote for the bot op top.gg today to get reduced cooldowns for 12h! https://top.gg/bot/844757192313536522\n-pagination for help command\n -buffed dmtroll command as it was becoming irrelevant\n -Increased cooldowns for most commands by a few seconds. ",inline = False)
+  em.add_field(name = "1.5.1 patch", value = "-New command: tictactoe\n-New command: vocabularygame\nFixed: Other users able to interact with your memorygame.\nNew command: ping ",inline = False)
   await ctx.send(embed = em)
 
 
