@@ -6,7 +6,8 @@ just know that this bot will annoy your friends within small servers with
 - uninspirational quotes
 - memes
 - bad jokes
-- (to be updated) math functions and formulae
+- math
+- games
 
 add the bot here please i beg:
 https://discordbotlist.com/bots/annoybot-4074
