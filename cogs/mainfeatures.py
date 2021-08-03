@@ -2,11 +2,12 @@ import discord
 from discord.ext import commands
 import os 
 
-from other.asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU
+from other.asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU,postTips
 
 import random
 import json
-import asyncio
+
+
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 
@@ -48,6 +49,11 @@ class MainFeatures(commands.Cog):
           
           embedVar.add_field(name="\u200b", value=finalRoast, inline=False)
           embedVar.set_footer(text="u suck")
+          tip = postTips()
+        
+          if tip != None:
+          
+            await ctx.send(tip)
           await ctx.send(embed=embedVar)
 
 
@@ -69,6 +75,11 @@ class MainFeatures(commands.Cog):
         embedVar2 = discord.Embed(color =color)
         embedVar2.add_field(name = randomSwear, value = "\u200b",inline = False)
         embedVar2.set_footer(text="requested by " +'{}'.format(ctx.message.author))
+        tip = postTips()
+        
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send(embed=embedVar2)
       
 
@@ -100,6 +111,11 @@ class MainFeatures(commands.Cog):
         embedVar3 = discord.Embed(color = color)
         embedVar3.add_field(name = finalUrmom, value = "\u200b",inline = False)
         embedVar3.set_footer(text="requested by " +'{}'.format(ctx.message.author)+"\nimagine having a mom.")
+        tip = postTips()
+        
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send(embed=embedVar3)
 
 
@@ -120,6 +136,11 @@ class MainFeatures(commands.Cog):
     embedVar3 = discord.Embed(color = color)
     embedVar3.add_field(name = finalUninspire, value = "\u200b",inline = False)
     embedVar3.set_footer(text="requested by " +'{}'.format(ctx.message.author))
+    tip = postTips()
+        
+    if tip != None:
+          
+      await ctx.send(tip)
     await ctx.send(embed=embedVar3)
   
   
@@ -144,6 +165,11 @@ class MainFeatures(commands.Cog):
       em.set_author(name = author_name+"'s threat",icon_url = ctx.author.avatar_url)
       em.add_field(name="\u200b",value=threat,inline=False)
       await channel.send(embed = em)
+      tip = postTips()
+        
+      if tip != None:
+          
+        await ctx.send(tip)
       await ctx.send("The user has been sent a threat in dms.")
     
     try:
@@ -152,6 +178,11 @@ class MainFeatures(commands.Cog):
 
         
       elif users[str(uid)]["dmblocker"] ==1:
+        tip = postTips()
+        print(tip)
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send("Sorry, the user you mentioned doesn't want to be dm'ed by me ;(")
     except:
       await addDataU(uid)

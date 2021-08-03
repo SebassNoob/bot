@@ -33,7 +33,7 @@ class Setups(commands.Cog):
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
     embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast``", value = "Gives a random roast. (40 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``roast``", value = "Gives a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
     
     embedVar.add_field(name = "``swear``", value = "The bot will swear at you. (15 possibilities)\n**6**s cooldown.",inline = False)
     embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**6**s cooldown.",inline = False)

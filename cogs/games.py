@@ -815,8 +815,9 @@ class Games(commands.Cog):
     
     
 
-    
-   
+  @commands.command()
+  async def g(self,ctx):
+    pass
     
               
 

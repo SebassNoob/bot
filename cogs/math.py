@@ -3,7 +3,7 @@ from discord.ext import commands
 import math
 import numexpr
 import json
-from other.asyncCmds import colorSetup
+from other.asyncCmds import colorSetup,postTips
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 
@@ -120,6 +120,11 @@ class Math(commands.Cog):
     embedVar5.set_author(name="Requested by"+' {}'.format(ctx.message.author), icon_url = ctx.message.author.avatar_url)
     embedVar5.add_field(name = "Input", value = question,inline = False)
     embedVar5.add_field(name = "Result", value = "```py\n" + str(result)+"```",inline = False)
+    tip = postTips()
+        
+    if tip != None:
+          
+      await ctx.send(tip)
     await ctx.send(embed=embedVar5)
       
 

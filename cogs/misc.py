@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 
-from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU
+from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
 import random
 import json
 
@@ -138,7 +138,11 @@ class Misc(commands.Cog):
         embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
         embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
+        tip = postTips()
         
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send(embed=embed)
 
 
@@ -166,6 +170,11 @@ class Misc(commands.Cog):
         embed.set_footer(text="UTC "+users[str(user.id)]["date"])
       
         embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
+        tip = postTips()
+        
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send(embed=embed)
         return
     except:

@@ -1,4 +1,4 @@
-
+import random
 import json
 
 async def addDataU(uid):
@@ -107,20 +107,23 @@ def getDataUpvote():
   with open("./json/upvoteData.json","r") as f:
     users = json.load(f)
   return users
+
+
   
-   def postTips():
+def postTips():
     tips = [
       "If you encounter any errors, you may join the support server [here](https://discord.gg/UCGAuRXmBD)",
       "Support the bot by [upvoting on top.gg](https://top.gg/bot/844757192313536522)!",
       "Find the latest patch notes with the command ``$patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``$settings``!",
-      "Enabling ``$autores`ponse`` will make the bot respond in a certain way to somne words!",
-      "Check the bot's ping with ``$ping``"
+      "Enabling ``$autoresponse`` will make the bot respond in a certain way to somne words!",
+      "Check the bot's ping with ``$ping``."
       ]
-      randomchance = random.randint(0,15)
-      randomMsg = tips[random.randint(0,len(tips)-1)]
-      if randomchance == 15:
-        await ctx.send(f"**Tip:** {randomMsg}")
-      else:
-        pass
+    randomchance = random.randint(0,9)
+    
+    randomMsg = tips[random.randint(0,len(tips)-1)]
+    if randomchance == 0:
+      return f"**Tip:** {randomMsg}"
+    else:
+      return None

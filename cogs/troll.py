@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup,addData,getDataU,addDataU
+from other.asyncCmds import colorSetup,addData,getDataU,addDataU,postTips
 import random
 import json
 import asyncio
@@ -41,7 +41,11 @@ class Troll(commands.Cog):
             channel_id = channel.id
 
 
-      
+      tip = postTips()
+        
+      if tip != None:
+          
+        await ctx.send(tip)
       await ctx.send(f"A new channel {channel.mention} was created. The bot will ping the trolled user 3 times to annoy them.")
       
           
@@ -99,6 +103,11 @@ class Troll(commands.Cog):
           
           
         await member.edit(nick=nick)
+        tip = postTips()
+        
+        if tip != None:
+          
+          await ctx.send(tip)
         await ctx.send(f'Nickname was changed for {member} to **{nick}** for 5 minutes. ')
         await asyncio.sleep(300.0)
         await member.edit(nick=None)
@@ -114,7 +123,12 @@ class Troll(commands.Cog):
 
 
     async def command():
-      await ctx.send("The trolled user will be pinged 1 time through dms lol.")
+      tip = postTips()
+        
+      if tip != None:
+          
+        await ctx.send(tip)
+      await ctx.send("The trolled user will be pinged 3 times through dms lol.")
       channel = await user.create_dm()
       
         
@@ -203,6 +217,13 @@ class Troll(commands.Cog):
     em.add_field(name="**mute**",value="**Offender:** {}".format(user.mention)+"\n**Reason:** "+reason+"\n**Responsible mod:** {}".format(ctx.author),inline=False)
 
     em.set_footer(text="sike you thought")
+              
+              
+    tip = postTips()
+        
+    if tip != None:
+          
+      await ctx.send(tip)
     await ctx.send(embed=em)
 
   
@@ -231,6 +252,7 @@ class Troll(commands.Cog):
           await ctx.send("Sorry, that user's top role is higher than mine, so I can't kick them.")
           await self.bot.http.delete_message(channel.id, msg_1.id)
           await self.bot.http.delete_message(channel.id, msg_2.id)
+          await channel.send(f"LOL {ctx.author.name} tried to troll you but failed.")
       if msg.content == "no":
         await ctx.send("ok, cancelled.")
     except asyncio.TimeoutError:
