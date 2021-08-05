@@ -86,6 +86,8 @@ class Setups(commands.Cog):
     embedVar5 = discord.Embed(color = color)
     embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
     embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
+    embedVar5.add_field(name = "``tictactoe``", value = "Play tictactoe with a friend!",inline = False)
+    embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game!", inline = False)
 
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")

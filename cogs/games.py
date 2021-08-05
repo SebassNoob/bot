@@ -704,6 +704,8 @@ class Games(commands.Cog):
   @commands.command()
   @commands.bot_has_guild_permissions(add_reactions = True)
   async def vocabularygame(self,ctx):
+    
+    
 
     wait = await ctx.reply("Please wait...")
     file = open("./json/words.txt","r")
@@ -730,7 +732,10 @@ class Games(commands.Cog):
       if len(word) == 1:
         listWords.remove(word)
 
-    randomLetters = ''.join(random.choices(string.ascii_lowercase,k=10))
+    vowels = ["a","e","i","o","u"]
+    randomLetters = ''.join(random.choices(string.ascii_lowercase,k=7))
+    for i in range(3):
+      randomLetters = randomLetters + vowels[random.randint(0,4)]
     await wait.edit(f"With the letters ``{randomLetters}`` type as many words as you can within 30s!")
     
     reqLetters= list(randomLetters)
@@ -768,12 +773,17 @@ class Games(commands.Cog):
     accuracy = 0
     correct = 0
     used_words = []
-    while True:
+    d = 0
+    
+    while timerVocab != 0:
+      
+      
       try:
+
         msg = await self.bot.wait_for(
         "message",
         check = lambda i: i.author.id == ctx.author.id, 
-        timeout = 30.0 
+        timeout = timerVocab
       )
         
 
@@ -793,33 +803,129 @@ class Games(commands.Cog):
           used_words.append(msg.content)
           combo = 0
           
-          
         
-
-        if timerVocab <= 0:
-          accuracy = correct/len(used_words)
-          d = score*(accuracy/8)
-          score +=d
-          break
+        
+        
       except asyncio.TimeoutError:
         break
+    try:
+      accuracy = correct/len(used_words)
+    except ZeroDivisionError:
+      accuracy = 0
+    d = score*(accuracy/8)
+    score +=d
+        
+      
       
       
     color = int(await colorSetup(ctx.message.author.id),16)
     em = discord.Embed(color=color)
-    em.add_field(name = "``Stats``",value=f"Accuracy: {math.ceil(accuracy)*100}%\nNumber of correct words: {correct}\nMax combo: {maxcombo}\nAccuracy bonus: +{math.ceil(d)}\n**Total score: {math.ceil(score)}**",inline=False)
+    em.add_field(name = "``Stats``",value=f"Accuracy: {math.ceil(accuracy*100)}%\nNumber of correct words: {correct}\nMax combo: {maxcombo}\nAccuracy bonus: +{math.ceil(d)}\n**Total score: {math.ceil(score)}**",inline=False)
     await ctx.send(embed = em)
     
     
         
     
     
-
+  
   @commands.command()
-  async def g(self,ctx):
-    pass
+  async def typingrace(self,ctx):
     
+    
+   
+    instructions = await ctx.send("Typing race will start!\nPress the button to join!", 
+    components = [
+      [
+        Button(
+          label = "Join",
+          id = "join",
+          style = ButtonStyle.green
+          ),
+          Button(
+          label = "Start",
+          id = "start",
+          style = ButtonStyle.blue
+          )
+        ]])
+        
+    players = []
+    
+    
+    while True:
+      
+      try:
+        interaction = await self.bot.wait_for(
+                  "button_click",
+                  check = lambda i: i.component.id in["join","start"], 
+                  timeout = 60.0 
+              )
+        
+        if interaction.user.id not in players and interaction.component.id == "join":
+     
+          players.append(interaction.user.id)
+        
+          await interaction.respond(type=4, content="You successfully joined the game!", ephemeral=True)
+        elif interaction.component.id == "start":
+          await instructions.delete()
+          break
+        else:
+          await interaction.respond(type=4, content="You've already joined the game, idiot.", ephemeral=True)
+          
+        
+        
+      except asyncio.TimeoutError:
+        await instructions.delete()
+        await ctx.send("I guess no one wants to join or start the game.")
+      
+    
+    def backgroundVocab():
+      global timerTyping
+      timerTyping = 30
+      while True:
+        time.sleep(1)
+        timerTyping -= 1
+        if timerTyping == 0:
+          break
+    
+    
+    threading.Thread(name = 'backgroundVocab', target = backgroundVocab).start()
+    await ctx.send("Type these sentences below!")
+    text = ["She could hear him in the shower singing with a joy she hoped he'd retain after she delivered the news. Some bathing suits just shouldn’t be worn by some people."]
+    
+    random_text = text[random.randint(0,len(text -1))]
+    await ctx.send(f"``{random_text}``")
+    accuracy = 0
+    wpm = 0 
+    penalty = 0
+    while timerTyping != 0:
+      try:
+        msg = await self.bot.wait_for(
+        "message", check = lambda i: i.author.id in players,timeout = timerTyping)
+        
+        def checkAccuracy(j):
+          correct = 0
+          accuracy = 0
+          a = random_text.split(" ")
+          b = j.split(" ")
+          
+          for i in range(len(a)):
+            if b[i] == a[i]:
+              correct += 1
               
+          accuracy = correct/len(a)
+          return accuracy
+          
+        accuracy = checkAccuracy(msg) 
+        wpm = len(msg)/timerTyping
+        penalty = wpm*(100 -(accuracy*100))
+        wpm -= penalty
+        color = int(await colorSetup(ctx.message.author.id),16)
+        em = discord.Embed(color = color)
+        em.add_field(name = "``stats``", value = f"Words/min: {math.ceil(len(msg)/timerTyping)}\nAccuracy: {math.ceil(accuracy*100)}%\nInaccuracy penalty: -{penalty}\n**Final score: {wpm}**")
+        await msg.reply(embed = em)
+      except asyncio.TimeoutError:
+        break
+    
 
 
 
