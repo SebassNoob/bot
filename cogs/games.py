@@ -859,7 +859,10 @@ class Games(commands.Cog):
                   check = lambda i: i.component.id in["join","start"], 
                   timeout = 60.0 
               )
-        
+        if interaction.component.id == "start" and len(players) == 0:
+          await instructions.delete()
+          await ctx.send("I guess no one wants to join the game.")
+          raise Exception("no on")
         if interaction.user.id not in players and interaction.component.id == "join":
      
           players.append(interaction.user.id)
@@ -878,9 +881,9 @@ class Games(commands.Cog):
         await ctx.send("I guess no one wants to join or start the game.")
       
     
-    def backgroundVocab():
+    def backgroundTyping():
       global timerTyping
-      timerTyping = 30
+      timerTyping = 180
       while True:
         time.sleep(1)
         timerTyping -= 1
@@ -888,15 +891,40 @@ class Games(commands.Cog):
           break
     
     
-    threading.Thread(name = 'backgroundVocab', target = backgroundVocab).start()
-    await ctx.send("Type these sentences below!")
-    text = ["She could hear him in the shower singing with a joy she hoped he'd retain after she delivered the news. Some bathing suits just shouldn’t be worn by some people."]
+    threading.Thread(name = 'backgroundTyping', target = backgroundTyping).start()
+    await ctx.send("Type the sentence below!")
+    texts = [
+      "She could hear him in the shower singing with a joy she hoped he'd retain after she delivered the news.",
+      "We have young kids who often walk into our room at night for various reasons including clowns in the closet.",
+      "She had that tint of craziness in her soul that made her believe she could actually make a difference.",
+      "When I cook spaghetti, I like to boil it a few minutes past al dente so the noodles are super slippery.",
+      "He felt that dining on the bridge brought romance to his relationship with his cat.",
+      "She couldn't decide of the glass was half empty or half full so she drank it.",
+      "The urgent care center was flooded with patients after the news of a new deadly virus was made public.",
+      "The Tsunami wave crashed against the raised houses and broke the pilings as if they were toothpicks.",
+      "The complicated school homework left the parents trying to help their kids quite confused.",
+      "The battle over coal continued to rage Tuesday afternoon during a hearing held by the House Oversight and Investigations Subcommittee on the community impacts of impending Environmental Protection Agency regulations for power plants.",
+      "They want a presidential nominee who fights for them, and who is pitching a fresh and dramatic plan for improving their lives in immediate, concrete ways.",
+      "Gowdy's letter comes a day after a senior State official told Gowdy in a letter that Finer's appearance 'will not be possible' and that State 'cannot participate' in a hearing Gowdy's staff suggested holding next week.",
+      "In Chicago, a regional housing authority that covers eight counties, including Cook County, is working to move families from the inner city to higher-opportunity neighborhoods.",
+      "Meanwhile, here is the Lorne Michaels-backed show I wish had lasted for 40 years, or at least more years than it did: the Toronto-based Kids in the Hall.",
+      "Lillian, Kimmy's hippie-haired landlady, is making stilted peace with the fact that the only home she has ever known—her New York neighborhood—is rapidly evolving away from her.",
+      "Johnson, the Chicago native joined Marathon Pharmaceuticals, which specializes in making drugs for hard-to-treat ailments most people have never heard of.",
+      "My avowed purpose in composing that text, as any swot who has suffered the Duty and Dullness rampant in our Schools must know, was to employ my modest pen as a scourge against human Folly and the vanities of the Age.",
+      "How do you think about distinguishing between intellectual curiosity and commercial intent -- or, I guess, between different forms of interest?",
+      "If there's been one overarching theme to the Republican presidential primary in the last week or two, it's been that past coming back to haunt the contenders.",
+      "A growing body of literature now suggests that the earlier we turn back the clock in kids’ development, the more profound the impact of their environment.",
+      "The rise in popularity of the more violent sport of American football over the past forty years may reflect shifts in militaristic ideology, from the Cold War to current overseas conflicts.",
+      "There is some fun gossip: I didn't know, for example, that show-runner Matthew Weiner started working on the landmark drama while co-writing for Becker."
+      ]
     
-    random_text = text[random.randint(0,len(text -1))]
-    await ctx.send(f"``{random_text}``")
+    random_text = texts[random.randint(0,len(texts)-1)]
+    shown_text = random_text.replace("","\u200b")
+    await ctx.send(f"``{shown_text}``")
     accuracy = 0
     wpm = 0 
     penalty = 0
+    leaderboards = {}
     while timerTyping != 0:
       try:
         msg = await self.bot.wait_for(
@@ -909,23 +937,53 @@ class Games(commands.Cog):
           b = j.split(" ")
           
           for i in range(len(a)):
-            if b[i] == a[i]:
-              correct += 1
+            try:
+
+              if b[i] == a[i]:
+                correct += 1
+            except:
+              pass
               
           accuracy = correct/len(a)
           return accuracy
           
-        accuracy = checkAccuracy(msg) 
-        wpm = len(msg)/timerTyping
-        penalty = wpm*(100 -(accuracy*100))
+        players.remove(msg.author.id)
+
+        accuracy = checkAccuracy(msg.content) 
+        
+        wpm = len(msg.content)/(180-timerTyping)
+        penalty = wpm*(1-accuracy)
         wpm -= penalty
-        color = int(await colorSetup(ctx.message.author.id),16)
+  
+        leaderboards[msg.author.name] = wpm
+        
+        color = int(await colorSetup(msg.author.id),16)
         em = discord.Embed(color = color)
-        em.add_field(name = "``stats``", value = f"Words/min: {math.ceil(len(msg)/timerTyping)}\nAccuracy: {math.ceil(accuracy*100)}%\nInaccuracy penalty: -{penalty}\n**Final score: {wpm}**")
+        
+        em.add_field(name = "``stats``", value = f"Characters/second: {round(len(msg.content)/(180-timerTyping),2)}\nAccuracy: {round(accuracy*100,2)}%\nInaccuracy penalty: -{round(penalty,2)}\n**Final score: {round(wpm,2)}**")
         await msg.reply(embed = em)
+        if len(players) == 0:
+          break
       except asyncio.TimeoutError:
         break
+    leaderboards = str(sorted(leaderboards.items(), key = lambda kv:(kv[1], kv[0]),reverse = True))[1:-1]
     
+    leaderboards = leaderboards.split(")")
+    newLeaderboards=[]
+    for l in leaderboards:
+      h = l[1:].replace(",",": ").replace("'","").replace("(","")
+      newLeaderboards.append(h)
+      
+      if l == '':
+        newLeaderboards.remove(l)
+    finalText = ""
+    for l in newLeaderboards:
+      
+      finalText = finalText+"\n"+l
+    color = int(await colorSetup(ctx.author.id),16)
+    em2 = discord.Embed(color = color)
+    em2.add_field(name = "``Leaderboard``",value = finalText,inline = False)
+    await ctx.send(embed = em2)
 
 
 

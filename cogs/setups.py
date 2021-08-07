@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.5.1", value = "Made by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.5.2", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------
@@ -88,6 +88,7 @@ class Setups(commands.Cog):
     embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
     embedVar5.add_field(name = "``tictactoe``", value = "Play tictactoe with a friend!",inline = False)
     embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game!", inline = False)
+    embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
 
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")

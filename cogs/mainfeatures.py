@@ -20,7 +20,7 @@ class MainFeatures(commands.Cog):
          
   @commands.command(name = 'roast', aliases = ['burn'])
   @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def roast(self,ctx,userToRoast : discord.Member):
+  async def roast(self,ctx,userToRoast : discord.Member= None):
       
         
         roastList1 =["Your face makes onions cry.","Light travels faster than sound, which is why you seemed bright until you spoke.","Those penis enlargement pills must be working — you’re twice the dick you were yesterday."," I treasure the time I don’t spend with you.","You’re entitled to your incorrect opinion.","I’d smack you, but that would be animal abuse.","Your birth certificate is an apology letter from the condom factory.","You must have been born on a highway because that's where most accidents happen.","Stop trying to be a smart ass, you're just an ass.","Why don't you slip into something more comfortable... like a coma."]
@@ -41,20 +41,20 @@ class MainFeatures(commands.Cog):
             
       
 
-        if userToRoast != '':
+        if userToRoast != '' and userToRoast!= None:
           await ctx.send(' {}'.format(userToRoast.mention))
-          color = int(await colorSetup(ctx.message.author.id),16)
-          embedVar = discord.Embed( color=color)
-          embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
+        color = int(await colorSetup(ctx.message.author.id),16)
+        embedVar = discord.Embed( color=color)
+        embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
           
-          embedVar.add_field(name="\u200b", value=finalRoast, inline=False)
-          embedVar.set_footer(text="u suck")
-          tip = postTips()
+        embedVar.add_field(name="\u200b", value=finalRoast, inline=False)
+        embedVar.set_footer(text="u suck")
+        tip = postTips()
         
-          if tip != None:
+        if tip != None:
           
-            await ctx.send(tip)
-          await ctx.send(embed=embedVar)
+          await ctx.send(tip)
+        await ctx.send(embed=embedVar)
 
 
   

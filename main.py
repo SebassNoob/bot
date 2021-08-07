@@ -178,7 +178,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.5.1 patch", value = "-New command: tictactoe\n-New command: vocabularygame\nFixed: Other users able to interact with your memorygame.\nNew command: ping ",inline = False)
+  em.add_field(name = "1.5.2 patch", value = "-New command: typingrace\n-Bugfixes for vocabularygame\n-Updated help description since I forgot the last time\n-Fixed roast command being too confusing",inline = False)
   await ctx.send(embed = em)
 
 
