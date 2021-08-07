@@ -112,13 +112,14 @@ def getDataUpvote():
   
 def postTips():
     tips = [
-      "If you encounter any errors, you may join the support server [here](https://discord.gg/UCGAuRXmBD)",
-      "Support the bot by [upvoting on top.gg](https://top.gg/bot/844757192313536522)!",
+      "If you encounter any errors, you may join the support server here.\n(https://discord.gg/UCGAuRXmBD)",
+      "Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!",
       "Find the latest patch notes with the command ``$patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``$settings``!",
       "Enabling ``$autoresponse`` will make the bot respond in a certain way to somne words!",
       "Check the bot's ping with ``$ping``."
+      "Play a few fun games with your friend with the commands in the 'games' category!"
       ]
     randomchance = random.randint(0,9)
     

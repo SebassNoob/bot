@@ -424,6 +424,7 @@ class Games(commands.Cog):
     await ctx.send(embed = em)
     
   @commands.command(name = "tictactoe",aliases = ["ttt"])
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def tictactoe(self,ctx,user: discord.Member):
     if user == ctx.author:
         await ctx.reply("You can't play a game of TicTacToe with yourself, you moron.")
@@ -703,6 +704,7 @@ class Games(commands.Cog):
 
   @commands.command()
   @commands.bot_has_guild_permissions(add_reactions = True)
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def vocabularygame(self,ctx):
     
     
@@ -829,6 +831,7 @@ class Games(commands.Cog):
     
   
   @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def typingrace(self,ctx):
     
     
