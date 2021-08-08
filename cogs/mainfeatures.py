@@ -10,6 +10,7 @@ import json
 
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
+from dadjokes import Dadjoke
 
 
 class MainFeatures(commands.Cog):
@@ -17,7 +18,7 @@ class MainFeatures(commands.Cog):
   def __init__(self, bot):
         self.bot = bot
 
-         
+
   @commands.command(name = 'roast', aliases = ['burn'])
   @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
   async def roast(self,ctx,userToRoast : discord.Member= None):
@@ -188,8 +189,17 @@ class MainFeatures(commands.Cog):
       await addDataU(uid)
       await command()
 
-
-
+  @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def dadJoke(self,ctx):
+    
+    
+    dadJoke = Dadjoke().joke
+    color = int(await colorSetup(ctx.message.author.id),16)
+    em = discord.Embed(color = color)
+    em.set_author(name = f"{ctx.author.name}'s dad joke", icon_url = ctx.author.avatar_url)
+    em.add_field(name = "\u200b",value = dadJoke,inline = False)
+    await ctx.send(embed = em)
 
 def setup(bot):
     bot.add_cog(MainFeatures(bot))
