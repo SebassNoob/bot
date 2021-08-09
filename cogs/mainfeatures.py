@@ -65,7 +65,7 @@ class MainFeatures(commands.Cog):
   async def swear(self,ctx):
     
 
-        packagedInsults= insults.insultify("You {}!")
+        packagedInsults= f"You {insults.long_insult()}!"
         
 
         

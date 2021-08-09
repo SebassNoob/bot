@@ -103,7 +103,10 @@ class Setups(commands.Cog):
     paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
     
     current = 0
-    
+    tip = postTips()
+        
+    if tip != None:
+      await ctx.send(tip)
     mainMessage = await ctx.reply(
         
         embed = paginationList[current],

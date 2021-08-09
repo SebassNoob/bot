@@ -103,8 +103,9 @@ async def on_message(message):
       if "cunt" in message.content or "Cunt" in message.content:
         await message.channel.send("You've been caught saying the worst word in the english language. Reevaluate your life choices.")
 
-
-    if f'<@!{bot.user.id}>' in message.content:
+  
+    if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
+      
       if 'help' in message.content:
         await message.channel.send("Hey, use $cmds to show my list of commands!")
       else:
@@ -114,6 +115,7 @@ async def on_message(message):
           hello = json.load(f)
         
         while True:
+          
           if hello[str(user.id)]["0"] == 0:
             
             hello[str(user.id)]["0"]=1
@@ -232,7 +234,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.0 patch", value = "-new command: waifu, dadjoke, neko (wtf is this)\n-reworked: swear, now has more possibilities\nadded: more tips and an easter egg.\nFixed: tictactoe interaction failing\n Added: support server link to vote command",inline = False)
+  em.add_field(name = "1.6.0 patch", value = "-new command: waifu, dadjoke, neko (wtf is this)\n-reworked: swear, now has more possibilities\nadded: more tips and an easter egg.\nFixed: tictactoe interaction failing\n Added: support server link to vote command, more sentences to the typingrace commands.",inline = False)
   await ctx.send(embed = em)
 
 
