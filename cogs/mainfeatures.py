@@ -11,7 +11,7 @@ import json
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 from dadjokes import Dadjoke
-
+from pyinsults import insults
 
 class MainFeatures(commands.Cog):
   
@@ -64,17 +64,18 @@ class MainFeatures(commands.Cog):
   @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
   async def swear(self,ctx):
     
-        swearList = ["You cow.","You bloody bitch.", "You freaking arsehole.","You ranky danky piece of dogshit.",'You little prick.','You twithead.',"You donkey shit.","You filthy poohead.","You absolute moron.","You actual idiot.","You talkative brat.","You stupid donghead.","You fucking loser","You twatface","You dirty asshole."]
-        randomSwear = swearList[random.randint(0,14)]
 
+        packagedInsults= insults.insultify("You {}!")
+        
 
+        
         uid = ctx.message.author.id
         status = await familyFriendlySetup(uid)
         if status ==True:
-          randomSwear =  await changeff(randomSwear)
+          packagedInsults =  await changeff(packagedInsults)
         color = int(await colorSetup(ctx.message.author.id),16)
         embedVar2 = discord.Embed(color =color)
-        embedVar2.add_field(name = randomSwear, value = "\u200b",inline = False)
+        embedVar2.add_field(name = packagedInsults, value = "\u200b",inline = False)
         embedVar2.set_footer(text="requested by " +'{}'.format(ctx.message.author))
         tip = postTips()
         
@@ -180,7 +181,7 @@ class MainFeatures(commands.Cog):
         
       elif users[str(uid)]["dmblocker"] ==1:
         tip = postTips()
-        print(tip)
+        
         if tip != None:
           
           await ctx.send(tip)
@@ -191,7 +192,7 @@ class MainFeatures(commands.Cog):
 
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def dadJoke(self,ctx):
+  async def dadjoke(self,ctx):
     
     
     dadJoke = Dadjoke().joke

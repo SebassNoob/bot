@@ -118,8 +118,10 @@ def postTips():
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``$settings``!",
       "Enabling ``$autoresponse`` will make the bot respond in a certain way to somne words!",
-      "Check the bot's ping with ``$ping``."
-      "Play a few fun games with your friend with the commands in the 'games' category!"
+      "Check the bot's ping with ``$ping``.",
+      "Play a few fun games with your friend with the commands in the 'games' category!",
+      "Try pinging the bot! They won't like it though...",
+      "Getting destroyed in chat? Use ``$roast`` to crush their argument!"
       ]
     randomchance = random.randint(0,9)
     
@@ -128,3 +130,23 @@ def postTips():
       return f"**Tip:** {randomMsg}"
     else:
       return None
+      
+      
+      
+      
+class egg:
+  def __init__(self,id,egg1):
+    self.id = id
+    self.egg1 = egg1
+    
+  def write(self):
+    with open("./json/egg.json","r") as f:
+      user = json.load(f)
+    
+    if str(self.id) not in user:
+      user[self.id] = {}
+      user[self.id][self.egg1] = 0 
+    
+    with open("./json/egg.json","w") as f:
+      json.dump(user,f)
+    

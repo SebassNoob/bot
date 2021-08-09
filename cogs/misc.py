@@ -9,7 +9,8 @@ import json
 import aiohttp
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
-
+import requests
+from waifu import WaifuClient
 class Misc(commands.Cog):
   
   def __init__(self, bot):
@@ -179,9 +180,34 @@ class Misc(commands.Cog):
         return
     except:
       pass
+  
+  
 
-      
-      
+  @commands.command()
+  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
+  async def waifu(self,ctx):
+    color = int(await colorSetup(ctx.author.id),16)
+    pic = WaifuClient().sfw(category='waifu')
+    em = discord.Embed(color = color)
+    em.set_author(name = f"Waifu requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
+    em.set_image(url = pic)
+    tip = postTips()
+    if tip != None:
+      await ctx.send(tip)
+    await ctx.send(embed = em)
+    
+  @commands.command()
+  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
+  async def neko(self,ctx):
+    color = int(await colorSetup(ctx.author.id),16)
+    pic = WaifuClient().sfw(category='neko')
+    em = discord.Embed(color = color)
+    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
+    em.set_image(url = pic)
+    tip = postTips()
+    if tip != None:
+      await ctx.send(tip)
+    await ctx.send(embed = em)
 
 def setup(bot):
     bot.add_cog(Misc(bot))

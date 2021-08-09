@@ -221,6 +221,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "pyinsults"
+version = "0.0.0.0.14"
+description = "A Python module, allowing you to cuss at your users."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "requests"
 version = "2.26.0"
 description = "Python HTTP for Humans."
@@ -260,6 +268,26 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
+name = "waifu"
+version = "0.0.2"
+description = "Talk to cute waifu!"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "waifu-py"
+version = "1.0.2"
+description = "A simple Python wrapper for the waifu.pics API"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+aiohttp = "*"
+requests = "*"
+
+[[package]]
 name = "werkzeug"
 version = "2.0.1"
 description = "The comprehensive WSGI web application library."
@@ -285,7 +313,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "dad45953785411df47d2e2092510b8db2555859906533b66bdca51e7135604bd"
+content-hash = "e4e3170771474ec8fc9ce905de959214c37c80df835fc729e39dc175ce19bfc2"
 
 [metadata.files]
 aiohttp = [
@@ -532,6 +560,10 @@ numpy = [
     {file = "numpy-1.21.1-pp37-pypy37_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2d4d1de6e6fb3d28781c73fbde702ac97f03d79e4ffd6598b880b2d95d62ead4"},
     {file = "numpy-1.21.1.zip", hash = "sha256:dff4af63638afcc57a3dfb9e4b26d434a7a602d225b42d746ea7fe2edf1342fd"},
 ]
+pyinsults = [
+    {file = "pyinsults-0.0.0.0.14-py3-none-any.whl", hash = "sha256:9514e2567826eab490a96f000d8ca21f23b985b0d831965dabebcb8cf0db09af"},
+    {file = "pyinsults-0.0.0.0.14.tar.gz", hash = "sha256:afec3c6df09a976ac74dc8d67a4385758f030cf8db875ff357c57e9da8cca78f"},
+]
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
     {file = "requests-2.26.0.tar.gz", hash = "sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"},
@@ -544,6 +576,14 @@ typing-extensions = [
 urllib3 = [
     {file = "urllib3-1.26.6-py2.py3-none-any.whl", hash = "sha256:39fb8672126159acb139a7718dd10806104dec1e2f0f6c88aab05d17df10c8d4"},
     {file = "urllib3-1.26.6.tar.gz", hash = "sha256:f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"},
+]
+waifu = [
+    {file = "waifu-0.0.2-py3-none-any.whl", hash = "sha256:73ec4c1b06422189d50b61ff93150e3e704c66441a7fe5a5a8dd704569285ce8"},
+    {file = "waifu-0.0.2.tar.gz", hash = "sha256:2897ddd5db5c189009ac09fcbc5154ed3f829529e7a0948c3730b631d2028739"},
+]
+waifu-py = [
+    {file = "waifu-py-1.0.2.tar.gz", hash = "sha256:eae051451a0c55c7ad808ac2fd9db7885a04be891467286aa03d65edd5ce1648"},
+    {file = "waifu_py-1.0.2-py3-none-any.whl", hash = "sha256:d3410a188863d1170d0036a7bbdd2a3e0697f9d3286e58ece0fc8a315586c9fa"},
 ]
 werkzeug = [
     {file = "Werkzeug-2.0.1-py3-none-any.whl", hash = "sha256:6c1ec500dcdba0baa27600f6a22f6333d8b662d22027ff9f6202e3367413caa8"},

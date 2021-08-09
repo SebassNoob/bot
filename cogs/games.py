@@ -561,6 +561,7 @@ class Games(commands.Cog):
               if interaction.user.id != turn_list[turn]:
                 await interaction.respond(type=4, content="It isn't your turn, idiot.", ephemeral=True)
               else:
+                
                 if turn_list[turn] == user.id:
                   userSquares.append(interaction.component.id)
                 elif turn_list[turn] == ctx.author.id:
@@ -573,8 +574,13 @@ class Games(commands.Cog):
                 if success(authorSquares) == True:
                   authorwin = 1
                 else:
-                  turn+= 1
-                  
+                  if turn != 8:
+                    turn+= 1
+                  else:
+                    await asyncio.sleep(1)
+                    await mainMessage.delete()
+                    await ctx.send(f"You tied! Rip lol you suck.")
+                    break
                 
                 
 
@@ -693,6 +699,8 @@ class Games(commands.Cog):
                   variable = ctx.author.mention
 
                 await turnNotif.edit(f"TicTacToe game between {user.name} and {ctx.author.name}\nYour turn {variable}")
+                
+        
 
         except asyncio.TimeoutError:
           break

@@ -12,8 +12,8 @@ import json
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
-
-
+from other.asyncCmds import egg
+import time
 intents = discord.Intents.default()
 intents.members = True
 
@@ -104,8 +104,62 @@ async def on_message(message):
         await message.channel.send("You've been caught saying the worst word in the english language. Reevaluate your life choices.")
 
 
-    if f'<@!{bot.user.id}>' in message.content and 'help' in message.content:
-      await message.channel.send("Hey, use $cmds to show my list of commands!")
+    if f'<@!{bot.user.id}>' in message.content:
+      if 'help' in message.content:
+        await message.channel.send("Hey, use $cmds to show my list of commands!")
+      else:
+        user = egg(message.author.id,0)
+        user.write()
+        with open("./json/egg.json","r") as f:
+          hello = json.load(f)
+        
+        while True:
+          if hello[str(user.id)]["0"] == 0:
+            
+            hello[str(user.id)]["0"]=1
+            
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("Stop pinging me.")
+            break
+          if hello[str(user.id)]["0"] == 1:
+            hello[str(user.id)]["0"]=2
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("I said, STOP PINGING ME YOU DUMB F**K")
+            break
+          if hello[str(user.id)]["0"] == 2:
+            hello[str(user.id)]["0"]=3
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("https://imgur.com/t/mike_wazowski/lQyLC5G")
+            break
+          if hello[str(user.id)]["0"] == 3:
+            hello[str(user.id)]["0"]=4
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("https://miro.medium.com/max/324/1*HI4kj-TPAQrfQkAdrw2KTA.png")
+            break
+          if hello[str(user.id)]["0"] == 4:
+            hello[str(user.id)]["0"]=5
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("https://memegenerator.net/img/instances/61640131.jpg")
+            break
+          if hello[str(user.id)]["0"] == 5:
+            hello[str(user.id)]["0"]=0
+            with open("./json/egg.json","w") as f:
+              json.dump(hello,f)
+            await message.channel.send("HOW WOULD YOU FEEL IF I PINGED YOU THEN")
+            for i in range(10):
+              await message.channel.send(f"<@!{message.author.id}>")
+              time.sleep(1)
+            break
+          
+          
+          
+          
+        
   except Exception:
     pass
   
@@ -124,7 +178,7 @@ async def on_message(message):
       json.dump(file,f)
       f.close
       
-    print(data)
+    
     user = bot.get_user(int(data))
     
     
@@ -178,7 +232,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.5.2 patch", value = "-New command: typingrace\n-Bugfixes for vocabularygame\n-Updated help description since I forgot the last time\n-Fixed roast command being too confusing\n-Introduced tips!",inline = False)
+  em.add_field(name = "1.6.0 patch", value = "-new command: waifu, dadjoke, neko (wtf is this)\n-reworked: swear, now has more possibilities\nadded: more tips and an easter egg.\nFixed: tictactoe interaction failing\n Added: support server link to vote command",inline = False)
   await ctx.send(embed = em)
 
 
