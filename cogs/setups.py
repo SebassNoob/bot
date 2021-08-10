@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup, addData ,addDataU,getDataU
+from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
 import random
 import json
 import asyncio
@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.5.2", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.6.0", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------

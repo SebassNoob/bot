@@ -116,11 +116,11 @@ def postTips():
       "Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!",
       "Find the latest patch notes with the command ``$patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
-      "You can change your preferred embed colour with ``$settings``!",
+      "You can change your preferred embed colour with ``$settings color [preferred color]``!",
       "Enabling ``$autoresponse`` will make the bot respond in a certain way to somne words!",
       "Check the bot's ping with ``$ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
-      "Try pinging the bot! They won't like it though...",
+      "Try pinging the bot multiple times! They won't like it though...",
       "Getting destroyed in chat? Use ``$roast`` to crush their argument!"
       ]
     randomchance = random.randint(0,9)
