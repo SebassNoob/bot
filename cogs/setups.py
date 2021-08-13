@@ -92,6 +92,8 @@ class Setups(commands.Cog):
     embedVar5.add_field(name = "``tictactoe``", value = "Play tictactoe with a friend!",inline = False)
     embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
     embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
+    embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
+
 
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")

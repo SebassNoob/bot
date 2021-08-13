@@ -12,6 +12,7 @@ import threading
 from threading import Thread
 import time
 import math
+from pyinsults import insults
 
 class Games(commands.Cog):
   
@@ -998,5 +999,133 @@ class Games(commands.Cog):
 
 
 
+
+  @commands.command(name = "wouldyourather",aliases = ["wyr"])
+  async def wouldyourather(self,ctx):
+   
+    option1= [
+      "lose a car",
+      "have the ability to see 10 minutes into the future",
+      "have telekinesis",
+      "be in a coma for 10 years",
+      "lose your vision",
+      "find a cockroach in your bed",
+      "drink from a toilet bowl",
+      "become vegan",
+      "always lie",
+      "speak any language",
+      "eat someone's vomit",
+      "let somebody read your DMs",
+      "drink pee",
+      "only eat raw food",
+      "be able to tell the future",
+      "have US$1 million now",
+      "clean the toilet with a toothbrush",
+      "be reincarnated as a plant",
+      "be always criticized",
+      "get 10 books free",
+      "know when you are going to die",
+      ]
+    option2 =[
+      "lose all the pictures you have ever taken",
+      "have the ability to see 150 years into the future",
+      "have telepathy",
+      "be jailed for 5 years",
+      "lose all memories",
+      "find some strange white sticky stuff on your bed",
+      "eat from the trashcan",
+      "cannabalise people you see",
+      "always tell the truth",
+      "speak to animals",
+      "drink someone's blood",
+      "let somebody see your camera roll",
+      "brush teeth with solid fuel",
+      "only eat expired food",
+      "be able to recall your past with perfect clarity",
+      "have US$5 000 every week for the rest of your life",
+      "lick the floor",
+      "be reincarnated as a mosquito",
+      "be always ignored",
+      "get to watch 1 movie free",
+      "know how you are going to die",
+      ]
+      
+    randomQnNo = random.randint(0,len(option1)-1)
+    options = (option1[randomQnNo],option2[randomQnNo])
+    
+    color = int(await colorSetup(ctx.message.author.id),16)
+    em = discord.Embed(color = color)
+    em.add_field(name = "Would you rather...", value = f"1. {options[0]}\n2. {options[1]}",inline = False)
+    em.set_footer(text = "Best played in a voice call!")
+    embed1= await ctx.send(embed = em)
+    interaction = await ctx.send("You have 30s to select one of the below!", 
+    components = [
+      [
+        Button(
+          label = "Option 1",
+          id = "1",
+          style = ButtonStyle.green
+          ),
+          Button(
+          label = "Option 2",
+          id = "2",
+          style = ButtonStyle.blue
+          )
+        ]])
+        
+    def backgroundWYR():
+      global timerWYR
+      timerWYR= 30
+      while True:
+        time.sleep(1)
+        timerWYR -= 1
+        if timerWYR == 0:
+          break
+      
+    
+    
+    threading.Thread(name='backgroundWYR', target=backgroundWYR).start()
+    respondents = []
+    voted1 = 0 
+    voted2 = 0 
+    totalvoted = 0
+    while timerWYR !=0:
+      
+      try:
+        click = await self.bot.wait_for(
+                  "button_click",
+                  check = lambda i: i.component.id in["1","2"], 
+                  timeout = timerWYR
+                )
+                
+                
+        if click.user.id not in respondents:
+          respondents.append(click.user.id)
+          totalvoted +=1
+          if click.component.id == "1":
+            voted1 += 1
+          elif click.component.id== "2":
+            voted2 +=1
+          else:
+            await ctx.send("Unknown error has occurred, try again")
+            raise Exception("Unknown error")
+          await click.respond(type=4, content=f"You voted for option {click.component.id}!", ephemeral=True)
+        elif click.user.id in respondents:
+          await click.respond(type=4, content=f"You've already voted, you {insults.long_insult()}. ", ephemeral=True)
+        
+      except asyncio.TimeoutError:
+        await interaction.delete()
+        await embed1.delete()
+        break
+      
+    em2 = discord.Embed(color = color)
+    try:
+      em2.add_field(name = "Results!", value = f"``{math.ceil(voted1/totalvoted)*100}%`` {options[0]}\n``{math.ceil(voted2/totalvoted)*100}%`` {options[1]}",inline = False)
+    except ZeroDivisionError:
+      em2.add_field(name = "Results!", value = f"``0%`` {options[0]}\n``0%`` {options[1]}",inline = False)
+    em2.set_footer(text = "Best played in a voice call!")
+    await ctx.send(embed = em2)
+      
+    
 def setup(bot):
   bot.add_cog(Games(bot))
