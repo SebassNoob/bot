@@ -296,7 +296,7 @@ class Games(commands.Cog):
         try:
               interaction = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"], 
+                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"] and i.channel.id == ctx.channel.id, 
                   timeout = 30.0 
               )
 
@@ -556,7 +556,7 @@ class Games(commands.Cog):
               
               interaction = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"], 
+                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"] and i.channel.id == ctx.channel.id, 
                   timeout = 30.0 
               )
               if interaction.user.id != turn_list[turn]:
@@ -793,7 +793,7 @@ class Games(commands.Cog):
 
         msg = await self.bot.wait_for(
         "message",
-        check = lambda i: i.author.id == ctx.author.id, 
+        check = lambda i: i.author.id == ctx.author.id and i.channel.id == ctx.channel.id, 
         timeout = timerVocab
       )
         
@@ -868,7 +868,7 @@ class Games(commands.Cog):
       try:
         interaction = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id in["join","start"], 
+                  check = lambda i: i.component.id in["join","start"] and i.channel.id == ctx.channel.id, 
                   timeout = 60.0 
               )
         if interaction.component.id == "start" and len(players) == 0:
@@ -940,7 +940,7 @@ class Games(commands.Cog):
     while timerTyping != 0:
       try:
         msg = await self.bot.wait_for(
-        "message", check = lambda i: i.author.id in players,timeout = timerTyping)
+        "message", check = lambda i: i.author.id in players and i.channel.id == ctx.channel.id,timeout = timerTyping)
         
         def checkAccuracy(j):
           correct = 0
@@ -1094,7 +1094,7 @@ class Games(commands.Cog):
       try:
         click = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id in["1","2"], 
+                  check = lambda i: i.component.id in["1","2"] and i.channel.id == ctx.channel.id and i.message.id == interaction.id, 
                   timeout = timerWYR
                 )
                 
@@ -1120,7 +1120,7 @@ class Games(commands.Cog):
       
     em2 = discord.Embed(color = color)
     try:
-      em2.add_field(name = "Results!", value = f"``{math.ceil(voted1/totalvoted)*100}%`` {options[0]}\n``{math.ceil(voted2/totalvoted)*100}%`` {options[1]}",inline = False)
+      em2.add_field(name = "Results!", value = f"``{(voted1/totalvoted)*100}%`` {options[0]}\n``{(voted2/totalvoted)*100}%`` {options[1]}",inline = False)
     except ZeroDivisionError:
       em2.add_field(name = "Results!", value = f"``0%`` {options[0]}\n``0%`` {options[1]}",inline = False)
     em2.set_footer(text = "Best played in a voice call!")

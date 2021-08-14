@@ -112,7 +112,7 @@ def getDataUpvote():
   
 def postTips():
     tips = [
-      "If you encounter any errors, you may join the support server here.\n(https://discord.gg/UCGAuRXmBD)",
+      "If you encounter any errors, you may join the support server here.\nhttps://discord.gg/UCGAuRXmBD",
       "Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!",
       "Find the latest patch notes with the command ``$patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
@@ -122,8 +122,11 @@ def postTips():
       "Play a few fun games with your friend with the commands in the 'games' category!",
       "Try pinging the bot multiple times! They won't like it though...",
       "Getting destroyed in chat? Use ``$roast`` to crush their argument!"
+      "Don't want to be DMed? Use ``$settings dmblocker on``!"
+      "Find creative curse words with ``$swear``!"
+      "Find some good memes on reddit with ``$meme``!"
       ]
-    randomchance = random.randint(0,9)
+    randomchance = random.randint(0,8)
     
     randomMsg = tips[random.randint(0,len(tips)-1)]
     if randomchance == 0:

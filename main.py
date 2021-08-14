@@ -34,9 +34,10 @@ DiscordComponents(bot)
 @bot.event
 async def on_ready():
   servers = len(bot.guilds)
-  print("-------------------------------------")
-  print('{0.user}'.format(bot)+ " connected to " + str(servers) + " servers")
-  print("-------------------------------------")
+  
+  print("\033[0;36;48m-------------------------------------")
+  print('\033[0;36;48m{0.user}'.format(bot)+ " connected to " + str(servers) + " servers")
+  print("\033[0;36;48m-------------------------------------")
   
   
 
@@ -55,7 +56,9 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.reply(":redTick: You don't have permission to use that command.")
         pass
-
+    if isinstance(error, discord.ext.commands.CommandNotFound):
+        
+        pass
     
     else:
       raise error
@@ -234,7 +237,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.0 patch", value = "-new command: waifu, dadjoke, neko (wtf is this)\n-reworked: swear, now has more possibilities\nadded: more tips and an easter egg.\nFixed: tictactoe interaction failing\n Added: support server link to vote command, more sentences to the typingrace commands.",inline = False)
+  em.add_field(name = "1.6.1 patch", value = "-New commands: shinobu, wouldyourather(wyr)\n-Fixed tictactoe and memorygame to not return errors while playing simultaneously\n-More tips\n-fixed ``$meme`` not responding (hopefully)\n-simplified ``$settings`` to be consistant with the rest of the setup commands",inline = False)
   await ctx.send(embed = em)
 
 

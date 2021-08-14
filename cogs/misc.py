@@ -123,7 +123,7 @@ class Misc(commands.Cog):
       #print state
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
+  
   async def meme(self,ctx):
   
 
@@ -132,13 +132,22 @@ class Misc(commands.Cog):
     subreddits = ['https://www.reddit.com/r/dankmemes/new.json?sort=hot','https://www.reddit.com/r/okbuddyretard/new.json?sort=hot','https://www.reddit.com/r/memes/new.json?sort=hot',
     'https://www.reddit.com/r/wholesomememes/new.json?sort=hot', 'https://www.reddit.com/r/meme/new.json?sort=hot', 'https://www.reddit.com/r/PrequelMemes/new.json?sort=hot','https://www.reddit.com/r/deepfriedmemes/new.json?sort=hot', 'https://www.reddit.com/r/nukedmemes/new.json?sort=hot']
     async with aiohttp.ClientSession() as cs:
-      async with cs.get(subreddits[random.randint(0,len(subreddits))]) as r:
+      async with cs.get(subreddits[random.randint(0,len(subreddits)-1)]) as r:
         res = await r.json()
-        randomn = random.randint(0,15)
-        color = int(await colorSetup(ctx.message.author.id),16)
-        embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
-        embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
+        color = int(await colorSetup(ctx.message.author.id),16)
+        
+        while True:
+          try:
+            randomn = random.randint(0,15)
+            embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
+        
+            embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
+            break
+
+          except KeyError as e:
+            raise e
+            
         tip = postTips()
         
         if tip != None:
@@ -208,6 +217,21 @@ class Misc(commands.Cog):
     if tip != None:
       await ctx.send(tip)
     await ctx.send(embed = em)
+    
+  @commands.command()
+  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
+  async def shinobu(self,ctx):
+    color = int(await colorSetup(ctx.author.id),16)
+    pic = WaifuClient().sfw(category='shinobu')
+    em = discord.Embed(color = color)
+    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
+    em.set_image(url = pic)
+    tip = postTips()
+    if tip != None:
+      await ctx.send(tip)
+    await ctx.send(embed = em)
+    
+    
 
 def setup(bot):
     bot.add_cog(Misc(bot))

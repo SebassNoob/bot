@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.6.0", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.6.1", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------
@@ -65,8 +65,9 @@ class Setups(commands.Cog):
     embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
     embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
     embedVar3.add_field(name = "``snipe``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu. Go crazy anime fans.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko. Go crazy anime fans.\n**6**s cooldown",inline = False)
+    embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
+    embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
+    embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
     
     
     
@@ -98,7 +99,7 @@ class Setups(commands.Cog):
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")
     embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
-    embedVar6.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` \nTo show menu, '$settings menu'.",inline = False)
+    embedVar6.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` .",inline = False)
     embedVar6.add_field(name = "``changeprefix``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
 
@@ -216,120 +217,122 @@ class Setups(commands.Cog):
     onoff = ["off",'on']
     
 
-    
-    if option.lower() == "color" and arg is not None:
-      if arg.lower() in colors:
-        code = hexCodes[colors.index(arg.lower())]
-        await addDataU(uid)
-        users = await getDataU()
-      
-        d = {"color" : code}
-        users[str(uid)].update(d)
-
-        with open("./json/userSettings.json","w") as f:
-          json.dump(users,f)
-        await ctx.send("Embed color is now **"+colors[hexCodes.index(users[str(uid)]["color"])]+"**")
+    try:
+      if option.lower() == "color" and arg is not None:
+        if arg.lower() in colors:
+          code = hexCodes[colors.index(arg.lower())]
+          await addDataU(uid)
+          users = await getDataU()
         
-      else:
-        await ctx.send("That's not a valid color.")
-      
-
-    if option.lower() == "familyfriendly" and arg is not None:
-      
-      if arg.lower() == 'on' or arg.lower() == 'enable':
-        
-        await addDataU(uid)
-        users = await getDataU()
-      
-        d = {"familyFriendly" : 1}
-        users[str(uid)].update(d)
-
-        with open("./json/userSettings.json","w") as f:
-          json.dump(users,f)
-        await ctx.send("Family friendly mode is now **on**.")
-
-      if arg.lower() == 'off' or arg.lower() == 'disable':
-        
-        await addDataU(uid)
-        users = await getDataU()
-      
-        d = {"familyFriendly" : 0}
-        users[str(uid)].update(d)
-
-        with open("./json/userSettings.json","w") as f:
-          json.dump(users,f)
-        await ctx.send("Family friendly mode is now **off**.")
-        
-      elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
-        await ctx.send("That's not a valid option.")
-
-
-
-
-    if option.lower() == "sniped" and arg is not None:
-      
-      if arg.lower() == 'on' or arg.lower() == 'enable':
-        
-        await addDataU(uid)
-        users = await getDataU()
-      
-        d = {"sniped" : 1}
-        users[str(uid)].update(d)
-
-        with open("./json/userSettings.json","w") as f:
-          json.dump(users,f)
-        await ctx.send("The ability to be sniped is now **on**.")
-
-      if arg.lower() == 'off' or arg.lower() == 'disable':
-        
-        await addDataU(uid)
-        users = await getDataU()
-      
-        d = {"sniped" : 0}
-        users[str(uid)].update(d)
-
-        with open("./json/userSettings.json","w") as f:
-          json.dump(users,f)
-        await ctx.send("The ability to be sniped is now **off**.")
-        
-      elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
-        await ctx.send("That's not a valid option.")
-
-    if option == "dmblocker" and arg is not None:
-      if arg.lower() == "on" or arg.lower() == "enable":
-        await addDataU(uid)
-        users = await getDataU()
-        try:
-          d = {"dmblocker" : 1}
+          d = {"color" : code}
           users[str(uid)].update(d)
 
           with open("./json/userSettings.json","w") as f:
             json.dump(users,f)
-          await ctx.send("DM-blocker is now **on**.")
-        except KeyError:
-          users[str(uid)]["dmblocker"] = 1
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("DM-blocker is now **on**.")
-      if arg.lower() == "off" or arg.lower() == "disable":
-        await addDataU(uid)
-        users = await getDataU()
-        try:
-          d = {"dmblocker" : 0}
+          await ctx.send("Embed color is now **"+colors[hexCodes.index(users[str(uid)]["color"])]+"**")
+          
+        else:
+          await ctx.send("That's not a valid color.")
+        
+
+      if option.lower() == "familyfriendly" and arg is not None:
+        
+        if arg.lower() == 'on' or arg.lower() == 'enable':
+          
+          await addDataU(uid)
+          users = await getDataU()
+        
+          d = {"familyFriendly" : 1}
           users[str(uid)].update(d)
 
           with open("./json/userSettings.json","w") as f:
             json.dump(users,f)
-          await ctx.send("DM-blocker is now **off**.")
-        except KeyError:
-          users[str(uid)]["dmblocker"] = 0
+          await ctx.send("Family friendly mode is now **on**.")
+
+        if arg.lower() == 'off' or arg.lower() == 'disable':
+          
+          await addDataU(uid)
+          users = await getDataU()
+        
+          d = {"familyFriendly" : 0}
+          users[str(uid)].update(d)
+
           with open("./json/userSettings.json","w") as f:
             json.dump(users,f)
-          await ctx.send("DM-blocker is now **off**.")
+          await ctx.send("Family friendly mode is now **off**.")
+          
+        elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
+          await ctx.send("That's not a valid option.")
+
+
+
+
+      if option.lower() == "sniped" and arg is not None:
+        
+        if arg.lower() == 'on' or arg.lower() == 'enable':
+          
+          await addDataU(uid)
+          users = await getDataU()
+        
+          d = {"sniped" : 1}
+          users[str(uid)].update(d)
+
+          with open("./json/userSettings.json","w") as f:
+            json.dump(users,f)
+          await ctx.send("The ability to be sniped is now **on**.")
+
+        if arg.lower() == 'off' or arg.lower() == 'disable':
+          
+          await addDataU(uid)
+          users = await getDataU()
+        
+          d = {"sniped" : 0}
+          users[str(uid)].update(d)
+
+          with open("./json/userSettings.json","w") as f:
+            json.dump(users,f)
+          await ctx.send("The ability to be sniped is now **off**.")
+          
+        elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
+          await ctx.send("That's not a valid option.")
+
+      if option == "dmblocker" and arg is not None:
+        if arg.lower() == "on" or arg.lower() == "enable":
+          await addDataU(uid)
+          users = await getDataU()
+          try:
+            d = {"dmblocker" : 1}
+            users[str(uid)].update(d)
+
+            with open("./json/userSettings.json","w") as f:
+              json.dump(users,f)
+            await ctx.send("DM-blocker is now **on**.")
+          except KeyError:
+            users[str(uid)]["dmblocker"] = 1
+            with open("./json/userSettings.json","w") as f:
+              json.dump(users,f)
+            await ctx.send("DM-blocker is now **on**.")
+        if arg.lower() == "off" or arg.lower() == "disable":
+          await addDataU(uid)
+          users = await getDataU()
+          try:
+            d = {"dmblocker" : 0}
+            users[str(uid)].update(d)
+
+            with open("./json/userSettings.json","w") as f:
+              json.dump(users,f)
+            await ctx.send("DM-blocker is now **off**.")
+          except KeyError:
+            users[str(uid)]["dmblocker"] = 0
+            with open("./json/userSettings.json","w") as f:
+              json.dump(users,f)
+            await ctx.send("DM-blocker is now **off**.")
+    except:
+      pass
 
     
     
-    if option == "menu":
+    if option == None:
       
       colorDisp = colors[hexCodes.index(users[str(uid)]["color"])]
       color = int(await colorSetup(ctx.message.author.id),16)
