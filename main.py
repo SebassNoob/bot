@@ -110,7 +110,7 @@ async def on_message(message):
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
       if 'help' in message.content:
-        await message.channel.send("Hey, use $cmds to show my list of commands!")
+        await message.channel.send(f"Hey, use $cmds to show my list of commands!\nhttps://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot")
       else:
         user = egg(message.author.id,0)
         user.write()
