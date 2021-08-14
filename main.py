@@ -1,5 +1,5 @@
 import os
-import numexpr
+import random
 import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
 import math
@@ -26,13 +26,13 @@ def get_prefix(bot, message):
     return '$'
 
     
-bot = commands.Bot(command_prefix=get_prefix, help_command = None, intents=intents)
-
+bot = commands.AutoShardedBot(command_prefix=get_prefix, help_command = None, intents=intents,shard_count=5)
 
 DiscordComponents(bot)
 
 @bot.event
 async def on_ready():
+  
   servers = len(bot.guilds)
   
   print("\033[0;36;48m-------------------------------------")
@@ -88,7 +88,7 @@ async def on_message(message):
     
   try:
     
-
+    randomNum = random.randint(0,1000)
     guildId = message.guild.id
     guilds = await getData()
     NwordValue = guilds[str(guildId)]["Nword"]
@@ -237,7 +237,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.1 patch", value = "-New commands: shinobu, wouldyourather(wyr)\n-Fixed tictactoe and memorygame to not return errors while playing simultaneously\n-More tips\n-fixed ``$meme`` not responding (hopefully)\n-simplified ``$settings`` to be consistant with the rest of the setup commands",inline = False)
+  em.add_field(name = "1.6.1 patch", value = "-New commands: shinobu, wouldyourather(wyr)\n-Fixed tictactoe and memorygame to not return errors while playing simultaneously\n-More tips\n-fixed ``$meme`` not responding (hopefully)\n-simplified ``$settings`` to be consistant with the rest of the setup commands\n-Hotfix 15/8 added a new easter egg and fixed some bugs",inline = False)
   await ctx.send(embed = em)
 
 
