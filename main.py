@@ -59,7 +59,12 @@ async def on_command_error(ctx, error):
     if isinstance(error, discord.ext.commands.CommandNotFound):
         
         pass
-    
+    if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
+        
+        await ctx.send(f"I don't have permissions for that! I need {error.missing_perms}")
+    if isinstance(error, discord.ext.commands.errors.MemberNotFound):
+        await ctx.send("The member you mentioned was not found, actually send a member name next time you moron.")
+        pass
     else:
       raise error
 

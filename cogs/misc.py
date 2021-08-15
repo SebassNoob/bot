@@ -123,7 +123,7 @@ class Misc(commands.Cog):
       #print state
 
   @commands.command()
-  
+  @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
   async def meme(self,ctx):
   
 
