@@ -16,7 +16,7 @@ class Setups(commands.Cog):
         self.bot = bot
 
   
-  @commands.command(name = "credits",aliases = ["vote"])
+  @commands.command(name = "credits",aliases = ["vote","invite"])
   async def credit(self,ctx):
     guilds = len(self.bot.guilds)
     username = await self.bot.fetch_user(int(os.environ['uid']))
@@ -32,13 +32,13 @@ class Setups(commands.Cog):
 
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
-    embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.set_author(name="Annoybot commands.")
+    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
     
     embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**6**s cooldown.",inline = False)
     embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**6**s cooldown.",inline = False)
     embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dmthreaten``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
+    embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
     embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
        
     
@@ -47,24 +47,24 @@ class Setups(commands.Cog):
     embedVar2 = discord.Embed(color = color)
     embedVar2.set_author(name="Annoybot commands (math)\n All commands have a 10s cooldown.")
         
-    embedVar2.add_field(name = "``calc``", value = "Evaluates your expression. Functions include:\n `+`,`-`,`*`,`/`,`sqrt`,`log`,`sin`,`cos`,`tan`.",inline = False)
+    embedVar2.add_field(name = "``calc (expression)``", value = "Evaluates your expression. Functions include:\n `+`,`-`,`*`,`/`,`sqrt`,`log`,`sin`,`cos`,`tan`.",inline = False)
         
-    embedVar2.add_field(name = "``form circleArea``", value = "Returns the area of a circle with radius x.",inline = True)
-    embedVar2.add_field(name = "``form circleCircum``", value = "Returns the circumference of a circle with radius x.",inline = True)
-    embedVar2.add_field(name = "``form triangleArea``", value = "Returns the area of a triangle with base x and height y.",inline = True)
-    embedVar2.add_field(name = "``form pythagoras``", value = "Returns the length of hypotenuse of triangle base x and height y.",inline = True)
-    embedVar2.add_field(name = "``form sphereVol``", value = "Returns volume of sphere with radius x.",inline = True)
-    embedVar2.add_field(name = "``form sphereArea``", value = "Returns surface area of sphere with radius x.",inline = True)
+    embedVar2.add_field(name = "``form circleArea (x)``", value = "Returns the area of a circle with radius x.",inline = True)
+    embedVar2.add_field(name = "``form circleCircum (x)``", value = "Returns the circumference of a circle with radius x.",inline = True)
+    embedVar2.add_field(name = "``form triangleArea (x,y)``", value = "Returns the area of a triangle with base x and height y.",inline = True)
+    embedVar2.add_field(name = "``form pythagoras (x,y)``", value = "Returns the length of hypotenuse of triangle base x and height y.",inline = True)
+    embedVar2.add_field(name = "``form sphereVol (x)``", value = "Returns volume of sphere with radius x.",inline = True)
+    embedVar2.add_field(name = "``form sphereArea (x)``", value = "Returns surface area of sphere with radius x.",inline = True)
     
     
 
     embedVar3 = discord.Embed(color = color)
     embedVar3.set_author(name="Annoybot commands (misc)")
-    embedVar3.add_field(name = "``pick``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``predict``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
+    embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
+    embedVar3.add_field(name = "``predict (question)``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
     embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
     embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``snipe``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
+    embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
     embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
     embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
     embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
@@ -75,22 +75,22 @@ class Setups(commands.Cog):
     embedVar4 = discord.Embed(color = color)
     embedVar4.set_author(name="Annoybot commands (trolls)\n All troll commands have a 10s cooldown.")
     
-    embedVar4.add_field(name = "``channeltroll``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
-    embedVar4.add_field(name = "``nicktroll``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
-    embedVar4.add_field(name = "``dmtroll``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
+    embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
+    embedVar4.add_field(name = "``nicktroll (user)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
+    embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
 
-    embedVar4.add_field(name = "``ghosttroll``", value = "Ghost pings the user in 3 different channels.",inline = False)
+    embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
     
 
-    embedVar4.add_field(name = "``fakeban``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
+    embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
 
-    embedVar4.add_field(name = "``fakemute``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
+    embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
 
 
     embedVar5 = discord.Embed(color = color)
     embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
     embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
-    embedVar5.add_field(name = "``tictactoe``", value = "Play tictactoe with a friend!",inline = False)
+    embedVar5.add_field(name = "``tictactoe (user)``", value = "Play tictactoe with a friend!",inline = False)
     embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
     embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
     embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
@@ -99,8 +99,8 @@ class Setups(commands.Cog):
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")
     embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
-    embedVar6.add_field(name = "``settings``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` .",inline = False)
-    embedVar6.add_field(name = "``changeprefix``", value = "Changes the bot's prefix in the server.",inline = False)
+    embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` .",inline = False)
+    embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
 
     paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
@@ -218,7 +218,7 @@ class Setups(commands.Cog):
     
 
     try:
-      if option.lower() == "color" and arg is not None:
+      if option.lower() == "color":
         if arg.lower() in colors:
           code = hexCodes[colors.index(arg.lower())]
           await addDataU(uid)
@@ -231,11 +231,11 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("Embed color is now **"+colors[hexCodes.index(users[str(uid)]["color"])]+"**")
           
-        else:
-          await ctx.send("That's not a valid color.")
+        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
         
 
-      if option.lower() == "familyfriendly" and arg is not None:
+      if option.lower() == "familyfriendly":
         
         if arg.lower() == 'on' or arg.lower() == 'enable':
           
@@ -261,13 +261,13 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("Family friendly mode is now **off**.")
           
-        elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
-          await ctx.send("That's not a valid option.")
+        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
 
 
 
 
-      if option.lower() == "sniped" and arg is not None:
+      if option.lower() == "sniped":
         
         if arg.lower() == 'on' or arg.lower() == 'enable':
           
@@ -293,10 +293,9 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("The ability to be sniped is now **off**.")
           
-        elif arg.lower() != 'on'and arg.lower() != 'off' and arg.lower() != 'enable'and arg.lower() != 'disable':
-          await ctx.send("That's not a valid option.")
-
-      if option == "dmblocker" and arg is not None:
+        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
+      if option == "dmblocker":
         if arg.lower() == "on" or arg.lower() == "enable":
           await addDataU(uid)
           users = await getDataU()
@@ -327,13 +326,15 @@ class Setups(commands.Cog):
             with open("./json/userSettings.json","w") as f:
               json.dump(users,f)
             await ctx.send("DM-blocker is now **off**.")
+        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
     except:
-      pass
-
-    
-    
-    if option == None:
+        pass
+  
       
+      
+    if option == None:
+        
       colorDisp = colors[hexCodes.index(users[str(uid)]["color"])]
       color = int(await colorSetup(ctx.message.author.id),16)
       

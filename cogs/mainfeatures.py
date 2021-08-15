@@ -157,6 +157,7 @@ class MainFeatures(commands.Cog):
       for arg in args:
         threat = threat + " "+arg
       author_name = '{}'.format(ctx.author)
+      guild = ctx.guild.name
       if threat == "":
         t = ["I'm gonna find you and shove a pencil up yo ass.","Get out of here, or imma yeet you off a cliff irl.","I'm gonna go to your house and shit inside of it.","I'll stalk you in your dreams","Don't you dare cross me, or I will whoop your ass","I'm going to leave a bunch of dogshit on your desk tomorrow.","Watch out, I've hired a bunch of goons to intimidate you as they stare into your window.","I'm gonna steal EVERYTHING from your fridge","I'm going to kidnap your virginity and hold it ransom","I'm going to vomit on your cat."]
         threat = t[random.randint(0,9)]
@@ -164,7 +165,7 @@ class MainFeatures(commands.Cog):
       channel = await user.create_dm()
       color = int(await colorSetup(ctx.message.author.id),16)
       em = discord.Embed(color = color)
-      em.set_author(name = author_name+"'s threat",icon_url = ctx.author.avatar_url)
+      em.set_author(name = author_name+" from "+ guild,icon_url = ctx.author.avatar_url)
       em.add_field(name="\u200b",value=threat,inline=False)
       await channel.send(embed = em)
       tip = postTips()

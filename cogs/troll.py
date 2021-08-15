@@ -131,8 +131,9 @@ class Troll(commands.Cog):
       
       channel = await user.create_dm()
       
-        
-      await channel.send(user.mention + " imagine getting pinged in dms moron.")
+      for i in range(3):
+        await channel.send(user.mention + " imagine getting pinged in DMs moron.")
+      await channel.send(f"Dmtroll from {ctx.author.name} in {ctx.guild.name}")
       
       
       
@@ -140,9 +141,9 @@ class Troll(commands.Cog):
     try:
       if users[str(uid)]["dmblocker"] == 0:
         await ctx.send("The trolled user will be pinged 3 times through dms lol.")
-        for i in range(3):
-          await command()
-
+        
+        await command()
+        
 
         
       elif users[str(uid)]["dmblocker"] ==1:
@@ -155,8 +156,8 @@ class Troll(commands.Cog):
       with open("./json/userSettings.json","w") as f:
         json.dump(users,f)
       await ctx.send("The trolled user will be pinged 3 times through dms lol.")
-      for i in range(3):
-        await command()
+      await command()
+
       
 
   

@@ -89,6 +89,7 @@ async def addDataSnipe(uid):
     user[str(uid)] = {}
     user[str(uid)]["deletedMessage"] = ''
     user[str(uid)]["date"] = ''
+    user[str(uid)]["nsfw"] = False 
     
 
 
@@ -99,6 +100,7 @@ async def addDataSnipe(uid):
 async def getDataSnipe():
   with open("./json/userSnipeCache.json","r") as f:
     users = json.load(f)
+  
   return users
 
 
@@ -117,7 +119,7 @@ def postTips():
       "Find the latest patch notes with the command ``$patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``$settings color [preferred color]``!",
-      "Enabling ``$autoresponse`` will make the bot respond in a certain way to somne words!",
+      "Enabling ``$autoresponse`` will make the bot respond in a certain way to some words!",
       "Check the bot's ping with ``$ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
       "Try pinging the bot multiple times! They won't like it though...",

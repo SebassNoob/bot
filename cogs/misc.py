@@ -23,6 +23,9 @@ class Misc(commands.Cog):
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def pick(self,ctx,*args):
     
+    
+        if args ==():
+          await ctx.send(f"You're missing an argument: ``list`` in that command, dumbass.")
         argList = []
         for arg in args:
           argList.append(arg)
@@ -36,9 +39,14 @@ class Misc(commands.Cog):
   @commands.command(name = "predict",aliases = ["8ball"])
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def predict(self,ctx,*args):
+        if args ==():
+          await ctx.send(f"You're missing an argument: ``question`` in that command, dumbass.")
         question = ""
         predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
         randomPrediction = predictions[random.randint(0,14)]
+        
+         
+
         for arg in args:
           question = question +" "+ arg
 
@@ -167,6 +175,19 @@ class Misc(commands.Cog):
     users = await getDataSnipe()
     
     settings  = await getDataU()
+    async def command():
+      color = int(await colorSetup(ctx.author.id),16)
+      embed = discord.Embed(color= color,description=users[str(user.id)]["deletedMessage"])        
+      embed.set_footer(text="UTC "+users[str(user.id)]["date"])
+        
+      embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
+      tip = postTips()
+          
+      if tip != None:
+            
+        await ctx.send(tip)
+      await ctx.send(embed=embed)
+          
     try:
       if users[str(user.id)]["deletedMessage"]=='':
         await ctx.reply("There's nothing to snipe!")
@@ -174,19 +195,15 @@ class Misc(commands.Cog):
       if settings[str(user.id)]["sniped"] == 0:
         await ctx.reply("This guy can't be sniped, what a loser.")
       else:
-            
-        color = int(await colorSetup(ctx.author.id),16)
-        embed = discord.Embed(color= color,description=users[str(user.id)]["deletedMessage"])        
-        embed.set_footer(text="UTC "+users[str(user.id)]["date"])
-      
-        embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
-        tip = postTips()
-        
-        if tip != None:
+        if ctx.channel.nsfw == False and users[str(user.id)]["nsfw"] == False:   
+          await command()
+        elif ctx.channel.nsfw == True and users[str(user.id)]["nsfw"] == False:   
+          await command()
           
-          await ctx.send(tip)
-        await ctx.send(embed=embed)
-        return
+        elif ctx.channel.nsfw == False and users[str(user.id)]["nsfw"] == True:   
+          await ctx.send("The user you mentioned deleted their last message in an nsfw channel.😳")
+        elif ctx.channel.nsfw == True and users[str(user.id)]["nsfw"] == True:   
+          await command()
     except:
       pass
   

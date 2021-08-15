@@ -48,23 +48,25 @@ async def on_ready():
 async def on_command_error(ctx, error):
     
     if isinstance(error, discord.ext.commands.MissingRequiredArgument):
-        await ctx.reply("You're missing an argument in that command, dumbass.")
+        await ctx.reply(f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
         pass
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.reply('This command is on a **%.1fs** cooldown, not sorry.' % error.retry_after)
         pass
     if isinstance(error, commands.MissingPermissions):
-        await ctx.reply(":redTick: You don't have permission to use that command.")
+        await ctx.reply(f":redTick: You need the {error.missing_perms} permission to use that command.")
         pass
     if isinstance(error, discord.ext.commands.CommandNotFound):
         
         pass
     if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
         
-        await ctx.send(f"I don't have permissions for that! I need {error.missing_perms}")
+        await ctx.send(f"I don't have permissions for that! I need the {error.missing_perms} permission(s).")
     if isinstance(error, discord.ext.commands.errors.MemberNotFound):
         await ctx.send("The member you mentioned was not found, actually send a member name next time you moron.")
         pass
+      
+    
     else:
       raise error
 
@@ -232,7 +234,12 @@ async def on_message_delete(message):
   d = {"deletedMessage" : str(message.content), "date" : cur_time}
   users[str(message.author.id)].update(d)
   
-
+  if message.channel.nsfw ==False:
+    e = {"nsfw": False}
+    users[str(message.author.id)].update(e)
+  elif message.channel.nsfw ==True:
+    e = {"nsfw": True}
+    users[str(message.author.id)].update(e)
   with open("./json/userSnipeCache.json","w") as f:
     json.dump(users,f)
   
