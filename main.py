@@ -30,6 +30,7 @@ bot = commands.AutoShardedBot(command_prefix=get_prefix, help_command = None, in
 
 DiscordComponents(bot)
 
+
 @bot.event
 async def on_ready():
   

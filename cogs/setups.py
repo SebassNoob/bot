@@ -6,7 +6,7 @@ from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
 import random
 import json
 import asyncio
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 
@@ -32,7 +32,7 @@ class Setups(commands.Cog):
 
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
-    embedVar.set_author(name="Annoybot commands.")
+    embedVar.set_author(name="Annoybot commands")
     embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
     
     embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**6**s cooldown.",inline = False)
@@ -99,7 +99,7 @@ class Setups(commands.Cog):
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")
     embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
-    embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings, to change a setting use ```$settings [option][value]``` .",inline = False)
+    embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
     embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
 
@@ -110,28 +110,12 @@ class Setups(commands.Cog):
         
     if tip != None:
       await ctx.send(tip)
+    await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
     mainMessage = await ctx.reply(
         
         embed = paginationList[current],
         components = [ 
-            [
-                Button(
-                    label = "<",
-                    id = "back",
-                    style = ButtonStyle.blue
-                ),
-                Button(
-                    label = f"Page {int(paginationList.index(paginationList[current])) + 1}/{len(paginationList)}",
-                    id = "cur",
-                    style = ButtonStyle.grey,
-                    disabled = True
-                ),
-                Button(
-                    label = ">",
-                    id = "front",
-                    style = ButtonStyle.blue
-                )
-            ]
+          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5")])
         ]
     )
     
@@ -139,45 +123,18 @@ class Setups(commands.Cog):
         
         try:
             interaction = await self.bot.wait_for(
-                "button_click",
-                check = lambda i: i.component.id in ["back", "front"], 
+                "select_option", 
+                check = lambda i: i.component[0].value in["0","1","2","3","4","5"],
                 timeout = 30.0 
             )
             
-            if interaction.component.id == "back":
-                current -= 1
-            elif interaction.component.id == "front":
-                current += 1
             
-            if current == len(paginationList):
-                current = 0
-            elif current < 0:
-                current = len(paginationList) - 1
 
-            
+            current = int(interaction.component[0].value)
             await interaction.respond(
                 type = InteractionType.UpdateMessage,
                 embed = paginationList[current],
-                components = [ 
-                    [
-                        Button(
-                            label = "<",
-                            id = "back",
-                            style = ButtonStyle.blue
-                        ),
-                        Button(
-                            label = f"Page {int(paginationList.index(paginationList[current])) + 1}/{len(paginationList)}",
-                            id = "cur",
-                            style = ButtonStyle.grey,
-                            disabled = True
-                        ),
-                        Button(
-                            label = ">",
-                            id = "front",
-                            style = ButtonStyle.blue
-                        )
-                    ]
-                ]
+              
             )
         except asyncio.TimeoutError:
           await mainMessage.delete()
@@ -231,9 +188,9 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("Embed color is now **"+colors[hexCodes.index(users[str(uid)]["color"])]+"**")
           
-        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
+          
           await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
-        
 
       if option.lower() == "familyfriendly":
         
@@ -261,7 +218,8 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("Family friendly mode is now **off**.")
           
-        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
+          
           await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
 
 
@@ -293,7 +251,8 @@ class Setups(commands.Cog):
             json.dump(users,f)
           await ctx.send("The ability to be sniped is now **off**.")
           
-        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
+          
           await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
       if option == "dmblocker":
         if arg.lower() == "on" or arg.lower() == "enable":
@@ -326,7 +285,8 @@ class Setups(commands.Cog):
             with open("./json/userSettings.json","w") as f:
               json.dump(users,f)
             await ctx.send("DM-blocker is now **off**.")
-        elif arg.lower() != "off" or arg.lower() != "disable" or arg.lower() != "on" or arg.lower() != "enable":
+        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
+          
           await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
     except:
         pass
