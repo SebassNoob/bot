@@ -111,7 +111,7 @@ class Setups(commands.Cog):
     if tip != None:
       await ctx.send(tip)
     await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
-    mainMessage = await ctx.reply(
+    mainMessage = await ctx.send(
         
         embed = paginationList[current],
         components = [ 
@@ -310,7 +310,8 @@ class Setups(commands.Cog):
 
   @commands.command()
   async def ping(self,ctx):
-     await ctx.send(f'Pong!\nPing: {round(self.bot.latency * 1000)}ms')
+    shard = self.bot.get_shard(ctx.guild.shard_id)
+    await ctx.send(f'Pong!\nPing: {round(shard.latency * 1000)}ms\nShard_id: {ctx.guild.shard_id}')
 
 def setup(bot):
     bot.add_cog(Setups(bot))

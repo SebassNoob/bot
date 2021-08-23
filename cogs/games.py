@@ -1100,18 +1100,22 @@ class Games(commands.Cog):
                 
                 
         if click.user.id not in respondents:
-          respondents.append(click.user.id)
+          
           totalvoted +=1
-          if click.component.id == "1":
-            voted1 += 1
-          elif click.component.id== "2":
-            voted2 +=1
-          else:
-            await ctx.send("Unknown error has occurred, try again")
-            raise Exception("Unknown error")
+        
           await click.respond(type=4, content=f"You voted for option {click.component.id}!", ephemeral=True)
         elif click.user.id in respondents:
           await click.respond(type=4, content=f"You've already voted, you {insults.long_insult()}. ", ephemeral=True)
+          
+          
+        
+        if click.component.id == "1" and click.user.id not in respondents:
+          respondents.append(click.user.id)
+          voted1 += 1
+        elif click.component.id== "2" and click.user.id not in respondents:
+          respondents.append(click.user.id)
+          voted2 +=1
+        
         
       except asyncio.TimeoutError:
         await interaction.delete()

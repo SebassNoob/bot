@@ -26,7 +26,7 @@ def get_prefix(bot, message):
     return '$'
 
     
-bot = commands.AutoShardedBot(command_prefix=get_prefix, help_command = None, intents=intents,shard_count=5)
+bot = commands.AutoShardedBot(command_prefix=get_prefix, help_command = None, intents=intents,shard_count=3)
 
 DiscordComponents(bot)
 
