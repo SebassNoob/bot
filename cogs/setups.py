@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.6.1", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.6.2", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------
@@ -302,7 +302,7 @@ class Setups(commands.Cog):
       em.set_author(name = 'Annoybot User Settings')
       em.add_field(name = "Preferred embed colour (color)",value = "Current: **"+colorDisp +"**\nChanges the colour of embed sent through the bot to a specific colour. Options are ``red``, ``yellow``, ``blue``, ``green``, ``magenta``, ``purple``, ``brown``, ``black``" ,inline= False)
       em.add_field(name = "Family Friendly (familyFriendly)",value = "Current: **"+onoff[users[str(uid)]["familyFriendly"]] +"**\nCensors some swear words. Options are ``on`` or ``off``" ,inline= False)
-      em.add_field(name = "Can be sniped (sniped)",value = "Current: **"+onoff[users[str(uid)]["sniped"]] +"**\nDetermines if you can me sniped by others.\nOptions are ``on`` or ``off``" ,inline= False)
+      em.add_field(name = "Can be sniped (sniped)",value = "Current: **"+onoff[users[str(uid)]["sniped"]] +"**\nDetermines if you can be sniped by others.\nOptions are ``on`` or ``off``" ,inline= False)
       em.add_field(name = "Can be dm'ed (dmblocker)",value = "Current: **"+onoff[users[str(uid)]["dmblocker"]] +"**\nDetermines if you can be dm'ed by the bot.\nOptions are ``on`` or ``off``" ,inline= False)
       await ctx.send(embed =em)
     
@@ -311,7 +311,55 @@ class Setups(commands.Cog):
   @commands.command()
   async def ping(self,ctx):
     shard = self.bot.get_shard(ctx.guild.shard_id)
-    await ctx.send(f'Pong!\nPing: {round(shard.latency * 1000)}ms\nShard_id: {ctx.guild.shard_id}')
+    color = int(await colorSetup(ctx.message.author.id),16)
+    em = discord.Embed(color=color,description = f'Pong!\nPing: {round(shard.latency * 1000)}ms\nShard id: {ctx.guild.shard_id}')
+    
+    await ctx.send(embed = em)
 
+  @commands.command()
+  async def removedata(self,ctx):
+    await ctx.send("This command will ERASE ALL YOUR DATA. Type ``yes`` or ``no`` to continue.")
+    try:
+      msg = await self.bot.wait_for("message",check = lambda i: i.author.id==ctx.author.id,timeout = 30)
+      if msg.content.lower() == "yes":
+        uid = ctx.author.id
+        with open("./json/userSnipeCache.json","r") as f:
+          snipe = json.load(f)
+          
+        with open("./json/userSettings.json","r") as f:
+          settings = json.load(f)
+          
+        with open("./json/upvoteData.json","r") as f:
+          upvote = json.load(f)
+          
+        with open("./json/egg.json","r") as f:
+          egg = json.load(f)
+          
+        toDelete =[snipe,settings,upvote,egg]
+        for i in range(4):
+          try:
+            del toDelete[i][str(uid)]
+          except:
+            pass
+        with open("./json/userSnipeCache.json","w") as f:
+          json.dump(snipe,f)
+        with open("./json/userSettings.json","w") as f:
+          json.dump(settings,f)
+        with open("./json/upvoteData.json","w") as f:
+         json.dump(upvote,f)
+        with open("./json/egg.json","w") as f:
+         json.dump(egg,f)
+         
+        await ctx.send("Thanks for freeing up my drive space, good riddance.")
+      elif msg.content.lower() =="no":
+        await ctx.send("ok, I won't be erasing your data today.")
+        
+      else:
+        await ctx.send("ok, I won't be erasing your data today.")
+    except asyncio.TimeoutError:
+      await ctx.send("ok, I won't be erasing your data today.")
+    
+      
+      
 def setup(bot):
     bot.add_cog(Setups(bot))

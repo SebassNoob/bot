@@ -14,6 +14,8 @@ from other.upvoteExpiration import upvoteCheck
 from threading import Thread
 from other.asyncCmds import egg
 import time
+from other.snipeTimeout import snipeTimeout, encodeCache
+
 intents = discord.Intents.default()
 intents.members = True
 
@@ -39,6 +41,7 @@ async def on_ready():
   print("\033[0;36;48m-------------------------------------")
   print('\033[0;36;48m{0.user}'.format(bot)+ " connected to " + str(servers) + " servers")
   print("\033[0;36;48m-------------------------------------")
+  await bot.change_presence(activity=discord.Game(name="$help"))
   
   
 
@@ -231,16 +234,19 @@ async def on_message_delete(message):
 
   cur_time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
 
-
+  
   d = {"deletedMessage" : str(message.content), "date" : cur_time}
   users[str(message.author.id)].update(d)
   
   if message.channel.nsfw ==False:
-    e = {"nsfw": False}
+    e = {"nsfw": False,"encoded":False}
     users[str(message.author.id)].update(e)
   elif message.channel.nsfw ==True:
-    e = {"nsfw": True}
+    e = {"nsfw": True,"encoded":False}
     users[str(message.author.id)].update(e)
+    
+  
+  
   with open("./json/userSnipeCache.json","w") as f:
     json.dump(users,f)
   
@@ -250,10 +256,8 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.1 patch", value = "-New commands: shinobu, wouldyourather(wyr)\n-Fixed tictactoe and memorygame to not return errors while playing simultaneously\n-More tips\n-fixed ``$meme`` not responding (hopefully)\n-simplified ``$settings`` to be consistant with the rest of the setup commands\n-Hotfix 15/8 added a new easter egg and fixed some bugs",inline = False)
+  em.add_field(name = "1.6.2 patch", value = "-New command: removedata\n-updated ping command\n-Encrypted all sensitive info stored by annoybot, now nobody has access to your deleted messages.\n-Snipe cache resets at the start of every month\n-inserted privacy policy into the vote command\n-updated discord rich presense to include $help if online\n-typo fixes",inline = False)
   await ctx.send(embed = em)
-
-
 
 
 
@@ -267,8 +271,8 @@ for filename in os.listdir('./cogs'):
 
 
 Thread(target=upvoteCheck).start()
-
-
+Thread(target=snipeTimeout).start()
+Thread(target=encodeCache).start()
 
 keep_alive() 
 

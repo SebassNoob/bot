@@ -5,7 +5,7 @@ from discord.ext.commands import has_permissions
 from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
 import random
 import json
-
+import base64
 import aiohttp
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
@@ -177,7 +177,13 @@ class Misc(commands.Cog):
     settings  = await getDataU()
     async def command():
       color = int(await colorSetup(ctx.author.id),16)
-      embed = discord.Embed(color= color,description=users[str(user.id)]["deletedMessage"])        
+      if users[str(user.id)]["encoded"] == True:
+        message = str(base64.b64decode(users[str(user.id)]["deletedMessage"]))[2:-1]
+        
+      else:
+        
+        message = users[str(user.id)]["deletedMessage"]
+      embed = discord.Embed(color= color,description=message)        
       embed.set_footer(text="UTC "+users[str(user.id)]["date"])
         
       embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
@@ -199,7 +205,6 @@ class Misc(commands.Cog):
           await command()
         elif ctx.channel.nsfw == True and users[str(user.id)]["nsfw"] == False:   
           await command()
-          
         elif ctx.channel.nsfw == False and users[str(user.id)]["nsfw"] == True:   
           await ctx.send("The user you mentioned deleted their last message in an nsfw channel.😳")
         elif ctx.channel.nsfw == True and users[str(user.id)]["nsfw"] == True:   

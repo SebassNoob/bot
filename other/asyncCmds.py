@@ -84,18 +84,20 @@ async def addDataSnipe(uid):
   
   user = await getDataSnipe()
   if str(uid) in user:
-    return False
+    return
+    
   else:
     user[str(uid)] = {}
     user[str(uid)]["deletedMessage"] = ''
     user[str(uid)]["date"] = ''
     user[str(uid)]["nsfw"] = False 
+    user[str(uid)]["encoded"] = False
     
-
+  
 
   with open("./json/userSnipeCache.json","w") as f:
     json.dump(user,f)
-  return True
+  
 
 async def getDataSnipe():
   with open("./json/userSnipeCache.json","r") as f:
