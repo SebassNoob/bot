@@ -99,7 +99,7 @@ async def on_message(message):
     
   try:
     
-    randomNum = random.randint(0,1000)
+    
     guildId = message.guild.id
     guilds = await getData()
     NwordValue = guilds[str(guildId)]["Nword"]
@@ -237,11 +237,15 @@ async def on_message_delete(message):
   
   d = {"deletedMessage" : str(message.content), "date" : cur_time}
   users[str(message.author.id)].update(d)
-  
-  if message.channel.nsfw ==False:
+  def guildCheck(ctx):
+    if ctx.guild is not None:
+      return True
+    else:
+      return False
+  if message.channel.nsfw ==False and guildCheck() == True:
     e = {"nsfw": False,"encoded":False}
     users[str(message.author.id)].update(e)
-  elif message.channel.nsfw ==True:
+  elif message.channel.nsfw ==True and guildCheck() == True:
     e = {"nsfw": True,"encoded":False}
     users[str(message.author.id)].update(e)
     
