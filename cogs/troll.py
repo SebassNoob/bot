@@ -246,9 +246,9 @@ class Troll(commands.Cog):
       if msg.content == "yes":
         try:
           invite = await ctx.channel.create_invite(max_uses=1,unique=True)
-    
+          print(str(invite))
           msg_1=await channel.send(f"You've been 'banned' from {user.guild.name} \nlmfao get trolled by {ctx.author.name}")
-          msg_2=await channel.send(invite)
+          msg_2=await channel.send(str(invite))
           await user.kick()
           await ctx.send("The user has been kicked and sent an invite.")
         except:

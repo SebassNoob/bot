@@ -94,14 +94,15 @@ class Setups(commands.Cog):
     embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
     embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
     embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
-
-
+    embedVar5.add_field(name = "``truthordare``", value = "Play a game of truth or dare with your friends. Best played in a VC!", inline = False)
+    
     embedVar6 = discord.Embed(color = color)
     embedVar6.set_author(name="Annoybot commands (setup)")
     embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
     embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
     embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
+    embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
 
     paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
     
@@ -110,7 +111,7 @@ class Setups(commands.Cog):
         
     if tip != None:
       await ctx.send(tip)
-    await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
+    instruct = await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
     mainMessage = await ctx.send(
         
         embed = paginationList[current],
@@ -138,6 +139,7 @@ class Setups(commands.Cog):
             )
         except asyncio.TimeoutError:
           await mainMessage.delete()
+          await instruct.delete()
             
 
   #-------------------end

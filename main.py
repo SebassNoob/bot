@@ -17,7 +17,7 @@ import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 
 intents = discord.Intents.default()
-intents.members = True
+
 
 def get_prefix(bot, message): 
   try:
@@ -55,7 +55,19 @@ async def on_command_error(ctx, error):
         await ctx.reply(f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
         pass
     if isinstance(error, commands.CommandOnCooldown):
-        await ctx.reply('This command is on a **%.1fs** cooldown, not sorry.' % error.retry_after)
+      with open("./json/upvoteData.json","r") as f:
+        data = json.load(f)
+        
+      if str(ctx.author.id) in data.keys():
+        em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown, and since you upvoted in the past 12 hours, you get lower cooldowns!' % error.retry_after)
+        
+        await ctx.reply(embed= em)
+        
+      else:
+        em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown. Upvote to get lower cooldowns [here](https://top.gg/bot/844757192313536522)!' % error.retry_after)
+        
+        await ctx.reply(embed= em)
+        
         pass
     if isinstance(error, commands.MissingPermissions):
         await ctx.reply(f":redTick: You need the {error.missing_perms} permission to use that command.")
@@ -167,7 +179,7 @@ async def on_message(message):
             with open("./json/egg.json","w") as f:
               json.dump(hello,f)
             await message.channel.send("HOW WOULD YOU FEEL IF I PINGED YOU THEN")
-            for i in range(10):
+            for i in range(5):
               await message.channel.send(f"<@!{message.author.id}>")
               time.sleep(1)
             break
@@ -195,22 +207,8 @@ async def on_message(message):
       f.close
       
     
-    user = bot.get_user(int(data))
+  
     
-    
-    await user.send("Thanks for upvoting! You received lower cooldowns for all commands.")
-    
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -237,15 +235,11 @@ async def on_message_delete(message):
   
   d = {"deletedMessage" : str(message.content), "date" : cur_time}
   users[str(message.author.id)].update(d)
-  def guildCheck(ctx):
-    if ctx.guild is not None:
-      return True
-    else:
-      return False
-  if message.channel.nsfw ==False and guildCheck() == True:
+  
+  if message.channel.nsfw ==False:
     e = {"nsfw": False,"encoded":False}
     users[str(message.author.id)].update(e)
-  elif message.channel.nsfw ==True and guildCheck() == True:
+  elif message.channel.nsfw ==True:
     e = {"nsfw": True,"encoded":False}
     users[str(message.author.id)].update(e)
     

@@ -13,6 +13,7 @@ from threading import Thread
 import time
 import math
 from pyinsults import insults
+import csv
 
 class Games(commands.Cog):
   
@@ -1001,6 +1002,7 @@ class Games(commands.Cog):
 
 
   @commands.command(name = "wouldyourather",aliases = ["wyr"])
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def wouldyourather(self,ctx):
    
     option1= [
@@ -1130,6 +1132,82 @@ class Games(commands.Cog):
     em2.set_footer(text = "Best played in a voice call!")
     await ctx.send(embed = em2)
       
+
+
+  @commands.command(name="tord")
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def truthordare(self,ctx):
+    color = int(await colorSetup(ctx.message.author.id),16)
+
     
+    interaction = await ctx.send("Truth or dare?",
+    components = [
+      [
+        Button(
+          label = "Truth",
+          id = "0",
+          style = ButtonStyle.green
+          ),
+          Button(
+          label = "Dare",
+          id = "1",
+          style = ButtonStyle.red
+          )
+        ]])
+    
+    try:
+      click = await self.bot.wait_for("button_click",
+      check = lambda i: i.component.id in["0","1"] and i.channel.id == ctx.channel.id and i.message.id == interaction.id, 
+        timeout = 30.0)
+      if click.component.id == "0":
+        
+        arr = []
+        with open("./json/TorD.csv",newline="") as file:
+          reader = csv.DictReader(file)
+          for row in reader:
+            arr.append(row)
+            
+        
+          
+        while True:
+          ran = random.randint(0,len(arr)-1)
+          
+          if arr[ran]["type"] == "0":
+            
+            break
+        color = int(await colorSetup(ctx.message.author.id),16)
+        new = arr[ran]["content"]
+        em = discord.Embed(color = color, title = "Truth", description = new)
+        em.set_footer(text = "imagine being a pussy")
+        await interaction.delete()
+        await ctx.send(embed = em)
+      elif click.component.id == "1":
+        arr = []
+        with open("./json/TorD.csv",newline="") as file:
+          reader = csv.DictReader(file)
+          for row in reader:
+            arr.append(row)
+            
+        
+          
+        while True:
+          ran = random.randint(0,len(arr)-1)
+          
+          if arr[ran]["type"] == "1":
+            
+            break
+        color = int(await colorSetup(ctx.message.author.id),16)
+        new = arr[ran]["content"]
+        em = discord.Embed(color = color, title = "Dare", description = new)
+        await interaction.delete()
+        await ctx.send(embed = em)
+    except asyncio.TimeoutError:
+      await interaction.delete()
+    
+      
+    em = discord.Embed(color = color)
+    
+
+
 def setup(bot):
   bot.add_cog(Games(bot))
