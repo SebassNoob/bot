@@ -1134,7 +1134,7 @@ class Games(commands.Cog):
       
 
 
-  @commands.command(name="tord")
+  @commands.command(name="tord",aliases = ["truthordare"])
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def truthordare(self,ctx):
     color = int(await colorSetup(ctx.message.author.id),16)
@@ -1168,20 +1168,53 @@ class Games(commands.Cog):
             arr.append(row)
             
         
+        def choose():
+          while True:
+            ran = random.randint(0,len(arr)-1)
           
-        while True:
-          ran = random.randint(0,len(arr)-1)
-          
-          if arr[ran]["type"] == "0":
+            if arr[ran]["type"] == "0":
             
-            break
+              break
+          return arr[ran]["content"]
+            
         color = int(await colorSetup(ctx.message.author.id),16)
-        new = arr[ran]["content"]
-        em = discord.Embed(color = color, title = "Truth", description = new)
+       
+        em = discord.Embed(color = color, title = "Truth", description = choose())
         em.set_footer(text = "imagine being a pussy")
+        
         await interaction.delete()
-        await ctx.send(embed = em)
+        a= await ctx.send(embed = em)
+        b= await ctx.send("\u200b",
+        components = [[
+        Button(
+          label = "Reroll!",
+          id = "reroll",
+          style = ButtonStyle.green
+          )]]
+          )
+        
+         
+        reroll = await self.bot.wait_for(
+          "button_click",
+          check =lambda i: i.component.id =="reroll" and i.channel.id == ctx.channel.id, 
+          timeout = None
+        )
+          
+        
+        em2 = discord.Embed(color = color, title = "Truth", description = choose())
+        em2.set_footer(text = "imagine being a pussy")
+        await a.edit(embed = em2)
+        await b.delete()
+        
+        
+        
+        
+        
+        
+        
+        #fmlfmlfmlfmflmflfmlfmflmflmflfmlfmlfmflmfl
       elif click.component.id == "1":
+
         arr = []
         with open("./json/TorD.csv",newline="") as file:
           reader = csv.DictReader(file)
@@ -1189,23 +1222,46 @@ class Games(commands.Cog):
             arr.append(row)
             
         
+        def choose():
+          while True:
+            ran = random.randint(0,len(arr)-1)
           
-        while True:
-          ran = random.randint(0,len(arr)-1)
-          
-          if arr[ran]["type"] == "1":
+            if arr[ran]["type"] == "1":
             
-            break
+              break
+          return arr[ran]["content"]
+            
         color = int(await colorSetup(ctx.message.author.id),16)
-        new = arr[ran]["content"]
-        em = discord.Embed(color = color, title = "Dare", description = new)
+       
+        em = discord.Embed(color = color, title = "Dare", description = choose())
+
+        
         await interaction.delete()
-        await ctx.send(embed = em)
+        a= await ctx.send(embed = em)
+        b= await ctx.send("\u200b",
+        components = [[
+        Button(
+          label = "Reroll!",
+          id = "reroll",
+          style = ButtonStyle.green
+          )]]
+          )
+        
+         
+        reroll = await self.bot.wait_for(
+          "button_click",
+          check =lambda i: i.component.id =="reroll" and i.channel.id == ctx.channel.id, 
+          timeout = None
+        )
+          
+        
+        em2 = discord.Embed(color = color, title = "Dare", description = choose())
+        
+        await a.edit(embed = em2)
+        await b.delete()
     except asyncio.TimeoutError:
-      await interaction.delete()
-    
-      
-    em = discord.Embed(color = color)
+      pass
+   
     
 
 
