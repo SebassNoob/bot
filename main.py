@@ -50,40 +50,49 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
+  if isinstance(error, discord.ext.commands.errors.CommandNotFound):
     
-    if isinstance(error, discord.ext.commands.MissingRequiredArgument):
-        await ctx.reply(f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
-        pass
-    if isinstance(error, commands.CommandOnCooldown):
+    raise Exception
+    
+  if isinstance(error, discord.ext.commands.MissingRequiredArgument):
+        em = discord.Embed(color = 0x000000, description = f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
+        await ctx.reply(embed = em)
+        raise Exception
+  if isinstance(error, commands.CommandOnCooldown):
       with open("./json/upvoteData.json","r") as f:
         data = json.load(f)
         
       if str(ctx.author.id) in data.keys():
-        em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown, and since you upvoted in the past 12 hours, you get lower cooldowns!' % error.retry_after)
+        em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown.\nSince you upvoted in the past 12 hours or claimed your daily in the past 30 minutes, you get lower cooldowns!' % error.retry_after)
         
         await ctx.reply(embed= em)
+        
         
       else:
         em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown. Upvote to get lower cooldowns [here](https://top.gg/bot/844757192313536522)!' % error.retry_after)
         
         await ctx.reply(embed= em)
-        
-        pass
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.reply(f":redTick: You need the {error.missing_perms} permission to use that command.")
-        pass
-    if isinstance(error, discord.ext.commands.CommandNotFound):
-        
-        pass
-    if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
-        
-        await ctx.send(f"I don't have permissions for that! I need the {error.missing_perms} permission(s).")
-    if isinstance(error, discord.ext.commands.errors.MemberNotFound):
-        await ctx.send("The member you mentioned was not found, actually send a member name next time you moron.")
-        pass
+      raise Exception
+  if isinstance(error, commands.MissingPermissions):
+        em = discord.Embed(color = 0x000000, description = f":redTick: You need the {error.missing_perms} permission to use that command.")
+        await ctx.reply(embed = em)
+        raise Exception
+    
+  if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
+        em = discord.Embed(color = 0x000000, description = f"I don't have permissions for that! I need the {error.missing_perms} permission(s).")
+        await ctx.send(embed = em)
+        raise Exception
+  if isinstance(error, discord.ext.commands.errors.MemberNotFound):
+        em = discord.Embed(color = 0x000000, description = "The member you mentioned was not found, actually send a member name next time you moron.")
+        await ctx.send(embed = em)
+        raise Exception
       
     
-    else:
+  else:
+    
+    
+      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
+      await ctx.send(embed = em)
       raise error
 
 
@@ -254,7 +263,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.2 patch", value = "-New command: removedata\n-updated ping command\n-Encrypted all sensitive info stored by annoybot, now nobody has access to your deleted messages.\n-Snipe cache resets at the start of every month\n-inserted privacy policy into the vote command\n-updated discord rich presense to include $help if online\n-typo fixes",inline = False)
+  em.add_field(name = "1.6.3", value = "-New command: truthordare, daily\n-Bugfixes for games\n-UI improvements for errors\n-More tips\n-Another easter egg",inline = False)
   await ctx.send(embed = em)
 
 

@@ -261,7 +261,6 @@ class Troll(commands.Cog):
     except asyncio.TimeoutError:
       await ctx.send("ok, cancelled.")
     
-
     
 
 def setup(bot):

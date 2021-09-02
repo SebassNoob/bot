@@ -253,7 +253,19 @@ class Misc(commands.Cog):
       await ctx.send(tip)
     await ctx.send(embed = em)
     
+  @commands.command()
+  @commands.check(CustomCooldown(1, 86400, 1, 86400, commands.BucketType.user, elements=getUserUpvoted()))
+  async def daily(self,ctx):
+    color = int(await colorSetup(ctx.author.id),16)
+    em = discord.Embed(color = color,description = "You've claimed your daily and recieved 30 minutes of lower cooldowns. [Upvote](https://top.gg/bot/844757192313536522) me to get a 12h extension!")
+    await ctx.send(embed = em)
+    with open("./json/upvoteData.json","r") as f:
+      file= json.load(f)
+  
+    file[str(ctx.author.id)] = 30
     
-
+    with open("./json/upvoteData.json","w") as f:
+      json.dump(file,f)
+      f.close
 def setup(bot):
     bot.add_cog(Misc(bot))

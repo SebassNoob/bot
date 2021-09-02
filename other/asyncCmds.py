@@ -129,12 +129,12 @@ def postTips():
       "Don't want to be DMed? Use ``$settings dmblocker on``!"
       "Find creative curse words with ``$swear``!"
       "Find some good memes on reddit with ``$meme``!"
-      "feelin' annoyed yet?😉"
+      "If you see this, hope you're having a great day! 😉"
       ]
     randomchance_normal = random.randint(0,8)
     randomchance_upvote = random.randint(0,16)
     #ez upvotes lol
-    randomMsg = tips[random.randint(0,len(tips))]
+    randomMsg = tips[random.randint(0,len(tips)-1)]
     if randomchance_normal == 0:
       return f"**Tip:** {randomMsg}"
       
