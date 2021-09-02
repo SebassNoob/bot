@@ -52,12 +52,15 @@ async def on_ready():
 async def on_command_error(ctx, error):
   if isinstance(error, discord.ext.commands.errors.CommandNotFound):
     
-    raise Exception
+    raise Exception("CommandNotFound")
     
   if isinstance(error, discord.ext.commands.MissingRequiredArgument):
         em = discord.Embed(color = 0x000000, description = f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
         await ctx.reply(embed = em)
-        raise Exception
+        raise Exception("MissingRequiredArgument")
+        
+  if isinstance(error,commands.CommandInvokeError):
+    raise Exception("CommandInvokeError")
   if isinstance(error, commands.CommandOnCooldown):
       with open("./json/upvoteData.json","r") as f:
         data = json.load(f)
@@ -72,20 +75,20 @@ async def on_command_error(ctx, error):
         em = discord.Embed(color = 0x000000,description = 'This command is on a **%.1fs** cooldown. Upvote to get lower cooldowns [here](https://top.gg/bot/844757192313536522)!' % error.retry_after)
         
         await ctx.reply(embed= em)
-      raise Exception
+      raise Exception("CommandOnCooldown")
   if isinstance(error, commands.MissingPermissions):
         em = discord.Embed(color = 0x000000, description = f":redTick: You need the {error.missing_perms} permission to use that command.")
         await ctx.reply(embed = em)
-        raise Exception
+        raise Exception("MissingPermissions")
     
   if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
         em = discord.Embed(color = 0x000000, description = f"I don't have permissions for that! I need the {error.missing_perms} permission(s).")
         await ctx.send(embed = em)
-        raise Exception
+        raise Exception("BotMissingPermissions")
   if isinstance(error, discord.ext.commands.errors.MemberNotFound):
         em = discord.Embed(color = 0x000000, description = "The member you mentioned was not found, actually send a member name next time you moron.")
         await ctx.send(embed = em)
-        raise Exception
+        raise Exception("MemberNotFound")
       
     
   else:
@@ -208,8 +211,14 @@ async def on_message(message):
     
     with open("./json/upvoteData.json","r") as f:
       file= json.load(f)
-  
-    file[data] = 720
+    
+    try:
+      d = {data: file[data]+720}
+
+      file.update(d)
+    except KeyError:
+      file[data] = 720
+    
     
     with open("./json/upvoteData.json","w") as f:
       json.dump(file,f)

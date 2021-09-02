@@ -262,7 +262,13 @@ class Misc(commands.Cog):
     with open("./json/upvoteData.json","r") as f:
       file= json.load(f)
   
-    file[str(ctx.author.id)] = 30
+    try:
+      d = {str(ctx.author.id): file[str(ctx.author.id)]+30}
+
+      file.update(d)
+    except KeyError:
+      file[str(ctx.author.id)] = 30
+    
     
     with open("./json/upvoteData.json","w") as f:
       json.dump(file,f)
