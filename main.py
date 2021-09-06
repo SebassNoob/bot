@@ -9,14 +9,15 @@ from keep_alive import keep_alive
 import datetime
 import asyncio
 import json
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
-from other.asyncCmds import egg
+from other.asyncCmds import egg,postTips
 import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 
 intents = discord.Intents.default()
+
 
 
 def get_prefix(bot, message): 
@@ -37,6 +38,14 @@ DiscordComponents(bot)
 async def on_ready():
   
   servers = len(bot.guilds)
+  count = {}
+  for guild in bot.guilds:
+    if guild.shard_id not in count:
+      count[guild.shard_id] = 1
+    else:
+      count[guild.shard_id] += 1
+  print(count)
+
   
   print("\033[0;36;48m-------------------------------------")
   print('\033[0;36;48m{0.user}'.format(bot)+ " connected to " + str(servers) + " servers")
@@ -44,7 +53,17 @@ async def on_ready():
   await bot.change_presence(activity=discord.Game(name="$help"))
   
   
-
+@bot.event
+async def on_guild_join(guild):
+  print(guild.name)
+  await addData(guild.id)
+  for channel in guild.text_channels:
+    if channel.permissions_for(guild.me).send_messages:
+      
+      em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. My prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
+      em.set_footer(text = "The embodiment of discord anarchy")
+      await channel.send(embed = em)
+      break
 
 
 
@@ -101,9 +120,7 @@ async def on_command_error(ctx, error):
 
 
 
-@bot.event
-async def on_guild_join(guild):
-  await addData(guild.id)
+
 
 
 
@@ -145,7 +162,118 @@ async def on_message(message):
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
       if 'help' in message.content:
-        await message.channel.send(f"Hey, use $cmds to show my list of commands!\nhttps://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot")
+        color = int(await colorSetup(message.author.id),16)
+        embedVar = discord.Embed(color = color)
+        embedVar.set_author(name="Annoybot commands")
+        embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
+        
+        embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**6**s cooldown.",inline = False)
+        embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**6**s cooldown.",inline = False)
+        embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
+        embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
+        embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
+          
+        
+
+        
+        embedVar2 = discord.Embed(color = color)
+        embedVar2.set_author(name="Annoybot commands (math)\n All commands have a 10s cooldown.")
+            
+        embedVar2.add_field(name = "``calc (expression)``", value = "Evaluates your expression. Functions include:\n `+`,`-`,`*`,`/`,`sqrt`,`log`,`sin`,`cos`,`tan`.",inline = False)
+            
+        embedVar2.add_field(name = "``form circleArea (x)``", value = "Returns the area of a circle with radius x.",inline = True)
+        embedVar2.add_field(name = "``form circleCircum (x)``", value = "Returns the circumference of a circle with radius x.",inline = True)
+        embedVar2.add_field(name = "``form triangleArea (x,y)``", value = "Returns the area of a triangle with base x and height y.",inline = True)
+        embedVar2.add_field(name = "``form pythagoras (x,y)``", value = "Returns the length of hypotenuse of triangle base x and height y.",inline = True)
+        embedVar2.add_field(name = "``form sphereVol (x)``", value = "Returns volume of sphere with radius x.",inline = True)
+        embedVar2.add_field(name = "``form sphereArea (x)``", value = "Returns surface area of sphere with radius x.",inline = True)
+        
+        
+
+        embedVar3 = discord.Embed(color = color)
+        embedVar3.set_author(name="Annoybot commands (misc)")
+        embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
+        embedVar3.add_field(name = "``predict (question)``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
+        embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
+        embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
+        embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
+        embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
+        embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
+        embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
+        
+        
+        
+
+        embedVar4 = discord.Embed(color = color)
+        embedVar4.set_author(name="Annoybot commands (trolls)\n All troll commands have a 10s cooldown.")
+        
+        embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
+        embedVar4.add_field(name = "``nicktroll (user)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
+        embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
+
+        embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
+        
+
+        embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
+
+        embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
+
+
+        embedVar5 = discord.Embed(color = color)
+        embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
+        embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
+        embedVar5.add_field(name = "``tictactoe (user)``", value = "Play tictactoe with a friend!",inline = False)
+        embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
+        embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
+        embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
+        embedVar5.add_field(name = "``truthordare``", value = "Play a game of truth or dare with your friends. Best played in a VC or physically!", inline = False)
+        
+        embedVar6 = discord.Embed(color = color)
+        embedVar6.set_author(name="Annoybot commands (setup)")
+        embedVar6.add_field(name = "``daily``", value = "Gives you 30mins of reduced cooldowns once per day!",inline = False)
+        embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
+        embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
+        embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
+        embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
+        embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
+
+        paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
+        
+        current = 0
+        tip = postTips()
+            
+        if tip != None:
+          await message.channel.send(tip)
+        instruct = await message.channel.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
+        mainMessage = await message.channel.send(
+            
+            embed = paginationList[current],
+            components = [ 
+              Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5")])
+            ]
+        )
+        
+        while True:
+            
+            try:
+                interaction = await bot.wait_for(
+                    "select_option", 
+                    check = lambda i: i.component[0].value in["0","1","2","3","4","5"],
+                    timeout = 30.0 
+                )
+                
+                
+
+                current = int(interaction.component[0].value)
+                await interaction.respond(
+                    type = InteractionType.UpdateMessage,
+                    embed = paginationList[current],
+                  
+                )
+            except asyncio.TimeoutError:
+              await mainMessage.delete()
+              await instruct.delete()
+                
       else:
         user = egg(message.author.id,0)
         user.write()
