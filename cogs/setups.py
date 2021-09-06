@@ -112,7 +112,7 @@ class Setups(commands.Cog):
         
     if tip != None:
       await ctx.send(tip)
-    instruct = await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
+    instruct = await ctx.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument."))
     mainMessage = await ctx.send(
         
         embed = paginationList[current],
