@@ -402,7 +402,8 @@ async def on_message_delete(message):
   
   with open("./json/userSnipeCache.json","w") as f:
     json.dump(users,f)
-  
+
+
     
 
 @bot.command()
