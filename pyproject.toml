@@ -16,6 +16,7 @@ pyinsults = "^0.0.0"
 waifu-py = "^1.0.2"
 waifu = "^0.0.2"
 cryptography = "^3.4.7"
+PyNaCl = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.6.3", value = "Done by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.6.4", value = "Developed by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
   #------------------------------------------
@@ -73,7 +73,7 @@ class Setups(commands.Cog):
     
 
     embedVar4 = discord.Embed(color = color)
-    embedVar4.set_author(name="Annoybot commands (trolls)\n All troll commands have a 10s cooldown.")
+    embedVar4.set_author(name="Annoybot commands (trolls)\nAll troll commands have a 10s cooldown.")
     
     embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
     embedVar4.add_field(name = "``nicktroll (user)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
@@ -105,7 +105,14 @@ class Setups(commands.Cog):
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
     embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
 
-    paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
+    embedVar7 = discord.Embed(color = color)
+    embedVar7.set_author(name="Annoybot commands (voice)\nAll voice commands have a 10s cooldown.")
+    embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
+    embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
+
+
+
+    paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
     
     current = 0
     tip = postTips()
@@ -117,7 +124,7 @@ class Setups(commands.Cog):
         
         embed = paginationList[current],
         components = [ 
-          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5")])
+          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5"), SelectOption(label="Voice", value="6")])
         ]
     )
     
@@ -126,8 +133,8 @@ class Setups(commands.Cog):
         try:
             interaction = await self.bot.wait_for(
                 "select_option", 
-                check = lambda i: i.component[0].value in["0","1","2","3","4","5"],
-                timeout = 30.0 
+                check = lambda i: i.component[0].value in["0","1","2","3","4","5","6"],
+                timeout = 60.0 
             )
             
             
@@ -141,6 +148,7 @@ class Setups(commands.Cog):
         except asyncio.TimeoutError:
           await mainMessage.delete()
           await instruct.delete()
+          break
             
 
   #-------------------end

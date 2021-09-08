@@ -61,6 +61,7 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
+  
   if isinstance(error, discord.ext.commands.errors.CommandNotFound):
     
     raise Exception("CommandNotFound")
@@ -71,7 +72,13 @@ async def on_command_error(ctx, error):
         raise Exception("MissingRequiredArgument")
         
   if isinstance(error,commands.CommandInvokeError):
-    raise Exception("CommandInvokeError")
+    
+    if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message":
+      raise Exception("NotFound")
+    else:
+      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
+      await ctx.send(embed = em)
+      raise error
   if isinstance(error, commands.CommandOnCooldown):
       with open("./json/upvoteData.json","r") as f:
         data = json.load(f)
@@ -103,8 +110,8 @@ async def on_command_error(ctx, error):
       
     
   else:
-    
-    
+      
+      
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
       await ctx.send(embed = em)
       raise error
@@ -402,7 +409,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.6.3", value = "-New command: truthordare, daily\n-Bugfixes for games\n-UI improvements for errors\n-More tips\n-Another easter egg\n-5/9 hotfix: backend fixes",inline = False)
+  em.add_field(name = "1.6.4", value = "-New commands: earrape, disconnect\n-New category: Voice",inline = False)
   await ctx.send(embed = em)
 
 
