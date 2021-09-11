@@ -32,7 +32,9 @@ class Voice(commands.Cog):
       
 
     except AttributeError:
-      pass
+      await ctx.send(embed = discord.Embed(color = 0x000000, description = "You are not in a VC, stupid."))
+    
+      
 
   @commands.command(name = "disconnect",aliases = ["dc"])
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))

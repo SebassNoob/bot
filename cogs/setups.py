@@ -25,7 +25,7 @@ class Setups(commands.Cog):
     embedVar3.add_field(name = "Annoybot 1.6.4", value = "Developed by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3)
 
-  #------------------------------------------
+  
   @commands.command(name = "cmds", aliases = ["commands","cmd","help"])
   async def pages(self,ctx):
     
@@ -323,7 +323,7 @@ class Setups(commands.Cog):
   async def ping(self,ctx):
     shard = self.bot.get_shard(ctx.guild.shard_id)
     color = int(await colorSetup(ctx.message.author.id),16)
-    em = discord.Embed(color=color,description = f'Pong!\nPing: {round(shard.latency * 1000)}ms\nShard id: {ctx.guild.shard_id}')
+    em = discord.Embed(color=color,description = f'Pong!🏓\nPing: {round(shard.latency * 1000)}ms\nShard id: {ctx.guild.shard_id}')
     
     await ctx.send(embed = em)
 

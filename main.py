@@ -75,6 +75,8 @@ async def on_command_error(ctx, error):
     
     if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message":
       raise Exception("NotFound")
+    if str(error) == "Command raised an exception: ClientException: Already connected to a voice channel.":
+      await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
     else:
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
       await ctx.send(embed = em)
@@ -171,7 +173,7 @@ async def on_message(message):
       
       if 'help' in message.content:
 
-        color = int(await colorSetup(message.author.id),16)
+        color = int(await colorSetup(ctx.message.author.id),16)
         embedVar = discord.Embed(color = color)
         embedVar.set_author(name="Annoybot commands")
         embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
@@ -181,9 +183,9 @@ async def on_message(message):
         embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
         embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
         embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
-          
+           
         
-
+    
         
         embedVar2 = discord.Embed(color = color)
         embedVar2.set_author(name="Annoybot commands (math)\n All commands have a 10s cooldown.")
@@ -198,7 +200,7 @@ async def on_message(message):
         embedVar2.add_field(name = "``form sphereArea (x)``", value = "Returns surface area of sphere with radius x.",inline = True)
         
         
-
+    
         embedVar3 = discord.Embed(color = color)
         embedVar3.set_author(name="Annoybot commands (misc)")
         embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
@@ -212,22 +214,22 @@ async def on_message(message):
         
         
         
-
+    
         embedVar4 = discord.Embed(color = color)
-        embedVar4.set_author(name="Annoybot commands (trolls)\n All troll commands have a 10s cooldown.")
+        embedVar4.set_author(name="Annoybot commands (trolls)\nAll troll commands have a 10s cooldown.")
         
         embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
         embedVar4.add_field(name = "``nicktroll (user)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
         embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
-
+    
         embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
         
-
+    
         embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
-
+    
         embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
-
-
+    
+    
         embedVar5 = discord.Embed(color = color)
         embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
         embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
@@ -245,34 +247,41 @@ async def on_message(message):
         embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
         embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
         embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
-
-        paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6]
+    
+        embedVar7 = discord.Embed(color = color)
+        embedVar7.set_author(name="Annoybot commands (voice)\nAll voice commands have a 10s cooldown.")
+        embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
+        embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
+    
+    
+    
+        paginationList = [embedVar,embedVar2,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
         
         current = 0
         tip = postTips()
             
         if tip != None:
-          await message.channel.send(tip)
-        instruct = await message.channel.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.\n [Invite](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)"))
-        mainMessage = await message.channel.send(
+          await ctx.send(tip)
+        instruct = await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
+        mainMessage = await ctx.send(
             
             embed = paginationList[current],
             components = [ 
-              Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5")])
+              Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Math", value="1"), SelectOption(label="Misc", value="2"), SelectOption(label="Trolls", value="3"), SelectOption(label="Games", value="4"), SelectOption(label="Setup", value="5"), SelectOption(label="Voice", value="6")])
             ]
         )
         
         while True:
             
             try:
-                interaction = await bot.wait_for(
+                interaction = await self.bot.wait_for(
                     "select_option", 
-                    check = lambda i: i.component[0].value in["0","1","2","3","4","5"],
-                    timeout = 30.0 
+                    check = lambda i: i.component[0].value in["0","1","2","3","4","5","6"],
+                    timeout = 60.0 
                 )
                 
                 
-
+    
                 current = int(interaction.component[0].value)
                 await interaction.respond(
                     type = InteractionType.UpdateMessage,
@@ -282,6 +291,7 @@ async def on_message(message):
             except asyncio.TimeoutError:
               await mainMessage.delete()
               await instruct.delete()
+              break
                 
       else:
         user = egg(message.author.id,0)
