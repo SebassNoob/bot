@@ -22,8 +22,26 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.6.4", value = "Developed by " +str(username)+"\n[Invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot)\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[top.gg link](https://top.gg/bot/844757192313536522)\n[support server](https://discord.gg/UCGAuRXmBD)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
-    await ctx.send(embed = embedVar3)
+    embedVar3.add_field(name = "Annoybot 1.6.4", value = "Developed by " +str(username)+"\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
+    await ctx.send(embed = embedVar3, components=[ 
+              [
+                  Button(
+                      label = "top.gg",
+                      url = "https://top.gg/bot/844757192313536522",
+                      style = 5
+                      
+                  ),
+                  Button(
+                      label = "invite",
+                      url = "https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot",
+                      style = 5
+                  ),
+                  Button(
+                      label = "support server",
+                      url = "https://discord.gg/UCGAuRXmBD",
+                      style = 5
+                  )
+                  ]])
 
   
   @commands.command(name = "cmds", aliases = ["commands","cmd","help"])
@@ -119,7 +137,7 @@ class Setups(commands.Cog):
         
     if tip != None:
       await ctx.send(tip)
-    instruct = await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
+    instruct = await ctx.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument."))
     mainMessage = await ctx.send(
         
         embed = paginationList[current],

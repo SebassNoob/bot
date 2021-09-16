@@ -111,13 +111,7 @@ async def on_command_error(ctx, error):
         raise Exception("MemberNotFound")
       
     
-  else:
-      
-      
-      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
-      await ctx.send(embed = em)
-      raise error
-
+  
 
 
 @bot.event
@@ -173,7 +167,7 @@ async def on_message(message):
       
       if 'help' in message.content:
 
-        color = int(await colorSetup(ctx.message.author.id),16)
+        color = int(await colorSetup(message.author.id),16)
         embedVar = discord.Embed(color = color)
         embedVar.set_author(name="Annoybot commands")
         embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
@@ -261,9 +255,9 @@ async def on_message(message):
         tip = postTips()
             
         if tip != None:
-          await ctx.send(tip)
-        instruct = await ctx.send("The values in brackets are additional arguments you're supposed to give. * denotes an optional argument.")
-        mainMessage = await ctx.send(
+          await message.channel.send(tip)
+        instruct = await message.channel.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument."))
+        mainMessage = await message.channel.send(
             
             embed = paginationList[current],
             components = [ 
@@ -274,7 +268,7 @@ async def on_message(message):
         while True:
             
             try:
-                interaction = await self.bot.wait_for(
+                interaction = await bot.wait_for(
                     "select_option", 
                     check = lambda i: i.component[0].value in["0","1","2","3","4","5","6"],
                     timeout = 60.0 
@@ -293,6 +287,19 @@ async def on_message(message):
               await instruct.delete()
               break
                 
+                
+                
+      if 'invite' in message.content:
+        await message.channel.send("here you go, you lazy ass.", components=[ 
+              [
+                  Button(
+                      label = "invite",
+                      url = "https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot",
+                      style = 5
+                      
+                  )]])
+              
+
       else:
         user = egg(message.author.id,0)
         user.write()
