@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) [2021] [discord.id = 695076103768768605]
+Copyright (c) [2021] [sebass#9507]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

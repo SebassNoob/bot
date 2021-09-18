@@ -125,14 +125,14 @@ def postTips():
       "Check the bot's ping with ``$ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
       "Try pinging the bot multiple times! They won't like it though...",
-      "Getting destroyed in chat? Use ``$roast`` to crush their argument!"
-      "Don't want to be DMed? Use ``$settings dmblocker on``!"
-      "Find creative curse words with ``$swear``!"
-      "Find some good memes on reddit with ``$meme``!"
+      "Getting destroyed in chat? Use ``$roast`` to crush their argument!",
+      "Don't want to be DMed? Use ``$settings dmblocker on``!",
+      "Find creative curse words with ``$swear``!",
+      "Find some good memes on reddit with ``$meme``!",
       "If you see this, hope you're having a great day! 😉"
       ]
     randomchance_normal = random.randint(0,8)
-    randomchance_upvote = random.randint(0,16)
+    randomchance_upvote = random.randint(0,20)
     #ez upvotes lol
     randomMsg = tips[random.randint(0,len(tips)-1)]
     if randomchance_normal == 0:

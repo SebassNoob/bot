@@ -9,7 +9,7 @@ from discord.ext import commands
       if str(num).isdigit() == False:
           
         await ctx.send("This is how to format, stupid:\n```$spam[num of times to spam][spam content]```")
-      elif int(num) > 25:
+      elif int(num) > 15:
         await ctx.send("Yeah not sorry my arse can't handle that much.\nAsk for 25 or less.")
 
       if str(num).isdigit() == True and int(num) <= 25:

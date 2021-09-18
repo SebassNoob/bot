@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 import os 
-
+import csv
 from other.asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU,postTips
-
+import asyncio
 import random
 import json
 
@@ -45,10 +45,10 @@ class MainFeatures(commands.Cog):
         if userToRoast != '' and userToRoast!= None:
           await ctx.send(' {}'.format(userToRoast.mention))
         color = int(await colorSetup(ctx.message.author.id),16)
-        embedVar = discord.Embed( color=color)
+        embedVar = discord.Embed( color=color,description = finalRoast)
         embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
           
-        embedVar.add_field(name="\u200b", value=finalRoast, inline=False)
+        
         embedVar.set_footer(text="u suck")
         tip = postTips()
         
@@ -74,8 +74,8 @@ class MainFeatures(commands.Cog):
         if status ==True:
           packagedInsults =  await changeff(packagedInsults)
         color = int(await colorSetup(ctx.message.author.id),16)
-        embedVar2 = discord.Embed(color =color)
-        embedVar2.add_field(name = packagedInsults, value = "\u200b",inline = False)
+        embedVar2 = discord.Embed(color =color,description = packagedInsults)
+        
         embedVar2.set_footer(text="requested by " +'{}'.format(ctx.message.author))
         tip = postTips()
         
@@ -135,8 +135,7 @@ class MainFeatures(commands.Cog):
       finalUninspire =  await changeff(finalUninspire)
 
 
-    embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = finalUninspire, value = "\u200b",inline = False)
+    embedVar3 = discord.Embed(color = color, description = finalUninspire)
     embedVar3.set_footer(text="requested by " +'{}'.format(ctx.message.author))
     tip = postTips()
         
@@ -164,9 +163,9 @@ class MainFeatures(commands.Cog):
 
       channel = await user.create_dm()
       color = int(await colorSetup(ctx.message.author.id),16)
-      em = discord.Embed(color = color)
+      em = discord.Embed(color = color,description = threat)
       em.set_author(name = author_name+" from "+ guild,icon_url = ctx.author.avatar_url)
-      em.add_field(name="\u200b",value=threat,inline=False)
+      
       await channel.send(embed = em)
       tip = postTips()
         
@@ -202,6 +201,37 @@ class MainFeatures(commands.Cog):
     em.set_author(name = f"{ctx.author.name}'s dad joke", icon_url = ctx.author.avatar_url)
     em.add_field(name = "\u200b",value = dadJoke,inline = False)
     await ctx.send(embed = em)
+  
+  
+  @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def dumbdeath(self,ctx,user:discord.Member):
+    color = int(await colorSetup(ctx.message.author.id),16)
+    arr= []
+    with open("./json/dumbdeath.csv",newline="") as file:
+          reader = csv.DictReader(file)
+          for row in reader:
+            arr.append(row)
+            
+    
+    def choose():
+      if ctx.channel.nsfw == False:
+        while True:
+          ran = arr[random.randint(0, len(arr)-1)]
+          if ran["nsfw"] == "1":
+            continue
+          elif ran["nsfw"] == "0":
+            return ran["content"]
+      elif ctx.channel.nsfw== True:
+      
+        return arr[random.randint(0, len(arr)-1)]["content"]
+    
+    em = discord.Embed(color = color, description =choose().replace("#", user.name).replace(";",","))
+    await ctx.send("{}".format(user.mention))
+    await ctx.send(embed =em)
+    
+  
+
 
 def setup(bot):
     bot.add_cog(MainFeatures(bot))

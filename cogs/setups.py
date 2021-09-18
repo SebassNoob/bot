@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.6.4", value = "Developed by " +str(username)+"\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\n[privacy policy](https://pastebin.com/fS86u0Hw)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.7.0", value = "Developed by " +str(username)+"with discord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3, components=[ 
               [
                   Button(
@@ -58,7 +58,8 @@ class Setups(commands.Cog):
     embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
     embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
     embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
-       
+    
+    embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**10**s cooldown.",inline = False)
     
 
     
@@ -122,10 +123,13 @@ class Setups(commands.Cog):
     embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
     embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
     embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
+    embedVar6.add_field(name = "``legal``", value = "Shows legal stuff. eh.", inline = False)
 
     embedVar7 = discord.Embed(color = color)
     embedVar7.set_author(name="Annoybot commands (voice)\nAll voice commands have a 10s cooldown.")
     embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
+    embedVar7.add_field(name = "``fart``", value = "Joins your VC and plays a fart sfx",inline = False)
+    embedVar7.add_field(name = "``micblow``", value = "Joins your VC and simulates blowing into the mic",inline = False)
     embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
 
 
@@ -388,7 +392,39 @@ class Setups(commands.Cog):
     except asyncio.TimeoutError:
       await ctx.send("ok, I won't be erasing your data today.")
     
-      
+  @commands.command()
+  async def legal(self,ctx):
+    await ctx.send("Here is our legal documents and stuff. Who cares though??",
+    components = [ 
+              [
+                  Button(
+                      label = "licence",
+                      url = "https://pastebin.com/7rGBHDCU",
+                      style = 5
+                      
+                  ),
+                  Button(
+                      label = "privacy policy",
+                      url = "https://pastebin.com/fS86u0Hw",
+                      style = 5
+                      
+                  ),
+                  Button(
+                      label = "terms of service",
+                      url = "https://pastebin.com/43VFzdJx",
+                      style = 5
+                      
+                      
+                  ),
+                  Button(
+                      label = "README.md",
+                      url = "https://pastebin.com/e7jLvVHr",
+                      style = 5
+                      
+                      
+                  )
+              ]]
+    )
       
 def setup(bot):
     bot.add_cog(Setups(bot))
