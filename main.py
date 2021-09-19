@@ -146,6 +146,21 @@ async def on_message(message):
     await bot.process_commands(message)
     
   try:
+    with open("./json/wc.json","r") as f:
+      wc = json.load(f)
+    
+    words = message.content.split(" ")
+    for word in words:
+      if word not in wc:
+        wc[word] = 1
+      else:
+        wc[word] +=1
+        
+    
+    
+    with open("./json/wc.json","w")as f:
+      json.dump(wc,f)
+    
     
     
     guildId = message.guild.id
@@ -324,6 +339,31 @@ async def patchnotes(ctx):
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     bot.load_extension(f'cogs.{filename[:-3]}')
+    
+
+import topgg
+
+
+
+
+bot.topggpy = topgg.DBLClient(bot, os.getenv('topgg token'), autopost=True, post_shard_count=True)
+
+
+@bot.event
+async def on_autopost_success():
+    print(
+        f"Posted server count ({bot.topggpy.guild_count}), shard count ({bot.shard_count})"
+    )
+
+@bot.command()
+async def wcLookup(ctx):
+  with open("./json/wc.json","r") as f:
+    wc = json.load(f)
+  
+  for item in wc.items():
+    if item[1] > 3:
+      print(item)
+        
 
 
 
