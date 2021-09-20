@@ -339,6 +339,7 @@ async def patchnotes(ctx):
 for filename in os.listdir('./cogs'):
   if filename.endswith('.py'):
     bot.load_extension(f'cogs.{filename[:-3]}')
+    print(f"\033[0;32;49m{filename} loaded")
     
 
 import topgg
@@ -356,15 +357,18 @@ async def on_autopost_success():
     )
 
 @bot.command()
-async def wcLookup(ctx):
+async def wcLookup(ctx,filterless:int,filtermore:int):
   with open("./json/wc.json","r") as f:
     wc = json.load(f)
-  
+  ordered = [("test", 1)]
   for item in wc.items():
-    if item[1] > 3:
-      print(item)
-        
-
+    if item[1] > filterless and item[1]<filtermore:
+      for ordered_item in ordered:
+        if item[1]>= ordered_item[1]:
+          
+          ordered.insert(ordered.index(ordered_item),item)
+          break
+  print(ordered)
 
 
 Thread(target=upvoteCheck).start()

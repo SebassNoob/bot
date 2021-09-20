@@ -22,7 +22,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.7.0", value = "Developed by " +str(username)+" with discord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.7.0", value = "Developed by " +str(username)+"\ndiscord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3, components=[ 
               [
                   Button(
