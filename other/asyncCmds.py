@@ -30,9 +30,7 @@ async def addData(guildId):
   else:
     
     guilds[str(guildId)] = {}
-    guilds[str(guildId)]["Nword"] = 0
-    guilds[str(guildId)]["Fword"] = 0
-    guilds[str(guildId)]["Cword"] = 0
+    guilds[str(guildId)]["autoresponse"] = 1
     guilds[str(guildId)]["Prefix"] = '$'
     
     

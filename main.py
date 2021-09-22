@@ -15,6 +15,7 @@ from threading import Thread
 from other.asyncCmds import egg,postTips
 import time
 from other.snipeTimeout import snipeTimeout, encodeCache
+import sys
 
 intents = discord.Intents.default()
 
@@ -371,11 +372,20 @@ async def wcLookup(ctx,filterless:int,filtermore:int):
   print(ordered)
 
 
+@bot.command()
+async def sysexit(ctx):
+  
+  if int(ctx.author.id) == int(os.getenv("uid")):
+    await ctx.send("Bot has been taken offline.")
+    sys.exit()
+
+
+
 Thread(target=upvoteCheck).start()
 Thread(target=snipeTimeout).start()
 Thread(target=encodeCache).start()
 
 keep_alive() 
 
-
 bot.run(os.getenv('TOKEN'))
+
