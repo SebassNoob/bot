@@ -9,6 +9,7 @@ import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
+import datetime
 
 class Setups(commands.Cog):
   
@@ -426,5 +427,60 @@ class Setups(commands.Cog):
               ]]
     )
       
+      
+  @commands.command()
+  async def feedback(self,ctx):
+    class feedback():
+      def __init__(self,author,content,type):
+        self.author = author
+        self.content = content
+        self.type = type
+      
+      
+        current_time = datetime.datetime.now() 
+  
+        if len(str(current_time.minute)) ==1:
+          minute = "0"+str(current_time.minute)
+      
+        else:
+          minute = str(current_time.minute)
+      
+      
+        self.time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
+        
+    options = await ctx.send("What type of feedback would you like to provide?",
+    components = [ 
+              [
+                  Button(
+                      label = "suggestion",
+                      id = "suggestion",
+                      style = 3
+                      ),
+                  Button(
+                      label = "complaint",
+                      id = "complaint",
+                      style = 3
+                      ),
+                  Button(
+                      label = "report",
+                      id = "report",
+                      style = 3
+                      )
+                      
+                    ]])
+    interaction = await self.bot.wait_for("button_click",check = lambda i: i.author.id == ctx.author.id and i.channel.id == ctx.channel.id and i.component.id in ["suggestion","complaint","report"],timeout = None)
+    await options.delete()
+    await ctx.send("please type out your feedback, or ``cancel`` to stop.")
+    content = await self.bot.wait_for("message",check = lambda msg: msg.author.id == ctx.author.id,timeout = None)
+    if content.content == "cancel":
+      await ctx.send("cancelled")
+      raise Exception("cancelled during feedback")
+    else:
+      feedback = feedback(ctx.author.name,content.content,interaction.component.id)
+      await ctx.send("Thank you for your feedback!")
+      channel = self.bot.get_channel(858206261904015360)
+      await channel.send(embed = discord.Embed(color = 0x0000AA, title = f"{feedback.type} from {feedback.author}",description = feedback.content).set_footer(text = feedback.time))
+      
+    
 def setup(bot):
     bot.add_cog(Setups(bot))

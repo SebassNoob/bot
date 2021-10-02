@@ -16,7 +16,7 @@ from other.asyncCmds import egg,postTips
 import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 import sys
-
+import csv
 intents = discord.Intents.default()
 
 
@@ -147,40 +147,24 @@ async def on_message(message):
     await bot.process_commands(message)
     
   try:
-    with open("./json/wc.json","r") as f:
-      wc = json.load(f)
-    
-    words = message.content.split(" ")
-    for word in words:
-      if word not in wc:
-        wc[word] = 1
-      else:
-        wc[word] +=1
-        
-    
-    
-    with open("./json/wc.json","w")as f:
-      json.dump(wc,f)
     
     
     
     guildId = message.guild.id
     guilds = await getData()
-    NwordValue = guilds[str(guildId)]["Nword"]
-    FwordValue = guilds[str(guildId)]["Fword"]
-    CwordValue = guilds[str(guildId)]["Cword"]
-    if NwordValue == 1:
-      if "nigga" in message.content or "nigger" in message.content or "Nigga" in message.content or "Nigger" in message.content:
-        await message.channel.send("You have been captured saying the Nword in 4K! STFU U RASIST SCUM.")
-
-    if FwordValue == 1:
-      if "fuck" in message.content or "Fuck" in message.content:
-        await message.channel.send("Frick off, you've been seen dropping an f bomb. ")
+    if guilds[str(guildId)]["autoresponse"] == 1:
+      
+      arr = []
+      with open("./json/autoresponse.csv",newline="") as file:
+        reader = csv.DictReader(file)
         
-    if CwordValue == 1:
-      if "cunt" in message.content or "Cunt" in message.content:
-        await message.channel.send("You've been caught saying the worst word in the english language. Reevaluate your life choices.")
-
+        for row in reader:
+          arr.append(row)
+        
+        for keyword in arr:
+          
+          if keyword["word"] in message.content.split(" "): 
+            await message.channel.send(keyword["response"].replace(";",","))
   
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
@@ -329,7 +313,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.0", value = "-New commands: fart,micblow,legal,dumbdeath\n-Updated earrape command to not last forever\n-Bugfixes for error handling\n-Added a layer of encryption to the snipe command, now no one can see it lol\n\nFor more detailed patch notes, join the support server thru '@annoybot help'.",inline = False)
+  em.add_field(name = "1.7.1", value = "-New commands: suggest\n-Rework: autoresponse\n-typo fix",inline = False)
   await ctx.send(embed = em)
 
 
@@ -358,19 +342,9 @@ async def on_autopost_success():
     )
 
 @bot.command()
-async def wcLookup(ctx,filterless:int,filtermore:int):
-  with open("./json/wc.json","r") as f:
-    wc = json.load(f)
-  ordered = [("test", 1)]
-  for item in wc.items():
-    if item[1] > filterless and item[1]<filtermore:
-      for ordered_item in ordered:
-        if item[1]>= ordered_item[1]:
-          
-          ordered.insert(ordered.index(ordered_item),item)
-          break
-  print(ordered)
-
+async def servers(ctx):
+  for server in bot.guilds:
+    print(server.name, server.id)
 
 @bot.command()
 async def sysexit(ctx):

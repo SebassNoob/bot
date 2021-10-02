@@ -149,8 +149,8 @@ class Troll(commands.Cog):
       elif users[str(uid)]["dmblocker"] ==1:
         await ctx.send("Sorry, the user you mentioned doesn't want to be dm'ed by me ;(")
 
-
-    except:
+      
+    except KeyError:
       await addDataU(uid)
       users[str(uid)]["dmblocker"] = 0
       with open("./json/userSettings.json","w") as f:

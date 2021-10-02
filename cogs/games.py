@@ -1229,7 +1229,7 @@ class Games(commands.Cog):
             if arr[ran]["type"] == "1":
             
               break
-          return arr[ran]["content"]
+          return arr[ran]["content"].replace(";",",")
             
         color = int(await colorSetup(ctx.message.author.id),16)
        

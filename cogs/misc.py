@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-
+import os
 from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
 import random
 import json
@@ -11,6 +11,10 @@ from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import requests
 from waifu import WaifuClient
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+import asyncio
+import csv
+
 class Misc(commands.Cog):
   
   def __init__(self, bot):
@@ -61,74 +65,109 @@ class Misc(commands.Cog):
 
   @commands.command(name = "autoresponse")
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  @has_permissions(manage_messages=True)  
-  async def autoresponse(self,ctx,arg=None):
+ 
+  async def autoresponse(self,ctx):
     guildId = ctx.message.guild.id
     
     await addData(guildId)
     
     guilds = await getData()
-    status =["Disabled :x: ","Enabled :white_check_mark: "]
+          
+    arr = []
+    desc = ""
+    with open("./json/autoresponse.csv",newline="") as file:
+      reader = csv.DictReader(file)
+      for row in reader:
+          arr.append(row)
+      for i in arr:
+        desc = desc+ ", " + i["word"]
+      desc = desc[2:]
     
     
-    if arg == "Nword" or arg == "nword":
-    
-      await addData(guildId)
-      guilds = await getData()
-      if guilds[str(guildId)]["Nword"] == 0:
-        d1 = {"Nword": 1}
-      elif guilds[str(guildId)]["Nword"] ==1:
-        d1 = {"Nword": 0}
+    color = int(await colorSetup(ctx.message.author.id),16)
+    em = discord.Embed(color = color,description = f"``{desc}``")
+    em.set_author(name = "Autoresponse keywords")
+    button_color = ""
+    label = ""
+    disabled_button = None
+    if guilds[str(guildId)]["autoresponse"] == 1:
+      button_color= ButtonStyle.green
+      label = "on"
       
-      guilds[str(guildId)].update(d1)
-      with open("./json/serverData.json","w") as f:
-        json.dump(guilds,f)
-      await ctx.send("N-word is now **"+status[guilds[str(guildId)]["Nword"]]+"**")
-      #change state
-
-    elif arg == "Fword" or arg == "fword":
-    
-      await addData(guildId)
-      guilds = await getData()
-      if guilds[str(guildId)]["Fword"] == 0:
-        d1 = {"Fword": 1}
-      elif guilds[str(guildId)]["Fword"] ==1:
-        d1 = {"Fword": 0}
+    elif guilds[str(guildId)]["autoresponse"] == 0:
+      button_color = ButtonStyle.red
+      label = "off"
       
-      guilds[str(guildId)].update(d1)
-      with open("./json/serverData.json","w") as f:
-        json.dump(guilds,f)
-      await ctx.send("F-word is now **"+status[guilds[str(guildId)]["Fword"]]+"**")
-      #change state
-
-    elif arg == "Cword" or arg == "cword":
+    if ctx.author.guild_permissions.manage_messages == True or int(ctx.author.id) == int(os.environ("uid")):
+      disabled_button = False
+    elif ctx.author.guild_permissions.manage_messages == False:
+      disabled_button = True
+    msg = await ctx.send(embed=em, 
+    components = [ 
+              [
+                  Button(
+                      label = label,
+                      id = "selector",
+                      style = button_color,
+                      disabled = disabled_button
+                      
+                  )]])
     
-      await addData(guildId)
-      guilds = await getData()
-      if guilds[str(guildId)]["Cword"] == 0:
-        d1 = {"Cword": 1}
-      elif guilds[str(guildId)]["Cword"] ==1:
-        d1 = {"Cword": 0}
+    del button_color
+    del label
+    del disabled_button
+    button_color = ""
+    label = ""
+    
+    while True:
+      try:
+        interaction = await self.bot.wait_for(
+                  "button_click",
+                  check = lambda i: i.component.id == "selector" and i.channel.id == ctx.channel.id, 
+                  timeout = 30.0 
+              )
+              
+        
+          
+        def write():
+          
+          with open("./json/serverData.json","w") as f:
+            
+            json.dump(guilds,f)
+            f.close()
+          
+        if guilds[str(guildId)]["autoresponse"] == 1:
+          
+          d = {"autoresponse" : 0}
+          guilds[str(ctx.guild.id)].update(d)
+          
+          button_color= ButtonStyle.red
+          label = "off"
+          write()
+          
       
-      guilds[str(guildId)].update(d1)
-      with open("./json/serverData.json","w") as f:
-        json.dump(guilds,f)
-      await ctx.send("C-word is now **"+status[guilds[str(guildId)]["Cword"]]+"**")
-      #change state
-    
-    if arg == None:
-      NwordValue = guilds[str(guildId)]["Nword"]
-      FwordValue = guilds[str(guildId)]["Fword"]
-      CwordValue = guilds[str(guildId)]["Cword"]
-    
-      color = int(await colorSetup(ctx.message.author.id),16)
-      em = discord.Embed(color = color)
-      em.set_author(name = "Autoresponse settings")
-      em.add_field(name = "N-word",value = status[int(NwordValue)],inline= False)
-      em.add_field(name = "F-word",value = status[int(FwordValue)],inline= False)
-      em.add_field(name = "C-word",value = status[int(CwordValue)],inline= False)
-      await ctx.send(embed=em)
-      #print state
+        elif guilds[str(guildId)]["autoresponse"] == 0:
+          d = {"autoresponse" : 1}
+          guilds[str(ctx.guild.id)].update(d)
+          button_color= ButtonStyle.green
+          label = "on"
+          write()
+      
+        
+        await interaction.respond(
+                      
+                      type = InteractionType.UpdateMessage,
+                      
+                      components = [[
+                  Button(
+                      label = label,
+                      id = "selector",
+                      style = button_color
+                      
+                  )]])
+        
+      except asyncio.TimeoutError:
+        await msg.delete()
 
   @commands.command()
   @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
