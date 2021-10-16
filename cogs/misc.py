@@ -98,7 +98,7 @@ class Misc(commands.Cog):
       button_color = ButtonStyle.red
       label = "off"
       
-    if ctx.author.guild_permissions.manage_messages == True or int(ctx.author.id) == int(os.environ("uid")):
+    if ctx.author.guild_permissions.manage_messages == True or int(ctx.author.id) == int(os.getenv("uid")):
       disabled_button = False
     elif ctx.author.guild_permissions.manage_messages == False:
       disabled_button = True

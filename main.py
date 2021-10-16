@@ -149,7 +149,7 @@ async def on_message(message):
   try:
     
     
-    
+    await addData(message.guild.id)
     guildId = message.guild.id
     guilds = await getData()
     if guilds[str(guildId)]["autoresponse"] == 1:
