@@ -105,8 +105,8 @@ class Setups(commands.Cog):
     embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
 
     embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
-
-
+    embedVar4.add_field(name = "``nitrotroll``",value = "Fakes a nitro gift in chat. Clicking on claim will produce a rickroll.")
+    
     embedVar5 = discord.Embed(color = color)
     embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
     embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)

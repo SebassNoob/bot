@@ -81,6 +81,11 @@ async def on_command_error(ctx, error):
       await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
     if str(error).startswith("Command raised an exception: Exception:"):
       pass
+      if "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)" in str(error):
+        pass
+      if "Command raised an exception: TimeoutError:" in str(error):
+        pass
+      
     else:
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
       await ctx.send(embed = em)
@@ -313,7 +318,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.1", value = "-New commands: suggest\n-Rework: autoresponse\n-typo fix",inline = False)
+  em.add_field(name = "1.7.2", value = "-New commands: nitrotroll\n-Bugfixes for the backend\nim literally running out of ideas, send some to me via ``$suggest``",inline = False)
   await ctx.send(embed = em)
 
 

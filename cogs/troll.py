@@ -9,6 +9,7 @@ import asyncio
 import string
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 
 class Troll(commands.Cog):
   
@@ -260,8 +261,34 @@ class Troll(commands.Cog):
         await ctx.send("ok, cancelled.")
     except asyncio.TimeoutError:
       await ctx.send("ok, cancelled.")
-    
-    
 
+  @commands.command(pass_context = True)
+  async def nitrotroll(self,ctx):
+    await ctx.message.delete()
+    em = discord.Embed(color = 0x000000, title = "A wild gift appears!", description = "Nitro classic (3 months)\nThis link will expire in 12 hours, claim it now!").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png")
+    msg = await ctx.send("https://dicsord.com/gifts/get9troll3d5you2m0r0n",embed = em, components = [ 
+              [
+                  Button(
+                      label = "\ufeff\ufeff\ufeff\ufeff\ufeff\ufeffClaim\ufeff\ufeff\ufeff\ufeff\ufeff\ufeff",
+                      id = "claim",
+                      style = ButtonStyle.green
+                      
+                      
+                  )]])
+    interaction = await self.bot.wait_for("button_click",check = lambda i: i.component.id == "claim", timeout = None)
+    await msg.edit(
+    embed = discord.Embed(color = 0x000000, title = "You received a gift, but...", description = "The gift link has either expired or has been revoked.\nThe sender can still create a new link to send again.").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png"),components = [ 
+              [
+                  Button(
+                      label = "\ufeff\ufeff\ufeff\ufeff\ufeffClaimed\ufeff\ufeff\ufeff\ufeff\ufeff",
+                      id = "claim",
+                      style = ButtonStyle.grey,
+                      disabled = True
+                      
+                  )]])
+
+    await interaction.respond(type=4, content="You idiot lol\nhttps://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif", ephemeral=True)
+
+    
 def setup(bot):
     bot.add_cog(Troll(bot))
