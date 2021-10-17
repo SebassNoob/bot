@@ -174,11 +174,11 @@ async def on_message(message):
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
       if 'help' in message.content:
-        em = discord.Embed(color = 0x000555,title="You need help? Get it yourself.", description = " My prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
+        em = discord.Embed(color = 0x000555,title="You need help? Get it yourself.", description = " My default prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
         em.set_footer(text = "The embodiment of discord anarchy")
         await message.channel.send(embed = em)
 
-                
+      
                 
       if 'invite' in message.content:
         await message.channel.send("here you go, you lazy ass.", components=[ 
@@ -189,7 +189,9 @@ async def on_message(message):
                       style = 5
                       
                   )]])
-              
+
+      if 'prefix' in message.content:
+        await message.channel.send(f"Your server uses: ``{get_prefix(bot, message)}`` as the prefix for all bot commands.")  
 
       else:
         user = egg(message.author.id,0)
@@ -318,7 +320,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.2", value = "-New commands: nitrotroll\n-Bugfixes for the backend\nim literally running out of ideas, send some to me via ``$suggest``",inline = False)
+  em.add_field(name = "1.7.2", value = "-New commands: nitrotroll\n-Bugfixes for the backend\nim literally running out of ideas, send some to me via ``$feedback``\nHotfix update 17/10: added a prefix command to check the prefix. Access it by using ``@annoybot prefix``",inline = False)
   await ctx.send(embed = em)
 
 
