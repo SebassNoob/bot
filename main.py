@@ -320,7 +320,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.2", value = "-New commands: nitrotroll\n-Bugfixes for the backend\nim literally running out of ideas, send some to me via ``$feedback``\nHotfix update 17/10: added a prefix command to check the prefix. Access it by using ``@annoybot prefix``",inline = False)
+  em.add_field(name = "1.7.3", value = "-New commands: scream, darkjoke,iplookup\n-im literally running out of ideas, send some to me via ``$feedback``\nHotfix update 17/10: added a prefix command to check the prefix. Access it by using ``@annoybot prefix``",inline = False)
   await ctx.send(embed = em)
 
 

@@ -14,6 +14,8 @@ from waifu import WaifuClient
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 import asyncio
 import csv
+import requests
+
 
 class Misc(commands.Cog):
   
@@ -312,5 +314,30 @@ class Misc(commands.Cog):
     with open("./json/upvoteData.json","w") as f:
       json.dump(file,f)
       f.close
+
+
+  @commands.command()
+  async def iplookup(self,ctx,ip: str):
+    color = int(await colorSetup(ctx.author.id),16)
+    url = "http://ip-api.com/json/"+ip
+    res = requests.get(url).json()
+    for item in res.items():
+      if item[0] == "status":
+        if item[1] =="success":
+          
+          pass
+        else:
+          await ctx.send("Thats not a valid ip, idiot.")
+          raise Exception("invalid ip")
+    country = res["country"]
+    region = res["regionName"]
+    city = res["city"]
+    zip= res["zip"]
+    latitude = res['lat']
+    longitude = res['lon']
+    provider = res['isp']
+    await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
+      
+      
 def setup(bot):
     bot.add_cog(Misc(bot))

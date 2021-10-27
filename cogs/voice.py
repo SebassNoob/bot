@@ -106,5 +106,27 @@ class Voice(commands.Cog):
     except: 
       pass
 
+  @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def scream(self,ctx):
+    try:
+      
+      channel = ctx.author.voice.channel
+      voice = await channel.connect()
+
+      
+
+    except AttributeError:
+      await ctx.send(embed = discord.Embed(color = 0x000000, description = "You are not in a VC, stupid."))
+      raise Exception
+    try:
+      
+      seconds = 2
+      await ctx.reply("Screaming into")
+      voice.play(FFmpegPCMAudio("./voice/mic.mp3"))
+      await asyncio.sleep(seconds)
+      await ctx.guild.voice_client.disconnect()
+    except: 
+      pass
 def setup(bot):
     bot.add_cog(Voice(bot))

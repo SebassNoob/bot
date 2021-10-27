@@ -229,9 +229,27 @@ class MainFeatures(commands.Cog):
     em = discord.Embed(color = color, description =choose().replace("#", user.name).replace(";",","))
     await ctx.send("{}".format(user.mention))
     await ctx.send(embed =em)
-    
-  
 
+  @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def darkjoke(self,ctx):
+    list = ["My wife told me she'll slam my head on the keyboard if I don't get off the computer. I'm not too worried, I think she's jokinlkjhfakljn m,.nbziyoao78yv87dfaoyuofaytdf",
+            "They say that breakfast is the most important meal of the day. Well, not if it's poisoned. Then the antidote becomes the most important.",
+            "Give a man a match, and he'll be warm for a few hours. Set a man on fire, and he will be warm for the rest of his life.",
+            "Never break someone's heart, they only have one. Break their bones instead, they have 206 of them.",
+            "It turns out a major new study recently found that humans eat more bananas than monkeys. It's true. Can you remember when you last ate a monkey?",
+            "'I work with animals,' the guy says to his date.  'That's so sweet,' she replies. 'I love a man who cares about animals. Where do you work?' 'I'm a butcher,' he says.",
+            "An apple a day keeps the doctor away. Or at least it does if you throw it hard enough.",
+            "I was in Russia listening to a stand-up comedian making fun of Putin. The jokes weren't that good, but I liked the execution.",
+            "I wasn't close to my father when he died. Which is lucky because he stepped on a landmine.",
+            "Why can't orphans play baseball? They have no idea what 'HOME' is.", 
+            "My grandfather says I'm too reliant on technology. I called him a hypocrite and unplugged his life support.",
+            "What's the difference between me and cancer? My dad didn't beat cancer but often did beat me half to death.",
+            "My grief counsellor died the other day. He was so good at his job, I don't even care.",
+            "When does a joke become a dad joke? When it leaves and never comes back.",
+           "My parents raised me as an only child, which really annoyed my younger brother."]
+    color = int(await colorSetup(ctx.message.author.id),16)
+    await ctx.reply(embed=discord.Embed(color=color,description = list[random.randint(0,len(list)-1)]))
 
 def setup(bot):
-    bot.add_cog(MainFeatures(bot))
+  bot.add_cog(MainFeatures(bot))

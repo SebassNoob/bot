@@ -23,7 +23,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.7.1", value = "Developed by " +str(username)+"\nLibrary: discord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.7.3", value = "Developed by " +str(username)+"\nLibrary: discord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
     await ctx.send(embed = embedVar3, components=[ 
               [
                   Button(
@@ -61,7 +61,7 @@ class Setups(commands.Cog):
     embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
     
     embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**10**s cooldown.",inline = False)
-    
+    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**10**s cooldown.",inline = False)
 
     
     embedVar2 = discord.Embed(color = color)
@@ -88,7 +88,7 @@ class Setups(commands.Cog):
     embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
     embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
     embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
-    
+    embedVar3.add_field(name = "``iplookup(ip)``", value = "Looks up somebody's ip LOL.",inline = False)
     
     
 
@@ -130,7 +130,8 @@ class Setups(commands.Cog):
     embedVar7.set_author(name="Annoybot commands (voice)\nAll voice commands have a 10s cooldown.")
     embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
     embedVar7.add_field(name = "``fart``", value = "Joins your VC and plays a fart sfx",inline = False)
-    embedVar7.add_field(name = "``micblow``", value = "Joins your VC and simulates blowing into the mic",inline = False)
+    embedVar7.add_field(name = "``micblow``", value = "Joins your VC and simulates blowing into a mic",inline = False)
+    embedVar7.add_field(name = "``scream``", value = "Joins your VC and screams into it.",inline = False)
     embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
 
 
