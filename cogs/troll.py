@@ -263,6 +263,8 @@ class Troll(commands.Cog):
       await ctx.send("ok, cancelled.")
 
   @commands.command(pass_context = True)
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.bot_has_guild_permissions(manage_messages=True)
   async def nitrotroll(self,ctx):
     await ctx.message.delete()
     em = discord.Embed(color = 0x000000, title = "A wild gift appears!", description = "Nitro classic (3 months)\nThis link will expire in 12 hours, claim it now!").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png")
