@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os
+import sys
 from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
 import random
 import json
@@ -14,7 +15,9 @@ from waifu import WaifuClient
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 import asyncio
 import csv
-import requests
+sys.path.insert(1,'./other')
+from custom_autoresponse import create_db, get_db_connection
+
 
 
 class Misc(commands.Cog):
@@ -69,28 +72,45 @@ class Misc(commands.Cog):
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
  
   async def autoresponse(self,ctx):
+    arr=[]
     guildId = ctx.message.guild.id
+    try:
+      create_db(guildId)
+    except:
+      pass
+    conn = get_db_connection(guildId)
+    cur = conn.cursor()
+    data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
     
-    await addData(guildId)
+    if len(data)== 0:
+      
+      with open("./json/autoresponse.csv",newline="") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            arr.append(row)
+        for pair in arr:
+          conn.execute('INSERT INTO autoresponse (keyword,res) VALUES (?,?)',(pair["word"],pair["response"]))
+          conn.commit()
+
+
+
+    desc = "ID/Keyword: Response\n"
+    for row in cur.execute('SELECT * FROM autoresponse'):
+      desc=desc+f'\n{row[0]} {row[1]}: {row[2]}'
+
     
     guilds = await getData()
-          
-    arr = []
-    desc = ""
-    with open("./json/autoresponse.csv",newline="") as file:
-      reader = csv.DictReader(file)
-      for row in reader:
-          arr.append(row)
-      for i in arr:
-        desc = desc+ ", " + i["word"]
-      desc = desc[2:]
+
+    
     
     
     color = int(await colorSetup(ctx.message.author.id),16)
     em = discord.Embed(color = color,description = f"``{desc}``")
     em.set_author(name = "Autoresponse keywords")
-    button_color = ""
-    label = ""
+    button_color = "" #for on/off
+    label = "" #for on/off
+    
+    
     disabled_button = None
     if guilds[str(guildId)]["autoresponse"] == 1:
       button_color= ButtonStyle.green
@@ -113,23 +133,35 @@ class Misc(commands.Cog):
                       style = button_color,
                       disabled = disabled_button
                       
-                  )]])
+                  ),
+                  Button(
+                    label = "Add",
+                    id="add",
+                    style= ButtonStyle.blue,
+                    disabled = disabled_button
+                    
+                  ),
+                  Button(
+                    label = "Remove",
+                    id="rm",
+                    style= ButtonStyle.blue,
+                    disabled = disabled_button
+                    
+                  )
+              ]])
     
-    del button_color
-    del label
-    del disabled_button
-    button_color = ""
-    label = ""
+    
     
     while True:
       try:
         interaction = await self.bot.wait_for(
                   "button_click",
-                  check = lambda i: i.component.id == "selector" and i.channel.id == ctx.channel.id, 
+                  check = lambda i: i.component.id in ["selector","add","rm"] and i.channel.id == ctx.channel.id, 
                   timeout = 30.0 
               )
               
-        
+        if interaction.user.id != ctx.author.id:
+          await interaction.respond(type=4, content="This isn't your menu, idiot.", ephemeral=True)
           
         def write():
           
@@ -137,37 +169,86 @@ class Misc(commands.Cog):
             
             json.dump(guilds,f)
             f.close()
-          
-        if guilds[str(guildId)]["autoresponse"] == 1:
-          
-          d = {"autoresponse" : 0}
-          guilds[str(ctx.guild.id)].update(d)
-          
-          button_color= ButtonStyle.red
-          label = "off"
-          write()
+
+        if interaction.component.id == "selector":
+          if guilds[str(guildId)]["autoresponse"] == 1:        
+            d = {"autoresponse" : 0}
+            guilds[str(ctx.guild.id)].update(d)
+            button_color= ButtonStyle.red
+            label = "off"
+            write()
           
       
-        elif guilds[str(guildId)]["autoresponse"] == 0:
-          d = {"autoresponse" : 1}
-          guilds[str(ctx.guild.id)].update(d)
-          button_color= ButtonStyle.green
-          label = "on"
-          write()
-      
+          elif guilds[str(guildId)]["autoresponse"] == 0:
+            d = {"autoresponse" : 1}
+            guilds[str(ctx.guild.id)].update(d)
+            button_color= ButtonStyle.green
+            label = "on"
+            write()   
+
+        if interaction.component.id == "add":
+            
+            await interaction.respond(type=4,content="what keyword would you like to add?",ephemeral=False)
+            await asyncio.sleep(1)
+            key= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+            await ctx.send("what should the response be?")
+            res= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+            conn.execute('INSERT INTO autoresponse (keyword,res) VALUES (?,?)',(key.content,res.content))
+            await ctx.send("confirmed")
+
+        if interaction.component.id == "rm":
+            
+            await interaction.respond(type=4,content="type the id of the autoresponse pair you want to delete.",ephemeral=False)
+            await asyncio.sleep(1)
+            id= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+            try:
+              id = int(id.content)
+              cur.execute('DELETE FROM autoresponse WHERE id=(?)',(id,))
+              await ctx.send("confirmed.")
+            except:
+              await ctx.send("don't be an idiot you donkey, actually provide an id number.")
         
-        await interaction.respond(
-                      
+        conn.commit()
+        desc = "ID/Keyword: Response\n"
+        for row in cur.execute('SELECT * FROM autoresponse'):
+          desc=desc+f'\n{row[0]} {row[1]}: {row[2]}'
+
+    
+    
+
+    
+    
+    
+        color = int(await colorSetup(ctx.message.author.id),16)
+        em = discord.Embed(color = color,description = f"``{desc}``")
+        await msg.edit(embed=em)
+        await interaction.respond(                     
                       type = InteractionType.UpdateMessage,
                       
                       components = [[
+      
                   Button(
                       label = label,
                       id = "selector",
-                      style = button_color
+                      style = button_color,
+                      disabled = disabled_button
                       
-                  )]])
-        
+                  ),
+                  Button(
+                    label = "Add",
+                    id="add",
+                    style= ButtonStyle.blue,
+                    disabled = disabled_button
+                    
+                  ),
+                  Button(
+                    label = "Remove",
+                    id="rm",
+                    style= ButtonStyle.blue,
+                    disabled = disabled_button
+                    
+                  )
+              ]])
       except asyncio.TimeoutError:
         await msg.delete()
 

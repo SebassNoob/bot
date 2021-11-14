@@ -7,7 +7,7 @@ import asyncio
 import random
 import json
 
-
+import requests
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 from dadjokes import Dadjoke
@@ -27,11 +27,11 @@ class MainFeatures(commands.Cog):
         roastList1 =["Your face makes onions cry.","Light travels faster than sound, which is why you seemed bright until you spoke.","Those penis enlargement pills must be working — you’re twice the dick you were yesterday."," I treasure the time I don’t spend with you.","You’re entitled to your incorrect opinion.","I’d smack you, but that would be animal abuse.","Your birth certificate is an apology letter from the condom factory.","You must have been born on a highway because that's where most accidents happen.","Stop trying to be a smart ass, you're just an ass.","Why don't you slip into something more comfortable... like a coma."]
         roastList2=["Shock me, say something intelligent.","How old are you? - Wait I shouldn't ask, you can't count that high.","Have you been shopping lately? They're selling lives, you should go get one.","If I told you that I have a piece of dirt in my eye, would you move?","Stupidity is not a crime so you are free to go.","We can always tell when you are lying. Your lips move.","Are you always this stupid or is today a special occasion?","Don't you have a terribly empty feeling - in your skull?","Seriously? You were the sperm that won!?","Is your ass jealous of the amount of shit that came out of your mouth?"]
         roastList3 = ["You are much like a cloud. When you disappear, its a beautiful day.","You should introduce your upper lip to your lower lip sometime and shut up.", "Zombies eat brains. You're safe however.","I was going to give you a nasty look, but I see you already have one.","There is no need to repeat yourself. I'd ignored you just fine the first time.","Keep rolling your eyes. One day you'll find a brain back there.","When I see your face, there's not a thing that I would change...Except for the direction in facing.","The problem with you is that your mouth is moving.","I hope the rest of your day is as unpleasent as you are.","You have the rest of your life to be a jerk, please take today off."]
-        roastList4 = ["Were you born this stupid or did you take lessons?","The people who tolerate you on a daily basis are the real heroes.","You look like something that came out of a slow cooker.","I thought of you today. It reminded me to take out the trash.","You are so full of shit, the toilet’s jealous.","Too bad you can’t Photoshop your ugly personality.","Do your parents even realize they’re living proof that two wrongs don’t make a right?","You’re like the end pieces of a loaf of bread. Everyone touches you, but nobody wants you.","You are more disappointing than an unsalted pretzel."," If laughter is the best medicine, your face must be curing the world."]
+        roastList4 = ["Were you born this stupid or did you take lessons?","The people who tolerate you on a daily basis are the real heroes.","You look like something that came out of a slow cooker.","I thought of you today. It reminded me to take out the trash.","You are so full of shit, the toilet’s jealous.","Too bad you can’t Photoshop your ugly personality.","Do your parents even realize they’re living proof that two wrongs don’t make a right?","You’re like the end pieces of a loaf of bread. Everyone touches you, but nobody wants you.","You are more disappointing than an unsalted pretzel."," If laughter is the best medicine, your face must be curing the world.","If I had a face like you, I'd probably commit suicide.","Your only chance to get laid is if you crawled up a chicken's ass and waited.","Some day you will go far... and everyone will hope that you stayed there permanantly.","Unfortunately your ignorance is getting better of your education.","when you were born, the doc threw you out of a window which is why you look so ugly.",""]
         randomRoast = roastList1[random.randint(0,9)]
         randomRoast2 = roastList2[random.randint(0,9)]
         randomRoast3 = roastList3[random.randint(0,9)]
-        randomRoast4 = roastList4[random.randint(0,9)]
+        randomRoast4 = roastList4[random.randint(0,14)]
         roastArray = [randomRoast,randomRoast2,randomRoast3,randomRoast4]
         finalRoast = roastArray[random.randint(0,3)]
         
@@ -250,6 +250,29 @@ class MainFeatures(commands.Cog):
            "My parents raised me as an only child, which really annoyed my younger brother."]
     color = int(await colorSetup(ctx.message.author.id),16)
     await ctx.reply(embed=discord.Embed(color=color,description = list[random.randint(0,len(list)-1)]))
-
+  @commands.command()
+  async def urbandict(self,ctx,term):
+    
+  
+    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+    
+    querystring = {"term":term}
+    
+    headers = {
+        'x-rapidapi-key': "eb9abc1708msh9ff61d9af0e2802p1a89dejsncd366a92c2b6",
+        'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com"
+        }
+    
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    color = int(await colorSetup(ctx.message.author.id),16)
+    try:
+      em = discord.Embed(color = color, title=f"Urban Dictionary result for {term}", description = "Definition: "+response.json()['list'][0]["definition"]+"\n\nExamples: "+response.json()['list'][0]["example"])
+      await ctx.send(embed = em)
+    except:
+      await ctx.send("there were no results returned, actually search for a real word next time, you moron.")
+    
+    
 def setup(bot):
   bot.add_cog(MainFeatures(bot))
+
+

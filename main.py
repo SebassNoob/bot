@@ -16,8 +16,12 @@ from other.asyncCmds import egg,postTips
 import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 import sys
-import csv
+sys.path.insert(1,'./other')
+from custom_autoresponse import create_db, get_db_connection
+
+
 intents = discord.Intents.default()
+
 
 
 def get_prefix(bot, message): 
@@ -85,6 +89,8 @@ async def on_command_error(ctx, error):
         pass
       if "Command raised an exception: TimeoutError:" in str(error):
         pass
+    if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)":
+      pass
       
     else:
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
@@ -159,17 +165,14 @@ async def on_message(message):
     guilds = await getData()
     if guilds[str(guildId)]["autoresponse"] == 1:
       
-      arr = []
-      with open("./json/autoresponse.csv",newline="") as file:
-        reader = csv.DictReader(file)
-        
-        for row in reader:
-          arr.append(row)
-        
-        for keyword in arr:
-          
-          if keyword["word"] in message.content.split(" "): 
-            await message.channel.send(keyword["response"].replace(";",","))
+      conn = get_db_connection(guildId)
+      
+      data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
+      for keyword in data:
+      
+        if keyword[1] in message.content.split(" "): 
+            
+          await message.channel.send(keyword[2].replace(";",","))
   
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
@@ -320,7 +323,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.3", value = "-New commands: scream, darkjoke,iplookup\n-im literally running out of ideas, send some to me via ``$feedback``\nHotfix update 17/10: added a prefix command to check the prefix. Access it by using ``@annoybot prefix``",inline = False)
+  em.add_field(name = "1.7.4", value = "``-New command: urbandict, rickroll\n-reworked autoresponse to add your own keywords/phrases.-added new roasts``",inline = False)
   await ctx.send(embed = em)
 
 

@@ -122,8 +122,30 @@ class Voice(commands.Cog):
     try:
       
       seconds = 2
-      await ctx.reply("Screaming into")
+      await ctx.reply("Screaming into your vc")
       voice.play(FFmpegPCMAudio("./voice/mic.mp3"))
+      await asyncio.sleep(seconds)
+      await ctx.guild.voice_client.disconnect()
+    except: 
+      pass
+
+
+  @commands.command()
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def rickroll(self,ctx):
+    try:
+      
+      channel = ctx.author.voice.channel
+      voice = await channel.connect()
+
+      
+
+    except AttributeError:
+      await ctx.send(embed = discord.Embed(color = 0x000000, description = "You are not in a VC, stupid."))
+      raise Exception
+    try:
+      seconds=float(MP3("./voice/rick_astley.mp3").info.length)
+      voice.play(FFmpegPCMAudio("./voice/rick_astley.mp3"))
       await asyncio.sleep(seconds)
       await ctx.guild.voice_client.disconnect()
     except: 
