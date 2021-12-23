@@ -189,24 +189,29 @@ class Misc(commands.Cog):
         if interaction.component.id == "add":
             
             await interaction.respond(type=4,content="what keyword would you like to add?",ephemeral=False)
-            await asyncio.sleep(1)
-            key= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+            
+            key= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
             await ctx.send("what should the response be?")
-            res= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+
+
+            res= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
             conn.execute('INSERT INTO autoresponse (keyword,res) VALUES (?,?)',(key.content,res.content))
             await ctx.send("confirmed")
+            disabled_button= True
 
         if interaction.component.id == "rm":
             
             await interaction.respond(type=4,content="type the id of the autoresponse pair you want to delete.",ephemeral=False)
-            await asyncio.sleep(1)
-            id= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id, timeout=None)
+            
+            id= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
             try:
               id = int(id.content)
               cur.execute('DELETE FROM autoresponse WHERE id=(?)',(id,))
               await ctx.send("confirmed.")
+              disabled_button = True
             except:
               await ctx.send("don't be an idiot you donkey, actually provide an id number.")
+              disabled_button=True
         
         conn.commit()
         desc = "ID/Keyword: Response\n"
@@ -251,7 +256,7 @@ class Misc(commands.Cog):
               ]])
       except asyncio.TimeoutError:
         await msg.delete()
-
+        
   @commands.command()
   @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
   async def meme(self,ctx):

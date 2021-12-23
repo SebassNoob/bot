@@ -91,7 +91,9 @@ async def on_command_error(ctx, error):
         pass
     if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)":
       pass
-      
+    
+    if "Command raised an exception: Exception:" in str(error):
+      pass
     else:
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
       await ctx.send(embed = em)
@@ -169,11 +171,17 @@ async def on_message(message):
       
       data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
       for keyword in data:
-      
-        if keyword[1] in message.content.split(" "): 
-            
+        res_words = keyword[1].split(" ")
+        
+        
+        for word in message.content.split(" "):
+          if word in res_words:
+            res_words.remove(word)
+        if len(res_words) == 0:
           await message.channel.send(keyword[2].replace(";",","))
-  
+        else: 
+          continue
+
     if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
       
       if 'help' in message.content:
@@ -323,7 +331,7 @@ async def on_message_delete(message):
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.4", value = "``-New command: urbandict, rickroll\n-reworked autoresponse to add your own keywords/phrases.-added new roasts``",inline = False)
+  em.add_field(name = "1.7.4", value = "``-New command: urbandict, rickroll\n-reworked autoresponse to add your own keywords/phrases.\n-added new roasts\nHotfix 18/11:\nfixed autoresponse not able to accept more than one keyword\nfixed autoresponse getting in the way of inputs``",inline = False)
   await ctx.send(embed = em)
 
 
