@@ -52,16 +52,16 @@ class Setups(commands.Cog):
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
     embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**3**s cooldown.",inline = False)
     
-    embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**6**s cooldown.",inline = False)
-    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**6**s cooldown.",inline = False)
-    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**6**s cooldown.",inline = False)
+    embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**3**s cooldown.",inline = False)
     embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**10**s cooldown.",inline = False)
+    embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**3**s cooldown.",inline = False)
     
-    embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**10**s cooldown.",inline = False)
-    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**10**s cooldown.",inline = False)
+    embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**3**s cooldown.",inline = False)
 
     
     embedVar2 = discord.Embed(color = color)
@@ -96,7 +96,7 @@ class Setups(commands.Cog):
     embedVar4.set_author(name="Annoybot commands (trolls)\nAll troll commands have a 10s cooldown.")
     
     embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
-    embedVar4.add_field(name = "``nicktroll (user)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
+    embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
     embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
 
     embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
@@ -160,7 +160,7 @@ SelectOption(label="Math", value="6")])
             interaction = await self.bot.wait_for(
                 "select_option", 
                 check = lambda i: i.component[0].value in["0","1","2","3","4","5","6"],
-                timeout = 60.0 
+                timeout = 30.0 
             )
             
             

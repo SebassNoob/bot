@@ -233,6 +233,7 @@ class Troll(commands.Cog):
   
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  
   @commands.bot_has_guild_permissions(create_instant_invite=True,kick_members=True)
   @has_permissions(kick_members = True)
   async def fakeban(self,ctx,user: discord.Member):
@@ -247,7 +248,6 @@ class Troll(commands.Cog):
       if msg.content == "yes":
         try:
           invite = await ctx.channel.create_invite(max_uses=1,unique=True)
-          print(str(invite))
           msg_1=await channel.send(f"You've been 'banned' from {user.guild.name} \nlmfao get trolled by {ctx.author.name}")
           msg_2=await channel.send(str(invite))
           await user.kick()

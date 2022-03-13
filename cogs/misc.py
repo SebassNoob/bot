@@ -414,7 +414,8 @@ class Misc(commands.Cog):
           pass
         else:
           await ctx.send("Thats not a valid ip, idiot.")
-          raise Exception("invalid ip")
+          
+          
     country = res["country"]
     region = res["regionName"]
     city = res["city"]

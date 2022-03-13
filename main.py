@@ -18,7 +18,7 @@ from other.snipeTimeout import snipeTimeout, encodeCache
 import sys
 sys.path.insert(1,'./other')
 from custom_autoresponse import create_db, get_db_connection
-
+from os import system
 
 intents = discord.Intents.default()
 
@@ -58,7 +58,7 @@ async def on_ready():
     
     print(f"   - Shard {t[0]}: {t[1]} servers")
   print("\033[0;36;48m-----------------------------------------")
-  await bot.change_presence(activity=discord.Game(name="$help"))
+  await bot.change_presence(activity=discord.Game(name=f"$help | annoying {servers} servers"))
   
   
 
@@ -85,7 +85,7 @@ async def on_command_error(ctx, error):
       await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
     if str(error).startswith("Command raised an exception: Exception:"):
       pass
-      if "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)" in str(error):
+      if "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)"  == str(error):
         pass
       if "Command raised an exception: TimeoutError:" in str(error):
         pass
@@ -93,6 +93,9 @@ async def on_command_error(ctx, error):
       pass
     
     if "Command raised an exception: Exception:" in str(error):
+      pass
+
+    if "Interaction is unknown" in str(error):
       pass
     else:
       em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
@@ -379,5 +382,11 @@ Thread(target=encodeCache).start()
 
 keep_alive() 
 
-bot.run(os.getenv('TOKEN'))
+try:
+    bot.run(os.getenv('TOKEN'))
+except discord.errors.HTTPException:
+    print("\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n")
+    system("python restart.py")
+    system('kill 1')
+
 
