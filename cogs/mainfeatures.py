@@ -20,7 +20,7 @@ class MainFeatures(commands.Cog):
 
 
   @commands.command(name = 'roast', aliases = ['burn'])
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def roast(self,ctx,userToRoast : discord.Member= None):
       
         
@@ -61,7 +61,7 @@ class MainFeatures(commands.Cog):
   
   
   @commands.command()
-  @commands.check(CustomCooldown(1,3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1,2, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def swear(self,ctx):
     
 
@@ -89,7 +89,7 @@ class MainFeatures(commands.Cog):
 
   
   @commands.command(name = 'urmom' , aliases = ["yourmom"])
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 2, 1, 4, commands.BucketType.user, elements=getUserUpvoted()))
   async def urmom(self,ctx):
     
         urmomList = ["Yo momma is so fat when she got on the scale it said, 'I need your weight not your phone number.'","Yo mamma is so ugly when she tried to join an ugly contest they said, 'Sorry, no professionals.'","Yo momma's so fat and old when God said, 'Let there be light,' he asked your mother to move out of the way.","Yo momma's so fat, that when she fell, no one was laughing but the ground was cracking up.","Yo momma is so fat that Dora can't even explore her!","Yo momma so stupid she stuck a battery up her ass and said, 'I GOT THE POWER!'","Yo momma is so hairy, when she went to the movie theater to see Star Wars, everybody screamed and said, 'IT'S CHEWBACCA!'","Yo mamma is so fat she doesn't need the internet, because she's already world wide.","Yo mama so ugly when she went into a haunted house she came out with a job application.","Your momma's so ugly, when she goes into a strip club, they pay her to keep her clothes on."]
@@ -123,7 +123,7 @@ class MainFeatures(commands.Cog):
 
  
   @commands.command(name = "uninspire", aliases = ["uninspirational"])
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 2, 1, 4, commands.BucketType.user, elements=getUserUpvoted()))
   async def uninspire(self,ctx):
     uninspireList = ["It's never too late to go back to bed.","It takes 37 muscles to frown but 0 muscles to shut the fuck up.","Looking at inspirational quotes to feel better is like looking at a treadmill to lose weight.","Instagram is a great place to look at pictures of the fake lives of all the people you hate.","Before you judge someone else, try to remember that you are also a piece of shit.","If you never believe in yourself, you'll never let yourself down.","True love is when 2 people lower their standards to just the right amount.","Relationships are like wine. They are expensive and eventually you just end up with a headache.","Monday hates you too.","Getting out of bed is almost always the wrong decision.", "The little progress you make today will be lost when you die.","Mistakes are a fact of life, which is why you should never try.","Success is a dream most of us will never achieve.","Today is going to be worse than yesterday.","Go the extra mile and you'll probably be run over by a truck.","Life has 2 rules:\n#1: Always quit when you can.\n#2: REMEMBER THE FIRST RULE","You're much weaker than you think you are.","You are going to give up today.","Strive for as little progress as you can.","In the middle of difficulty lies a hole all the way to hell."]
     finalUninspire = uninspireList[random.randint(0,19)]
@@ -191,7 +191,7 @@ class MainFeatures(commands.Cog):
       await command()
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def dadjoke(self,ctx):
     
     
@@ -204,7 +204,7 @@ class MainFeatures(commands.Cog):
   
   
   @commands.command()
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def dumbdeath(self,ctx,user:discord.Member):
     color = int(await colorSetup(ctx.message.author.id),16)
     arr= []
@@ -231,7 +231,7 @@ class MainFeatures(commands.Cog):
     await ctx.send(embed =em)
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 3, 1, 1.5, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
   async def darkjoke(self,ctx):
     list = ["My wife told me she'll slam my head on the keyboard if I don't get off the computer. I'm not too worried, I think she's jokinlkjhfakljn m,.nbziyoao78yv87dfaoyuofaytdf",
             "They say that breakfast is the most important meal of the day. Well, not if it's poisoned. Then the antidote becomes the most important.",

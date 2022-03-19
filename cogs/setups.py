@@ -52,16 +52,16 @@ class Setups(commands.Cog):
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar = discord.Embed(color = color)
     embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**4**s cooldown.",inline = False)
     
-    embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**4**s cooldown.",inline = False)
+    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**4**s cooldown.",inline = False)
+    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**4**s cooldown.",inline = False)
     embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**4**s cooldown.",inline = False)
     
     embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**3**s cooldown.",inline = False)
+    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
 
     
     embedVar2 = discord.Embed(color = color)

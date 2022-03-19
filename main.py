@@ -98,8 +98,11 @@ async def on_command_error(ctx, error):
     if "Interaction is unknown" in str(error):
       pass
     else:
-      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"Please report this to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
+      
+      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
       await ctx.send(embed = em)
+      channel = bot.get_channel(953214132058992670)
+      await channel.send(embed=em)
       raise error
   if isinstance(error, commands.CommandOnCooldown):
       with open("./json/upvoteData.json","r") as f:
@@ -367,6 +370,8 @@ async def servers(ctx):
   for server in bot.guilds:
     print(server.name, server.id)
 
+  
+
 @bot.command()
 async def sysexit(ctx):
   
@@ -374,7 +379,13 @@ async def sysexit(ctx):
     await ctx.send("Bot has been taken offline.")
     sys.exit()
 
-
+@bot.command()
+async def restart(ctx):
+  if int(ctx.author.id) == int(os.getenv("uid")):
+    await ctx.send("Bot is restarting...")
+    system("python restart.py")
+    system('kill 1')
+    
 
 Thread(target=upvoteCheck).start()
 Thread(target=snipeTimeout).start()

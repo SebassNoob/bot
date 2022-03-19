@@ -1,6 +1,9 @@
 from flask import Flask
 from threading import Thread
 
+
+ports = []
+#test out diff ports
 app = Flask('')
 
 @app.route('/')
@@ -9,7 +12,7 @@ def home():
     
 
 def run():
-  app.run(host='0.0.0.0',port=4455)
+  app.run(host='0.0.0.0',port=8080)
   
 
 def keep_alive():
