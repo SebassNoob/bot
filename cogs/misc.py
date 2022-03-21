@@ -302,6 +302,11 @@ class Misc(commands.Cog):
     users = await getDataSnipe()
     
     settings  = await getDataU()
+
+
+    
+
+
     async def command():
       color = int(await colorSetup(ctx.author.id),16)
       if users[str(user.id)]["encoded"] == True:
@@ -416,7 +421,10 @@ class Misc(commands.Cog):
           await ctx.send("Thats not a valid ip, idiot.")
           
           
-    country = res["country"]
+    try:
+      country = res["country"]
+    except:
+      await ctx.send("An error occurred, try again later lmao.")
     region = res["regionName"]
     city = res["city"]
     zip= res["zip"]
@@ -425,6 +433,29 @@ class Misc(commands.Cog):
     provider = res['isp']
     await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
       
+
+  @commands.command()
+  @commands.check(CustomCooldown(1, 0, 1, 0, commands.BucketType.user, elements=getUserUpvoted()))
+  async def textwall(self,ctx,num:int,*content):
+    #print(len(content))
+    #print(content)
+    if len(content) == 0:
+      await ctx.send("You forgot to say what you want to textwall! You're such an idiot.")
+      raise Exception("no args passed into textwall")
+    sents=""
+    for word in content:
+      sents = sents+ f" {word}"
+
+    sents = sents[1:]
+    toSend= ""
+    for i in range(num):
+      toSend = toSend + f" {sents}"
+
+    if len(toSend) > 2000:
+      await ctx.send("Your text wall is too long (>2000 characters), you moron. ")
+      raise Exception("textwall too long")
       
+    await ctx.send(toSend)
+  
 def setup(bot):
     bot.add_cog(Misc(bot))

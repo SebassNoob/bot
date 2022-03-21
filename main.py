@@ -19,8 +19,48 @@ import sys
 sys.path.insert(1,'./other')
 from custom_autoresponse import create_db, get_db_connection
 from os import system
+import topgg
 
-intents = discord.Intents.default()
+
+#methodology for updating
+
+#commit changes in bot
+#pull changes to bot-1
+#write + test code in bot-1
+#sysexit bot
+#for all changed files in bot, copy and paste manually into bot-1
+#commit to repo
+#pull to bot
+#run
+
+#1.8 log:
+#OPENING COMMENT: 
+#- This is essentially a complete code rewrite of the bot by using discord.py 2.0 to support interactional-based components, instead of d.py 1.7.3 + discord-components 2.1.2 (as a temporary method to support interactions). 
+#- solves several bad code practices that have plagued this project (if anyone cares: json as db => sqlite3, bot going offline due to ratelimits => auto restart once timeout finishes). 
+#- Due to the decommission of discord gateway api v7 on May 1st 2022, this update is completely necessary to keep the bot up and running. 
+#- I will probably add slash commands slowly, since message content privilaged intent has been approved for use on this bot, thus the May 1st deadline does not apply.
+#- On the future of the bot, new features supported by discord.py 2.0 will be added if there are any creative applications for them. (eg. member timeouts? modals?)
+#- This bot will continue to be maintained for the foreseeable future with bug fixes and the addition of new features.
+
+#- The full list of changes to the user experience are detailed below, with plans for future updates:
+
+#- ADD: proper error messages for certain edge case errors
+#- CHANGE: bot and most events are all organised into a class
+#- FIX: iplookup failing in some cases
+#- ADD: textwall command
+
+#TODO:
+#- remove discord-components dependancy
+#- bump discord.py to 2.0
+#- rewrite all button and select code
+#- fix autoresponse erroring on adding key value pair
+#- rewrite snipe to use sqlite3 db
+
+#FUTURE:
+#- replace message based responses with interaction based components
+#- new commands involving new featues of d.py 2.0
+#- transition away from the default prefix of '$' to something like 'a$' or 'a.' since '$' is used very commonly to denote currency.
+
 
 
 
@@ -32,79 +72,88 @@ def get_prefix(bot, message):
   except KeyError:
     return '$'
 
+
+
+
+
+#bot object here
+class Bot(commands.AutoShardedBot):
+  def __init__(self):
+    intents = discord.Intents.default()
     
-bot = commands.AutoShardedBot(command_prefix=get_prefix, help_command = None, intents=intents,shard_count=4)
+        
+    super().__init__(command_prefix=get_prefix, intents=intents, shard_count= 4, help_command= None)
 
-DiscordComponents(bot)
-
-
-@bot.event
-async def on_ready():
+  async def on_ready(self):
+    servers = len(self.guilds)
+    print("\033[0;36;48m-----------------------------------------")
+    print(f" * {self.user} connected to {servers} servers")
   
-  servers = len(bot.guilds)
-  
-
-  print("\033[0;36;48m-----------------------------------------")
-  print(" * "+'{0.user}'.format(bot)+ f" connected to {servers} servers")
-  
-  servers = len(bot.guilds)
-  count = {}
-  for guild in bot.guilds:
-    if guild.shard_id not in count:
-      count[guild.shard_id] = 1
-    else:
-      count[guild.shard_id] += 1
-  for t in count.items():
+    count = {}
+    for guild in self.guilds:
+      if guild.shard_id not in count:
+        count[guild.shard_id] = 1
+      else:
+        count[guild.shard_id] += 1
+    for t in count.items():
     
-    print(f"   - Shard {t[0]}: {t[1]} servers")
-  print("\033[0;36;48m-----------------------------------------")
-  await bot.change_presence(activity=discord.Game(name=f"$help | annoying {servers} servers"))
-  
-  
+      print(f"   - Shard {t[0]}: {t[1]} servers")
+    print("\033[0;36;48m-----------------------------------------")
+    await self.change_presence(activity=discord.Game(name=f"$help | annoying {servers} servers"))
+    return
+
+  async def on_guild_join(self,guild):
+    print(guild.name)
+    await addData(guild.id)
+    for channel in guild.text_channels:
+      if channel.permissions_for(guild.me).send_messages:
+      
+        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. My prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
+        em.set_footer(text = "The embodiment of discord anarchy")
+        await channel.send(embed = em)
+        break
 
 
-
-@bot.event
-async def on_command_error(ctx, error):
+  async def on_command_error(self,ctx, error):
   
   
-  if isinstance(error, discord.ext.commands.errors.CommandNotFound):
+    if isinstance(error, discord.ext.commands.errors.CommandNotFound):
     
-    raise Exception("CommandNotFound")
+      raise Exception("CommandNotFound")
     
-  if isinstance(error, discord.ext.commands.MissingRequiredArgument):
+    if isinstance(error, discord.ext.commands.MissingRequiredArgument):
         em = discord.Embed(color = 0x000000, description = f"You're missing an argument: ``{error.param}`` in that command, dumbass.")
         await ctx.reply(embed = em)
         raise Exception("MissingRequiredArgument")
         
-  if isinstance(error,commands.CommandInvokeError):
+    if isinstance(error,commands.CommandInvokeError):
     
-    if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message":
-      raise Exception("NotFound")
-    if str(error) == "Command raised an exception: ClientException: Already connected to a voice channel.":
-      await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
-    if str(error).startswith("Command raised an exception: Exception:"):
-      pass
-      if "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)"  == str(error):
+      if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message":
+        raise Exception("NotFound")
+      elif str(error) == "Command raised an exception: ClientException: Already connected to a voice channel.":
+        await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
+      elif str(error).startswith("Command raised an exception: Exception:"):
         pass
-      if "Command raised an exception: TimeoutError:" in str(error):
+      elif "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)"  == str(error):
+          pass
+      elif "Command raised an exception: TimeoutError:" in str(error):
+          pass
+      elif str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)":
         pass
-    if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 0): Interaction is unknown (you have already responded to the interaction or responding took too long)":
-      pass
     
-    if "Command raised an exception: Exception:" in str(error):
-      pass
+      elif "Command raised an exception: Exception:" in str(error):
+        pass
 
-    if "Interaction is unknown" in str(error):
-      pass
-    else:
+      elif "Interaction is unknown" in str(error):
+        pass
+      else:
       
-      em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
-      await ctx.send(embed = em)
-      channel = bot.get_channel(953214132058992670)
-      await channel.send(embed=em)
-      raise error
-  if isinstance(error, commands.CommandOnCooldown):
+        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
+        await ctx.send(embed = em)
+        channel = self.get_channel(953214132058992670)
+        await channel.send(embed=em)
+        raise error
+    if isinstance(error, commands.CommandOnCooldown):
       with open("./json/upvoteData.json","r") as f:
         data = json.load(f)
         
@@ -119,86 +168,102 @@ async def on_command_error(ctx, error):
         
         await ctx.reply(embed= em)
       raise Exception("CommandOnCooldown")
-  if isinstance(error, commands.MissingPermissions):
+    if isinstance(error, commands.MissingPermissions):
         em = discord.Embed(color = 0x000000, description = f"❌ You need the ``{error.missing_perms}`` permission to use that command.")
         await ctx.reply(embed = em)
         raise Exception("MissingPermissions")
     
-  if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
+    if isinstance(error, discord.ext.commands.errors.BotMissingPermissions):
         em = discord.Embed(color = 0x000000, description = f"❌ I don't have permissions for that! I need the {error.missing_perms} permission(s).")
         await ctx.send(embed = em)
         raise Exception("BotMissingPermissions")
-  if isinstance(error, discord.ext.commands.errors.MemberNotFound):
+    if isinstance(error, discord.ext.commands.errors.MemberNotFound):
         em = discord.Embed(color = 0x000000, description = "❌ The member you mentioned was not found, actually send a member name next time you moron.")
         await ctx.send(embed = em)
         raise Exception("MemberNotFound")
-      
-    
+
+
+
   
 
+  async def on_message_delete(self,message):
 
-@bot.event
-async def on_guild_join(guild):
-  print(guild.name)
-  await addData(guild.id)
-  for channel in guild.text_channels:
-    if channel.permissions_for(guild.me).send_messages:
-      
-      em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. My prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
-      em.set_footer(text = "The embodiment of discord anarchy")
-      await channel.send(embed = em)
-      break
+  
+    await addDataSnipe(message.author.id)
+    users = await getDataSnipe()
+  
+    current_time = datetime.datetime.now() 
+  
+    if len(str(current_time.minute)) ==1:
+      minute = "0"+str(current_time.minute)
 
-
-
+    else:
+      minute = str(current_time.minute)
 
 
+    cur_time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
 
-
-
-
-#commands below
-@bot.event
-async def on_message(message):
-  if message.author == bot.user:
-    return
-  else:
-    await bot.process_commands(message)
+  
+    d = {"deletedMessage" : str(message.content), "date" : cur_time}
+    users[str(message.author.id)].update(d)
+  
+    if message.channel.nsfw ==False:
+      e = {"nsfw": False,"encoded":False}
+      users[str(message.author.id)].update(e)
+    elif message.channel.nsfw ==True:
+      e = {"nsfw": True,"encoded":False}
+      users[str(message.author.id)].update(e)
     
-  try:
+  
+  
+    with open("./json/userSnipeCache.json","w") as f:
+      json.dump(users,f)
+
+
+
+
+
+  #ON_MESSAGE
+  async def on_message(self,message):
+    if message.author == self.user:
+      return
+    else:
+      await self.process_commands(message)
+    
+    try:
     
     
-    await addData(message.guild.id)
-    guildId = message.guild.id
-    guilds = await getData()
-    if guilds[str(guildId)]["autoresponse"] == 1:
+      await addData(message.guild.id)
+      guildId = message.guild.id
+      guilds = await getData()
+      if guilds[str(guildId)]["autoresponse"] == 1:
       
-      conn = get_db_connection(guildId)
+        conn = get_db_connection(guildId)
       
-      data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
-      for keyword in data:
-        res_words = keyword[1].split(" ")
+        data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
+        for keyword in data:
+          res_words = keyword[1].split(" ")
         
         
-        for word in message.content.split(" "):
-          if word in res_words:
-            res_words.remove(word)
-        if len(res_words) == 0:
-          await message.channel.send(keyword[2].replace(";",","))
-        else: 
-          continue
+          for word in message.content.split(" "):
+            if word in res_words:
+              res_words.remove(word)
+          if len(res_words) == 0:
+            await message.channel.send(keyword[2].replace(";",","))
+          else: 
+            continue
 
-    if f'<@{bot.user.id}>' in message.content or f'<@!{bot.user.id}>' in message.content :
+      if f'<@{self.user.id}>' in message.content or f'<@!{self.user.id}>' in message.content :
       
-      if 'help' in message.content:
-        em = discord.Embed(color = 0x000555,title="You need help? Get it yourself.", description = " My default prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
-        em.set_footer(text = "The embodiment of discord anarchy")
-        await message.channel.send(embed = em)
+        if 'help' in message.content:
+          em = discord.Embed(color = 0x000555,title="You need help? Get it yourself.", description = " My default prefix is $, and if you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
+          em.set_footer(text = "The embodiment of discord anarchy")
+          await message.channel.send(embed = em)
 
       
                 
-      if 'invite' in message.content:
-        await message.channel.send("here you go, you lazy ass.", components=[ 
+        if 'invite' in message.content:
+          await message.channel.send("here you go, you lazy ass.", components=[ 
               [
                   Button(
                       label = "invite",
@@ -207,131 +272,122 @@ async def on_message(message):
                       
                   )]])
 
-      if 'prefix' in message.content:
-        await message.channel.send(f"Your server uses: ``{get_prefix(bot, message)}`` as the prefix for all bot commands.")  
+        if 'prefix' in message.content:
+          await message.channel.send(f"Your server uses: ``{get_prefix(self, message)}`` as the prefix for all bot commands.")  
 
-      else:
-        user = egg(message.author.id,0)
-        user.write()
-        with open("./json/egg.json","r") as f:
-          hello = json.load(f)
+        else:
+          
+          user = egg(message.author.id,0)
+          user.write()
+          with open("./json/egg.json","r") as f:
+            hello = json.load(f)
         
-        while True:
+          while True:
           
-          if hello[str(user.id)]["0"] == 0:
+            if hello[str(user.id)]["0"] == 0:
             
-            hello[str(user.id)]["0"]=1
+              hello[str(user.id)]["0"]=1
             
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("Stop pinging me.")
-            break
-          if hello[str(user.id)]["0"] == 1:
-            hello[str(user.id)]["0"]=2
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("I said, STOP PINGING ME YOU DUMB F**K")
-            break
-          if hello[str(user.id)]["0"] == 2:
-            hello[str(user.id)]["0"]=3
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("https://imgur.com/t/mike_wazowski/lQyLC5G")
-            break
-          if hello[str(user.id)]["0"] == 3:
-            hello[str(user.id)]["0"]=4
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("https://miro.medium.com/max/324/1*HI4kj-TPAQrfQkAdrw2KTA.png")
-            break
-          if hello[str(user.id)]["0"] == 4:
-            hello[str(user.id)]["0"]=5
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("https://memegenerator.net/img/instances/61640131.jpg")
-            break
-          if hello[str(user.id)]["0"] == 5:
-            hello[str(user.id)]["0"]=0
-            with open("./json/egg.json","w") as f:
-              json.dump(hello,f)
-            await message.channel.send("HOW WOULD YOU FEEL IF I PINGED YOU THEN")
-            for i in range(5):
-              await message.channel.send(f"<@!{message.author.id}>")
-              time.sleep(1)
-            break
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("Stop pinging me.")
+              break
+            if hello[str(user.id)]["0"] == 1:
+              hello[str(user.id)]["0"]=2
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("I said, STOP PINGING ME YOU DUMB F**K")
+              break
+            if hello[str(user.id)]["0"] == 2:
+              hello[str(user.id)]["0"]=3
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("https://imgur.com/t/mike_wazowski/lQyLC5G")
+              break
+            if hello[str(user.id)]["0"] == 3:
+              hello[str(user.id)]["0"]=4
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("https://miro.medium.com/max/324/1*HI4kj-TPAQrfQkAdrw2KTA.png")
+              break
+            if hello[str(user.id)]["0"] == 4:
+              hello[str(user.id)]["0"]=5
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("https://memegenerator.net/img/instances/61640131.jpg")
+              break
+            if hello[str(user.id)]["0"] == 5:
+              hello[str(user.id)]["0"]=0
+              with open("./json/egg.json","w") as f:
+                json.dump(hello,f)
+              await message.channel.send("HOW WOULD YOU FEEL IF I PINGED YOU THEN")
+              for i in range(5):
+                await message.channel.send(f"<@!{message.author.id}>")
+                time.sleep(1)
+              break
           
           
           
           
         
-  except Exception:
-    pass
+    except Exception:
+      pass
   
-  if message.channel.id == 864467615891324938 and "ty" in message.content and "for" in message.content and "upvoting" in message.content:
-    data = message.content.split(" ")
-    data = list(data)[1]
-    data = str(data)[2:-1]
+    if message.channel.id == 864467615891324938 and "ty" in message.content and "for" in message.content and "upvoting" in message.content:
+      data = message.content.split(" ")
+      data = list(data)[1]
+      data = str(data)[2:-1]
 
     
-    with open("./json/upvoteData.json","r") as f:
-      file= json.load(f)
+      with open("./json/upvoteData.json","r") as f:
+        file= json.load(f)
     
-    try:
-      d = {data: file[data]+720}
+      try:
+        d = {data: file[data]+720}
 
-      file.update(d)
-    except KeyError:
-      file[data] = 720
+        file.update(d)
+      except KeyError:
+        file[data] = 720
     
     
-    with open("./json/upvoteData.json","w") as f:
-      json.dump(file,f)
-      f.close
+      with open("./json/upvoteData.json","w") as f:
+        json.dump(file,f)
+        f.close
+      
+    
+
+
       
     
   
-    
 
 
 
+bot = Bot()
 
-
-@bot.event
-async def on_message_delete(message):
+DiscordComponents(bot)
 
   
-  await addDataSnipe(message.author.id)
-  users = await getDataSnipe()
   
-  current_time = datetime.datetime.now() 
-  
-  if len(str(current_time.minute)) ==1:
-    minute = "0"+str(current_time.minute)
-
-  else:
-    minute = str(current_time.minute)
 
 
-  cur_time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
-
-  
-  d = {"deletedMessage" : str(message.content), "date" : cur_time}
-  users[str(message.author.id)].update(d)
-  
-  if message.channel.nsfw ==False:
-    e = {"nsfw": False,"encoded":False}
-    users[str(message.author.id)].update(e)
-  elif message.channel.nsfw ==True:
-    e = {"nsfw": True,"encoded":False}
-    users[str(message.author.id)].update(e)
-    
-  
-  
-  with open("./json/userSnipeCache.json","w") as f:
-    json.dump(users,f)
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @bot.command()
 async def patchnotes(ctx):
@@ -351,7 +407,6 @@ for filename in os.listdir('./cogs'):
     print(f"\033[0;32;49m{filename} loaded")
     
 
-import topgg
 
 
 

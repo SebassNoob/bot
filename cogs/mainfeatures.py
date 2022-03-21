@@ -158,7 +158,7 @@ class MainFeatures(commands.Cog):
       author_name = '{}'.format(ctx.author)
       guild = ctx.guild.name
       if threat == "":
-        t = ["I'm gonna find you and shove a pencil up yo ass.","Get out of here, or imma yeet you off a cliff irl.","I'm gonna go to your house and shit inside of it.","I'll stalk you in your dreams","Don't you dare cross me, or I will whoop your ass","I'm going to leave a bunch of dogshit on your desk tomorrow.","Watch out, I've hired a bunch of goons to intimidate you as they stare into your window.","I'm gonna steal EVERYTHING from your fridge","I'm going to kidnap your virginity and hold it ransom","I'm going to vomit on your cat."]
+        t = ["I'm gonna find you and shove a pencil up yo ass.","Get out of here, or imma thow you off a cliff irl.","I'm gonna go to your house and shit inside of it.","I'll stalk you in your dreams","Don't you dare cross me, or I will whoop your ass","I'm going to leave a bunch of dogshit on your desk tomorrow.","Watch out, I've hired a bunch of goons to intimidate you as they stare into your window.","I'm gonna steal EVERYTHING from your fridge","I'm going to kidnap your virginity and hold it ransom","I'm going to vomit on that damn cat of yours."]
         threat = t[random.randint(0,9)]
 
       channel = await user.create_dm()
@@ -175,6 +175,9 @@ class MainFeatures(commands.Cog):
       await ctx.send("The user has been sent a threat in dms.")
     
     try:
+      if user.bot == True:
+        await ctx.send("The user you mentioned is a bot, idiot.")
+        raise Exception("User mentioned is a bot")
       if users[str(uid)]["dmblocker"] == 0:
         await command()
 

@@ -140,9 +140,12 @@ class Troll(commands.Cog):
       
       
     try:
+      if user.bot == True:
+        await ctx.send("The user you mentioned is a bot, idiot.")
+        raise Exception("User mentioned is a bot")
       if users[str(uid)]["dmblocker"] == 0:
         await ctx.send("The trolled user will be pinged 3 times through dms lol.")
-        
+      
         await command()
         
 
