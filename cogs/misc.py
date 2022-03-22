@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
+
 import os
 import sys
 from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
@@ -20,11 +21,13 @@ from custom_autoresponse import create_db, get_db_connection
 
 
 
+
 class Misc(commands.Cog):
   
   def __init__(self, bot):
         self.bot = bot
   
+
 
 
   
@@ -35,6 +38,7 @@ class Misc(commands.Cog):
     
         if args ==():
           await ctx.send(f"You're missing an argument: ``list`` in that command, dumbass.")
+
         argList = []
         for arg in args:
           argList.append(arg)
@@ -42,6 +46,7 @@ class Misc(commands.Cog):
         randomArg = argList[random.randint(0,len(argList)-1)]
         await ctx.send(' {}'.format(ctx.author.mention)+" I pick:\n" + randomArg)
         
+
 
 
   
@@ -69,6 +74,7 @@ class Misc(commands.Cog):
         
 
   @commands.command(name = "autoresponse")
+
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
  
   async def autoresponse(self,ctx):
@@ -259,6 +265,40 @@ class Misc(commands.Cog):
         
   @commands.command()
   @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
+      #change state
+
+    elif arg == "Cword" or arg == "cword":
+    
+      await addData(guildId)
+      guilds = await getData()
+      if guilds[str(guildId)]["Cword"] == 0:
+        d1 = {"Cword": 1}
+      elif guilds[str(guildId)]["Cword"] ==1:
+        d1 = {"Cword": 0}
+      
+      guilds[str(guildId)].update(d1)
+      with open("./json/serverData.json","w") as f:
+        json.dump(guilds,f)
+      await ctx.send("C-word is now **"+status[guilds[str(guildId)]["Cword"]]+"**")
+      #change state
+    
+    if arg == None:
+      NwordValue = guilds[str(guildId)]["Nword"]
+      FwordValue = guilds[str(guildId)]["Fword"]
+      CwordValue = guilds[str(guildId)]["Cword"]
+    
+      color = int(await colorSetup(ctx.message.author.id),16)
+      em = discord.Embed(color = color)
+      em.set_author(name = "Autoresponse settings")
+      em.add_field(name = "N-word",value = status[int(NwordValue)],inline= False)
+      em.add_field(name = "F-word",value = status[int(FwordValue)],inline= False)
+      em.add_field(name = "C-word",value = status[int(CwordValue)],inline= False)
+      await ctx.send(embed=em)
+      #print state
+
+  @commands.command()
+  @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def meme(self,ctx):
   
 
@@ -267,6 +307,7 @@ class Misc(commands.Cog):
     subreddits = ['https://www.reddit.com/r/dankmemes/new.json?sort=hot','https://www.reddit.com/r/okbuddyretard/new.json?sort=hot','https://www.reddit.com/r/memes/new.json?sort=hot',
     'https://www.reddit.com/r/wholesomememes/new.json?sort=hot', 'https://www.reddit.com/r/meme/new.json?sort=hot', 'https://www.reddit.com/r/PrequelMemes/new.json?sort=hot','https://www.reddit.com/r/deepfriedmemes/new.json?sort=hot', 'https://www.reddit.com/r/nukedmemes/new.json?sort=hot']
     async with aiohttp.ClientSession() as cs:
+
       async with cs.get(subreddits[random.randint(0,len(subreddits)-1)]) as r:
         res = await r.json()
         
@@ -288,11 +329,14 @@ class Misc(commands.Cog):
         if tip != None:
           
           await ctx.send(tip)
+
         await ctx.send(embed=embed)
 
 
   @commands.command()
+
   @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def snipe(self,ctx, user: discord.Member):
 
 
@@ -302,6 +346,7 @@ class Misc(commands.Cog):
     users = await getDataSnipe()
     
     settings  = await getDataU()
+
 
 
     
@@ -326,6 +371,7 @@ class Misc(commands.Cog):
         await ctx.send(tip)
       await ctx.send(embed=embed)
           
+
     try:
       if users[str(user.id)]["deletedMessage"]=='':
         await ctx.reply("There's nothing to snipe!")
@@ -333,6 +379,7 @@ class Misc(commands.Cog):
       if settings[str(user.id)]["sniped"] == 0:
         await ctx.reply("This guy can't be sniped, what a loser.")
       else:
+
         if ctx.channel.nsfw == False and users[str(user.id)]["nsfw"] == False:   
           await command()
         elif ctx.channel.nsfw == True and users[str(user.id)]["nsfw"] == False:   
@@ -459,3 +506,4 @@ class Misc(commands.Cog):
   
 def setup(bot):
     bot.add_cog(Misc(bot))
+
