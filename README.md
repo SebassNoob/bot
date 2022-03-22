@@ -1,4 +1,4 @@
-`Annoybot`
+## Annoybot
 
 just know that this bot will annoy your friends within small servers with
 - roasts
@@ -6,9 +6,17 @@ just know that this bot will annoy your friends within small servers with
 - uninspirational quotes
 - memes
 - bad jokes
-- (to be updated) math functions and formulae
+- math
+- games
 
 add the bot here please i beg:
-https://discordbotlist.com/bots/annoybot-4074
+https://top.gg/bot/844757192313536522
+
 support:
 https://discord.gg/UCGAuRXmBD
+
+### Instructions to operate
+1. Install the discord client on any supported device
+2. Create a guild/server and follow the invite link to add the bot to said guild/server
+3. Use $help to see the list of commands.
+

@@ -2,7 +2,11 @@ import discord
 from discord.ext import commands
 import math
 import numexpr
-from asyncCmds import colorSetup
+
+import json
+from other.asyncCmds import colorSetup,postTips
+from other.customCooldown import CustomCooldown
+from other.upvoteExpiration import getUserUpvoted
 
 
 
@@ -12,6 +16,9 @@ class Math(commands.Cog):
         self.bot = bot
 
   @commands.command()
+
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def calc(self,ctx,*args):
     question = ''
     for arg in args:
@@ -40,7 +47,9 @@ class Math(commands.Cog):
 
 
   @commands.command()
-  async def form(self,ctx,op,*args):
+
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+  async def form(self,ctx,operator,*args):
     argList = []
     for arg in args:
       if arg.isdigit() == False:
@@ -81,34 +90,36 @@ class Math(commands.Cog):
       return 4*(math.pi*(x**3))/3
 
 
-    if op.lower() == "circlearea":
+
+    if operator.lower() == "circlearea":
       question = '```py\n\u03c0('+ argList[0] + '²)```'
       result = circleArea(argList[0])
-    if op.lower() == "circlecircum":
+    if operator.lower() == "circlecircum":
       question = '```py\n2\u03c0'+ argList[0] + '```'
       result = circleCircum(argList[0])
-    if op.lower() == "spherevol":
+    if operator.lower() == "spherevol":
       question = '```py\n4/3*\u03c0*'+ argList[0] + '³```'
       result = spherevol(argList[0])
-    if op.lower() == "spherearea":
+    if operator.lower() == "spherearea":
       question = '```py\n4\u03c0'+ argList[0] + '²```'
       result = 4*circleArea(argList[0])
-    if op.lower() == "trianglearea":
+    if operator.lower() == "trianglearea":
       
       if len(argList) < 2:
-        await ctx.send("You're missing an argument in that command, dumbass.")
+        await ctx.send("You need a second value for this command.")
       else:
         question = '```py\n\u00BD'+ argList[0] +"\u2715" + argList[1]+'```'
         result = triangleArea(argList[0],argList[1])
-    if op.lower() == "pythagoras":
+    if operator.lower() == "pythagoras":
       
       if len(argList) < 2:
-        await ctx.send("You're missing an argument in that command, dumbass.")
+        await ctx.send("You need a second value for this command.")
       else:
         question = 'Solve for x:\n```py\nx² = '+ argList[0] +"² + " + argList[1]+'²```'
         result = pythagoras(argList[0],argList[1])
+    else:
+      await ctx.send("You need a valid operator to calculate your result.")
 
-        
 
     
     color = int(await colorSetup(ctx.message.author.id),16)
@@ -116,6 +127,13 @@ class Math(commands.Cog):
     embedVar5.set_author(name="Requested by"+' {}'.format(ctx.message.author), icon_url = ctx.message.author.avatar_url)
     embedVar5.add_field(name = "Input", value = question,inline = False)
     embedVar5.add_field(name = "Result", value = "```py\n" + str(result)+"```",inline = False)
+
+    tip = postTips()
+        
+    if tip != None:
+          
+      await ctx.send(tip)
+
     await ctx.send(embed=embedVar5)
       
 
@@ -126,4 +144,8 @@ class Math(commands.Cog):
 
 
 def setup(bot):
+
     bot.add_cog(Math(bot))
+
+
+
