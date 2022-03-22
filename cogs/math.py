@@ -2,10 +2,12 @@ import discord
 from discord.ext import commands
 import math
 import numexpr
+
 import json
 from other.asyncCmds import colorSetup,postTips
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
+
 
 
 class Math(commands.Cog):
@@ -14,7 +16,9 @@ class Math(commands.Cog):
         self.bot = bot
 
   @commands.command()
+
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def calc(self,ctx,*args):
     question = ''
     for arg in args:
@@ -43,6 +47,7 @@ class Math(commands.Cog):
 
 
   @commands.command()
+
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def form(self,ctx,operator,*args):
     argList = []
@@ -85,6 +90,7 @@ class Math(commands.Cog):
       return 4*(math.pi*(x**3))/3
 
 
+
     if operator.lower() == "circlearea":
       question = '```py\n\u03c0('+ argList[0] + '²)```'
       result = circleArea(argList[0])
@@ -113,7 +119,7 @@ class Math(commands.Cog):
         result = pythagoras(argList[0],argList[1])
     else:
       await ctx.send("You need a valid operator to calculate your result.")
-        
+
 
     
     color = int(await colorSetup(ctx.message.author.id),16)
@@ -121,11 +127,13 @@ class Math(commands.Cog):
     embedVar5.set_author(name="Requested by"+' {}'.format(ctx.message.author), icon_url = ctx.message.author.avatar_url)
     embedVar5.add_field(name = "Input", value = question,inline = False)
     embedVar5.add_field(name = "Result", value = "```py\n" + str(result)+"```",inline = False)
+
     tip = postTips()
         
     if tip != None:
           
       await ctx.send(tip)
+
     await ctx.send(embed=embedVar5)
       
 
@@ -136,4 +144,8 @@ class Math(commands.Cog):
 
 
 def setup(bot):
+
     bot.add_cog(Math(bot))
+
+
+

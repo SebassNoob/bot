@@ -2,14 +2,18 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
+
 from other.asyncCmds import colorSetup,addData,getDataU,addDataU,postTips
+
 import random
 import json
 import asyncio
 import string
+
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+
 
 class Troll(commands.Cog):
   
@@ -17,9 +21,14 @@ class Troll(commands.Cog):
         self.bot = bot
 
         
+
   
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
+  @commands.cooldown(1,10)
+  @commands.command()
+
   @commands.bot_has_guild_permissions(manage_channels=True)
   async def channeltroll(self,ctx,user: discord.Member = None):
     if user:
@@ -42,11 +51,13 @@ class Troll(commands.Cog):
             channel_id = channel.id
 
 
+
       tip = postTips()
         
       if tip != None:
           
         await ctx.send(tip)
+
       await ctx.send(f"A new channel {channel.mention} was created. The bot will ping the trolled user 3 times to annoy them.")
       
           
@@ -83,9 +94,13 @@ class Troll(commands.Cog):
         break
 
 
+
   
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
+  
+
   @commands.bot_has_guild_permissions(manage_nicknames=True)
   async def nicktroll(self,ctx, member: discord.Member, *args):
     if member:
@@ -104,19 +119,23 @@ class Troll(commands.Cog):
           
           
         await member.edit(nick=nick)
+
         tip = postTips()
         
         if tip != None:
           
           await ctx.send(tip)
+
         await ctx.send(f'Nickname was changed for {member} to **{nick}** for 5 minutes. ')
         await asyncio.sleep(300.0)
         await member.edit(nick=None)
 
       
 
+
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def dmtroll(self,ctx, user : discord.Member):
     uid = user.id
     users = await getDataU()
@@ -124,6 +143,7 @@ class Troll(commands.Cog):
 
 
     async def command():
+
       tip = postTips()
         
       if tip != None:
@@ -149,9 +169,11 @@ class Troll(commands.Cog):
         await command()
         
 
+
         
       elif users[str(uid)]["dmblocker"] ==1:
         await ctx.send("Sorry, the user you mentioned doesn't want to be dm'ed by me ;(")
+
 
       
     except KeyError:
@@ -159,6 +181,7 @@ class Troll(commands.Cog):
       users[str(uid)]["dmblocker"] = 0
       with open("./json/userSettings.json","w") as f:
         json.dump(users,f)
+
       await ctx.send("The trolled user will be pinged 3 times through dms lol.")
       await command()
 
@@ -167,6 +190,7 @@ class Troll(commands.Cog):
   
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def ghosttroll(self,ctx,user: discord.Member):
     
 
@@ -201,10 +225,12 @@ class Troll(commands.Cog):
       except Exception:
         pass
 
+
   
 
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
+
   async def fakemute(self,ctx,user: discord.Member,*args):
     
 
@@ -224,6 +250,7 @@ class Troll(commands.Cog):
     em.add_field(name="**mute**",value="**Offender:** {}".format(user.mention)+"\n**Reason:** "+reason+"\n**Responsible mod:** {}".format(ctx.author),inline=False)
 
     em.set_footer(text="sike you thought")
+
               
               
     tip = postTips()
@@ -237,6 +264,7 @@ class Troll(commands.Cog):
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   
+
   @commands.bot_has_guild_permissions(create_instant_invite=True,kick_members=True)
   @has_permissions(kick_members = True)
   async def fakeban(self,ctx,user: discord.Member):
@@ -251,6 +279,7 @@ class Troll(commands.Cog):
       if msg.content == "yes":
         try:
           invite = await ctx.channel.create_invite(max_uses=1,unique=True)
+
           msg_1=await channel.send(f"You've been 'banned' from {user.guild.name} \nlmfao get trolled by {ctx.author.name}")
           msg_2=await channel.send(str(invite))
           await user.kick()
@@ -259,11 +288,13 @@ class Troll(commands.Cog):
           await ctx.send("Sorry, that user's top role is higher than mine, so I can't kick them.")
           await self.bot.http.delete_message(channel.id, msg_1.id)
           await self.bot.http.delete_message(channel.id, msg_2.id)
+
           await channel.send(f"LOL {ctx.author.name} tried to troll you but failed.")
       if msg.content == "no":
         await ctx.send("ok, cancelled.")
     except asyncio.TimeoutError:
       await ctx.send("ok, cancelled.")
+
 
   @commands.command(pass_context = True)
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
@@ -297,3 +328,4 @@ class Troll(commands.Cog):
     
 def setup(bot):
     bot.add_cog(Troll(bot))
+
