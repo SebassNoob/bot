@@ -37,7 +37,7 @@ import topgg
 #OPENING COMMENT: 
 #- This is essentially a complete code rewrite of the bot by using discord.py 2.0 to support interactional-based components, instead of d.py 1.7.3 + discord-components 2.1.2 (as a temporary method to support interactions). 
 #- solves several bad code practices that have plagued this project (if anyone cares: json as db => sqlite3, bot going offline due to ratelimits => auto restart once timeout finishes). 
-#- Due to the decommission of discord gateway api v7 on May 1st 2022, this update is completely necessary to keep the bot up and running. 
+#- Due to the decommission of discord gateway api v7 in a year, this update is completely necessary to keep the bot up and running. 
 #- I will probably add slash commands slowly, since message content privilaged intent has been approved for use on this bot, thus the May 1st deadline does not apply.
 #- On the future of the bot, new features supported by discord.py 2.0 will be added if there are any creative applications for them. (eg. member timeouts? modals?)
 #- This bot will continue to be maintained for the foreseeable future with bug fixes and the addition of new features.
