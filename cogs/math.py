@@ -3,7 +3,7 @@ from discord.ext import commands
 import math
 import numexpr
 
-import json
+
 from other.asyncCmds import colorSetup,postTips
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted

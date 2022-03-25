@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
-import os 
+
 import csv
 from other.asyncCmds import colorSetup, familyFriendlySetup,changeff,getDataU,addDataU,postTips
-import asyncio
+
 import random
-import json
+
 
 import requests
 from other.customCooldown import CustomCooldown

@@ -9,7 +9,7 @@ from other.asyncCmds import colorSetup
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import threading
-from threading import Thread
+
 import time
 import math
 from pyinsults import insults

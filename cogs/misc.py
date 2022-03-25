@@ -4,7 +4,7 @@ from discord.ext.commands import has_permissions
 
 import os
 import sys
-from other.asyncCmds import colorSetup,addData,getData,addDataSnipe,getDataSnipe,getDataU,postTips
+from other.asyncCmds import colorSetup,getData,addDataSnipe,getDataSnipe,getDataU,postTips
 import random
 import json
 import base64
@@ -17,7 +17,7 @@ from discord_components import DiscordComponents, Button, ButtonStyle, Interacti
 import asyncio
 import csv
 sys.path.insert(1,'./other')
-from custom_autoresponse import create_db, get_db_connection
+from sqliteDB import create_db, get_db_connection
 
 
 

@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
 from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
-import random
+
 import json
 import asyncio
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption

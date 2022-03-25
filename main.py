@@ -2,22 +2,22 @@ import os
 import random
 import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
-import math
-from discord.ext import commands, tasks
-from discord.ext.commands import has_permissions
+
+from discord.ext import commands
+
 from keep_alive import keep_alive
 import datetime
-import asyncio
+
 import json
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
-from other.asyncCmds import egg,postTips
+from other.asyncCmds import egg
 import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 import sys
 sys.path.insert(1,'./other')
-from custom_autoresponse import create_db, get_db_connection
+from sqliteDB import get_db_connection
 from os import system
 import topgg
 

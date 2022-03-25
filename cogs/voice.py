@@ -3,7 +3,7 @@ from discord.ext import commands
 import random
 import asyncio
 from discord import FFmpegPCMAudio
-import os
+
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 from mutagen.mp3 import MP3
