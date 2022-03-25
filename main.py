@@ -50,6 +50,7 @@ import topgg
 #- ADD: textwall command
 
 #TODO:
+#- increase cooldowns add logging to cmds
 #- remove discord-components dependancy
 #- bump discord.py to 2.0
 #- rewrite all button and select code
@@ -238,7 +239,7 @@ class Bot(commands.AutoShardedBot):
       guilds = await getData()
       if guilds[str(guildId)]["autoresponse"] == 1:
       
-        conn = get_db_connection(guildId)
+        conn = get_db_connection(f'./other/data/{guildId}.db')
       
         data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
         for keyword in data:

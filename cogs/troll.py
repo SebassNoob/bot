@@ -25,11 +25,6 @@ class Troll(commands.Cog):
   
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-
-  @commands.cooldown(1,10)
-  @commands.command()
-
-  @commands.bot_has_guild_permissions(manage_channels=True)
   async def channeltroll(self,ctx,user: discord.Member = None):
     if user:
       

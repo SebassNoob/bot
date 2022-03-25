@@ -80,11 +80,16 @@ class Misc(commands.Cog):
   async def autoresponse(self,ctx):
     arr=[]
     guildId = ctx.message.guild.id
+    
     try:
-      create_db(guildId)
+      #tries to create db with guildId as name, under ./other/data
+      #uses schema.sql as format
+      #if already exists error raised, ignore new creation
+      create_db(f'./other/data/{guildId}.db','./other/schema.sql')
+      print(f"created {guildId}")
     except:
       pass
-    conn = get_db_connection(guildId)
+    conn = get_db_connection(f'./other/data/{guildId}.db')
     cur = conn.cursor()
     data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
     
@@ -263,38 +268,7 @@ class Misc(commands.Cog):
       except asyncio.TimeoutError:
         await msg.delete()
         
-  @commands.command()
-  @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
-      #change state
-
-    elif arg == "Cword" or arg == "cword":
-    
-      await addData(guildId)
-      guilds = await getData()
-      if guilds[str(guildId)]["Cword"] == 0:
-        d1 = {"Cword": 1}
-      elif guilds[str(guildId)]["Cword"] ==1:
-        d1 = {"Cword": 0}
-      
-      guilds[str(guildId)].update(d1)
-      with open("./json/serverData.json","w") as f:
-        json.dump(guilds,f)
-      await ctx.send("C-word is now **"+status[guilds[str(guildId)]["Cword"]]+"**")
-      #change state
-    
-    if arg == None:
-      NwordValue = guilds[str(guildId)]["Nword"]
-      FwordValue = guilds[str(guildId)]["Fword"]
-      CwordValue = guilds[str(guildId)]["Cword"]
-    
-      color = int(await colorSetup(ctx.message.author.id),16)
-      em = discord.Embed(color = color)
-      em.set_author(name = "Autoresponse settings")
-      em.add_field(name = "N-word",value = status[int(NwordValue)],inline= False)
-      em.add_field(name = "F-word",value = status[int(FwordValue)],inline= False)
-      em.add_field(name = "C-word",value = status[int(CwordValue)],inline= False)
-      await ctx.send(embed=em)
-      #print state
+  
 
   @commands.command()
   @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
