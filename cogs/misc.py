@@ -431,25 +431,27 @@ class Misc(commands.Cog):
   @commands.command()
   async def iplookup(self,ctx,ip: str):
     color = int(await colorSetup(ctx.author.id),16)
-    url = "http://ip-api.com/json/"+ip
+    url = f"http://ip-api.com/json/{ip}"
     res = requests.get(url).json()
+    
     for item in res.items():
       if item[0] == "status":
         if item[1] =="success":
           
           pass
         else:
+          
           await ctx.send("Thats not a valid ip, idiot.")
           
           
     try:
-      country = res["country"]
-      region = res["regionName"]
-      city = res["city"]
-      zip= res["zip"]
-      latitude = res['lat']
-      longitude = res['lon']
-      provider = res['isp']
+      country = res["country"] or "Unknown" 
+      region = res["regionName"] or "Unknown" 
+      city = res["city"] or "Unknown"  
+      zip= res["zip"] or "Unknown" 
+      latitude = res['lat'] or "Unknown"  
+      longitude = res['lon'] or "Unknown" 
+      provider = res['isp'] or "Unknown" 
     except:
       await ctx.send("An unspecified error occured, the ip address probably is private. What a loser lmao.")
     await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
