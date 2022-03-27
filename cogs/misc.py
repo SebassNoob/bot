@@ -444,14 +444,14 @@ class Misc(commands.Cog):
           
     try:
       country = res["country"]
+      region = res["regionName"]
+      city = res["city"]
+      zip= res["zip"]
+      latitude = res['lat']
+      longitude = res['lon']
+      provider = res['isp']
     except:
-      await ctx.send("An error occurred, try again later lmao.")
-    region = res["regionName"]
-    city = res["city"]
-    zip= res["zip"]
-    latitude = res['lat']
-    longitude = res['lon']
-    provider = res['isp']
+      await ctx.send("An unspecified error occured, the ip address probably is private. What a loser lmao.")
     await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
       
 
