@@ -1,5 +1,7 @@
 import random
 import json
+import sqlite3
+from other.sqliteDB import get_db_connection
 
 async def addDataU(uid):
   
@@ -78,30 +80,28 @@ async def familyFriendlySetup(uid):
 
 
 
-async def addDataSnipe(uid):
+def addDataSnipe(uid, message, date, nsfw=0):
   
-  user = await getDataSnipe()
-  if str(uid) in user:
-    return
-    
-  else:
-    user[str(uid)] = {}
-    user[str(uid)]["deletedMessage"] = ''
-    user[str(uid)]["date"] = ''
-    user[str(uid)]["nsfw"] = False 
-    user[str(uid)]["encoded"] = False
-    
+  conn = get_db_connection("./other/snipe2.db")
+  conn.execute("INSERT INTO snipe (id, deletedMessage, date,nsfw) VALUES (?,?,?,?)", (int(uid), str(message), str(date), int(nsfw)))
+  conn.commit()
+  conn.close()
+
+
+
+def getDataSnipe(uid):
+  conn = get_db_connection("./other/snipe2.db")
+  data = conn.execute("SELECT * FROM snipe WHERE id == (?)", (int(uid),)).fetchone()
+  #returns (content, date, nsfw)
+  return (data[1],data[2],data[3])
+
   
 
-  with open("./json/userSnipeCache.json","w") as f:
-    json.dump(user,f)
+
   
 
-async def getDataSnipe():
-  with open("./json/userSnipeCache.json","r") as f:
-    users = json.load(f)
-  
-  return users
+
+
 
 
 

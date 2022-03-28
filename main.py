@@ -17,6 +17,7 @@ import time
 from other.snipeTimeout import snipeTimeout, encodeCache
 import sys
 sys.path.insert(1,'./other')
+import sqlite3
 from sqliteDB import get_db_connection
 from os import system
 import topgg
