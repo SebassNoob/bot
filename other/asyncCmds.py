@@ -3,6 +3,13 @@ import json
 import sqlite3
 from other.sqliteDB import get_db_connection
 
+def bool_to_int(bool):
+  if bool == True:
+    return 1 
+  elif bool == False:
+    return 0 
+  else:
+    raise SyntaxError
 async def addDataU(uid):
   
   user = await getDataU()
@@ -72,28 +79,30 @@ async def familyFriendlySetup(uid):
   users = await getDataU()
   state = users[str(uid)]["familyFriendly"]
   
-  if state == 1:
-    return True
-  if state == 0:
-    return False
-
-
-
-
-def addDataSnipe(uid, message, date, nsfw=0):
-  
-  conn = get_db_connection("./other/snipe2.db")
-  conn.execute("INSERT INTO snipe (id, deletedMessage, date,nsfw) VALUES (?,?,?,?)", (int(uid), str(message), str(date), int(nsfw)))
-  conn.commit()
-  conn.close()
-
+  return bool_to_int(state)
 
 
 def getDataSnipe(uid):
   conn = get_db_connection("./other/snipe2.db")
   data = conn.execute("SELECT * FROM snipe WHERE id == (?)", (int(uid),)).fetchone()
   #returns (content, date, nsfw)
-  return (data[1],data[2],data[3])
+  if data:
+    return (data[1],data[2],data[3])
+  return None
+
+def addDataSnipe(uid, message, date, nsfw=0):
+  
+  conn = get_db_connection("./other/snipe2.db")
+  if getDataSnipe(uid) is not None:
+    conn.execute("UPDATE snipe SET (deletedMessage, date, nsfw) = (?,?,?) WHERE id = (?)", (str(message),str(date),bool_to_int(nsfw),int(uid)))
+    #TODO
+  else:
+    conn.execute("INSERT INTO snipe (id, deletedMessage, date,nsfw) VALUES (?,?,?,?)", (int(uid), str(message), str(date), bool_to_int(nsfw)))
+  conn.commit()
+  conn.close()
+
+
+
 
   
 

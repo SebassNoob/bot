@@ -191,35 +191,15 @@ class Bot(commands.AutoShardedBot):
   async def on_message_delete(self,message):
 
   
-    await addDataSnipe(message.author.id)
-    users = await getDataSnipe()
-  
+      
     current_time = datetime.datetime.now() 
-  
-    if len(str(current_time.minute)) ==1:
-      minute = "0"+str(current_time.minute)
 
-    else:
-      minute = str(current_time.minute)
-
-
-    cur_time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
-
-  
-    d = {"deletedMessage" : str(message.content), "date" : cur_time}
-    users[str(message.author.id)].update(d)
-  
-    if message.channel.nsfw ==False:
-      e = {"nsfw": False,"encoded":False}
-      users[str(message.author.id)].update(e)
-    elif message.channel.nsfw ==True:
-      e = {"nsfw": True,"encoded":False}
-      users[str(message.author.id)].update(e)
+    addDataSnipe(message.author.id, message.content, current_time, message.channel.nsfw)
+    #print(getDataSnipe(message.author.id))
     
   
   
-    with open("./json/userSnipeCache.json","w") as f:
-      json.dump(users,f)
+  
 
 
 

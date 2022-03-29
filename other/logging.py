@@ -1,5 +1,5 @@
 import sqlite3
-from sqliteDB import get_db_connection
+from other.sqliteDB import get_db_connection
 
 def log(cmd_name):
   conn = get_db_connection("./other/logging.db")
@@ -23,5 +23,3 @@ def log(cmd_name):
 
 
 
-
-  
