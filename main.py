@@ -379,7 +379,7 @@ DiscordComponents(bot)
 async def patchnotes(ctx):
   color = int(await colorSetup(ctx.message.author.id),16)
   em = discord.Embed(color = color)
-  em.add_field(name = "1.7.4", value = "``-New command: urbandict, rickroll\n-reworked autoresponse to add your own keywords/phrases.\n-added new roasts\nHotfix 18/11:\nfixed autoresponse not able to accept more than one keyword\nfixed autoresponse getting in the way of inputs``",inline = False)
+  em.add_field(name = "1.8.0 part I", value = "``**1.8.0 part I**\nThis serves as a bridging update for the future release of discord.py 2.0, as well as general updates to the bot.\n- ADD: proper error messages for common errors\n- FIX: iplookup failing in some cases\n- ADD: textwall command\n- CHANGE: snipe cache clear 30 days => 2 hours\n- CHANGE: snipe is now more reliable (database will not corrupt) but slightly slower\n- FIX: (hopefully) resolves poor uptime lately \n- CHANGE: Privacy policy got an update\n- ADD: more dark humor yay``",inline = False)
   await ctx.send(embed = em)
 
 

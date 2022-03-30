@@ -270,7 +270,10 @@ class MainFeatures(commands.Cog):
             "When does a joke become a dad joke? When it leaves and never comes back.",
            "My parents raised me as an only child, which really annoyed my younger brother.",
            "Water is like dark humor. Not all africans get it.",
-           "Air is like dark humor. Not every Jew got it."]
+           "Air is like dark humor. Not every Jew got it.",
+           "My grief councillor died today, but I don't care because they were so good at their job.",
+           "A man wakes from a coma. His wife changes out of her black clothes and, irritated, remarks, 'I really cannot depend on you in anything, can I!'",
+           "What does my dad have in common with Nemo? They both can’t be found."]
     color = int(await colorSetup(ctx.message.author.id),16)
     await ctx.reply(embed=discord.Embed(color=color,description = list[random.randint(0,len(list)-1)]))
 
