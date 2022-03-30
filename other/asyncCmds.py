@@ -87,7 +87,7 @@ def getDataSnipe(uid):
   data = conn.execute("SELECT * FROM snipe WHERE id == (?)", (int(uid),)).fetchone()
   #returns (content, date, nsfw)
   if data:
-    return (data[1],data[2],data[3])
+    return (data[1],data[2],bool(data[3]))
   return None
 
 def addDataSnipe(uid, message, date, nsfw=0):
