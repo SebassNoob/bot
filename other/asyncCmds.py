@@ -27,6 +27,7 @@ async def addDataU(uid):
   return True
 
 async def getDataU():
+  
   with open("./json/userSettings.json","r") as f:
     users = json.load(f)
   return users

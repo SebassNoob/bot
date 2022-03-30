@@ -14,7 +14,7 @@ from other.upvoteExpiration import upvoteCheck
 from threading import Thread
 from other.asyncCmds import egg
 import time
-from other.snipeTimeout import snipeTimeout, encodeCache
+from other.snipeTimeout import clearSnipe
 import sys
 sys.path.insert(1,'./other')
 import sqlite3
@@ -49,6 +49,7 @@ import topgg
 #- CHANGE: bot and most events are all organised into a class
 #- FIX: iplookup failing in some cases
 #- ADD: textwall command
+#- CHANGE: snipe cache clear 30 days => 2 hours
 
 #TODO:
 #- increase cooldowns add logging to cmds
@@ -425,8 +426,7 @@ async def restart(ctx):
     
 
 Thread(target=upvoteCheck).start()
-Thread(target=snipeTimeout).start()
-Thread(target=encodeCache).start()
+Thread(target=clearSnipe).start()
 
 keep_alive() 
 
