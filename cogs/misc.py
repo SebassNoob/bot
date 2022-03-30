@@ -4,7 +4,7 @@ from discord.ext.commands import has_permissions
 
 import os
 import sys
-from other.asyncCmds import colorSetup,getData,addDataSnipe,getDataSnipe,getDataU,postTips
+from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, familyFriendlySetup, changeff
 import random
 import json
 import base64
@@ -444,7 +444,7 @@ class Misc(commands.Cog):
       
 
   @commands.command()
-  @commands.check(CustomCooldown(1, 0, 1, 0, commands.BucketType.user, elements=getUserUpvoted()))
+  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
   async def textwall(self,ctx,num:int,*content):
     #print(len(content))
     #print(content)
@@ -463,7 +463,8 @@ class Misc(commands.Cog):
     if len(toSend) > 2000:
       await ctx.send("Your text wall is too long (>2000 characters), you moron. ")
       raise Exception("textwall too long")
-      
+    if await familyFriendlySetup(ctx.author.id):
+      toSend = await changeff(toSend)
     await ctx.send(toSend)
   
 def setup(bot):
