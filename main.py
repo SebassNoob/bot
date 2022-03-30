@@ -133,6 +133,9 @@ class Bot(commands.AutoShardedBot):
     
       if str(error) == "Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message":
         raise Exception("NotFound")
+
+      elif error == "Command raised an exception: Forbidden: 403 Forbidden (error code: 50007): Cannot send messages to this user":
+        await ctx.send(embed = discord.Embed(color = 0x000000, description = "This user most likely is a bot, or has blocked the bot. What a pussy."))
       elif str(error) == "Command raised an exception: ClientException: Already connected to a voice channel.":
         await ctx.send(embed = discord.Embed(color = 0x000000, description = "The bot is already connected to a voice channel, dumbass."))
       elif str(error).startswith("Command raised an exception: Exception:"):
