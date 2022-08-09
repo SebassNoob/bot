@@ -12,7 +12,7 @@ import string
 
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
 
 
 class Troll(commands.Cog):

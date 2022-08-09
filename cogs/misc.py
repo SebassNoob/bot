@@ -13,7 +13,7 @@ from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import requests
 from waifu import WaifuClient
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
 import asyncio
 import csv
 sys.path.insert(1,'./other')
@@ -239,7 +239,7 @@ class Misc(commands.Cog):
         em = discord.Embed(color = color,description = f"``{desc}``")
         await msg.edit(embed=em)
         await interaction.respond(                     
-                      type = InteractionType.UpdateMessage,
+                      type = 7,
                       
                       components = [[
       

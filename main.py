@@ -1,15 +1,16 @@
+
 import os
 import random
 import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
-
+from restart import run_main
 from discord.ext import commands
 
 from keep_alive import keep_alive
 import datetime
 
 import json
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
 from other.asyncCmds import egg
@@ -22,7 +23,7 @@ from sqliteDB import get_db_connection
 from os import system
 import topgg
 
-
+os.system('pip install git+https://github.com/kiki7000/discord.py-components.git')
 #methodology for updating
 
 #commit changes in bot
@@ -154,7 +155,7 @@ class Bot(commands.AutoShardedBot):
         pass
       else:
       
-        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD).\nFull traceback:\n```py\n{error}```")
+        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it. \nFull traceback:\n```py\n{error}```")
         await ctx.send(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
@@ -425,7 +426,7 @@ async def restart(ctx):
   if int(ctx.author.id) == int(os.getenv("uid")):
     await ctx.send("Bot is restarting...")
     system("python restart.py")
-    system('kill 1')
+
     
 
 Thread(target=upvoteCheck).start()
@@ -437,7 +438,8 @@ try:
     bot.run(os.getenv('TOKEN'))
 except discord.errors.HTTPException:
     print("\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n")
+    time.sleep(10)
     system("python restart.py")
-    system('kill 1')
+    
 
 

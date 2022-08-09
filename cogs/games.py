@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
+from discord_components import Button, ButtonStyle
 import asyncio
 import random
 import json
@@ -125,7 +125,7 @@ class Games(commands.Cog):
         labels[cur_list[i]] = str(i+1)
 
         await instruct.edit(
-                    type = InteractionType.UpdateMessage,
+                    type = 7,
                     
                     components = [ 
                 [
@@ -332,7 +332,7 @@ class Games(commands.Cog):
                   
                 
                 await interaction.respond(
-                      type = InteractionType.UpdateMessage,
+                      type = 7,
                       
                       components = [ 
                   [
@@ -613,7 +613,7 @@ class Games(commands.Cog):
 
                 await interaction.respond(
                       
-                      type = InteractionType.UpdateMessage,
+                      type = 7,
                       
                       components = [ 
                   [
@@ -705,10 +705,11 @@ class Games(commands.Cog):
         
 
         except asyncio.TimeoutError:
-          break
+          
           await ctx.send("You ran out of time.")
           
           await mainMessage.delete()
+          break
 
         
 

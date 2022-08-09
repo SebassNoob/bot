@@ -38,8 +38,8 @@ from discord.ext import commands
           
           if msg:
             await ctx.reply("Stopped.")
-            break
-            raise Exception
+            
+            raise Exception('fuck you')
           
         except asyncio.TimeoutError:
           continue

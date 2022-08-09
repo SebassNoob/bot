@@ -1,10 +1,10 @@
 from flask import Flask
 from threading import Thread
+import random
 
 
 
-
-PORT = 8081
+PORT = random.randint(2000,9000)
 #test out diff ports
 app = Flask('')
 

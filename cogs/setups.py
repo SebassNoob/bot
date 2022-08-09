@@ -6,7 +6,7 @@ from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
 
 import json
 import asyncio
-from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType,Select,SelectOption
+from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import datetime
@@ -150,25 +150,26 @@ class Setups(commands.Cog):
         
         embed = paginationList[current],
         components = [ 
-          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Misc", value="1"), SelectOption(label="Trolls", value="2"), SelectOption(label="Games", value="3"), SelectOption(label="Setup", value="4"), SelectOption(label="Voice", value="5"),
-SelectOption(label="Math", value="6")])
+          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Misc", value="1"), SelectOption(label="Trolls", value="2"), SelectOption(label="Games", value="3"), SelectOption(label="Setup", value="4"), SelectOption(label="Voice", value="5"), SelectOption(label="Math", value="6")])
         ]
     )
     
     while True:
         
         try:
+            
+            
             interaction = await self.bot.wait_for(
                 "select_option", 
-                check = lambda i: i.component[0].value in["0","1","2","3","4","5","6"],
-                timeout = 30.0 
+                check = lambda i: True,
+                timeout = 60.0 
             )
             
             
 
-            current = int(interaction.component[0].value)
+            current = int(interaction.values[0])
             await interaction.respond(
-                type = InteractionType.UpdateMessage,
+                type = 7,
                 embed = paginationList[current],
               
             )
