@@ -178,7 +178,7 @@ class MainFeatures(commands.Cog):
       color = int(await colorSetup(ctx.message.author.id),16)
 
       em = discord.Embed(color = color,description = threat)
-      em.set_author(name = author_name+" from "+ guild,icon_url = ctx.author.avatar_url)
+      em.set_author(name = author_name+" from "+ guild,icon_url = ctx.author.avatar)
       
       await channel.send(embed = em)
       tip = postTips()
@@ -219,7 +219,7 @@ class MainFeatures(commands.Cog):
     dadJoke = Dadjoke().joke
     color = int(await colorSetup(ctx.message.author.id),16)
     em = discord.Embed(color = color)
-    em.set_author(name = f"{ctx.author.name}'s dad joke", icon_url = ctx.author.avatar_url)
+    em.set_author(name = f"{ctx.author.name}'s dad joke", icon_url = ctx.author.avatar)
     em.add_field(name = "\u200b",value = dadJoke,inline = False)
     await ctx.send(embed = em)
   
