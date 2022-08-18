@@ -10,6 +10,7 @@ from keep_alive import keep_alive
 import datetime
 
 import json
+os.system('pip install git+https://github.com/kiki7000/discord.py-components.git')
 from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
@@ -23,7 +24,7 @@ from sqliteDB import get_db_connection
 from os import system
 import topgg
 
-os.system('pip install git+https://github.com/kiki7000/discord.py-components.git')
+
 #methodology for updating
 
 #commit changes in bot
