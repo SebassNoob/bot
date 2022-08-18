@@ -19,30 +19,38 @@ class Setups(commands.Cog):
   
   @commands.command(name = "credits",aliases = ["vote","invite"])
   async def credit(self,ctx):
+    view = discord.ui.View() 
     guilds = len(self.bot.guilds)
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = int(await colorSetup(ctx.message.author.id),16)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.7.4", value = "Developed by " +str(username)+"\nLibrary: discord.py 1.7.3\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
-    await ctx.send(embed = embedVar3, components=[ 
-              [
-                  Button(
-                      label = "top.gg",
-                      url = "https://top.gg/bot/844757192313536522",
-                      style = 5
-                      
-                  ),
-                  Button(
-                      label = "invite",
-                      url = "https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=4294967287&scope=bot",
-                      style = 5
-                  ),
-                  Button(
-                      label = "support server",
-                      url = "https://discord.gg/UCGAuRXmBD",
-                      style = 5
-                  )
-                  ]])
+    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.0.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+
+    buttons = [
+      discord.ui.Button(
+        style=discord.ButtonStyle.link, 
+        label="top.gg", 
+        url="https://top.gg/bot/844757192313536522"
+      ),
+      discord.ui.Button(
+        style=discord.ButtonStyle.link, 
+        label="invite", 
+        url="https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=1490084293971&scope=bot%20applications.commands"
+      ),
+      discord.ui.Button(
+        style=discord.ButtonStyle.link, 
+        label="support server", 
+        url="https://discord.gg/UCGAuRXmBD"
+      ),
+    
+    ] 
+    for button in buttons:
+      view.add_item(item=button)
+    
+    await ctx.send(embed = embedVar3, view=view)
+
+
+
 
   
   @commands.command(name = "cmds", aliases = ["commands","cmd","help"])
@@ -63,18 +71,6 @@ class Setups(commands.Cog):
     embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
     embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
 
-    
-    embedVar2 = discord.Embed(color = color)
-    embedVar2.set_author(name="Annoybot commands (math)\n All commands have a 10s cooldown.")
-        
-    embedVar2.add_field(name = "``calc (expression)``", value = "Evaluates your expression. Functions include:\n `+`,`-`,`*`,`/`,`sqrt`,`log`,`sin`,`cos`,`tan`.",inline = False)
-        
-    embedVar2.add_field(name = "``form circleArea (x)``", value = "Returns the area of a circle with radius x.",inline = True)
-    embedVar2.add_field(name = "``form circleCircum (x)``", value = "Returns the circumference of a circle with radius x.",inline = True)
-    embedVar2.add_field(name = "``form triangleArea (x,y)``", value = "Returns the area of a triangle with base x and height y.",inline = True)
-    embedVar2.add_field(name = "``form pythagoras (x,y)``", value = "Returns the length of hypotenuse of triangle base x and height y.",inline = True)
-    embedVar2.add_field(name = "``form sphereVol (x)``", value = "Returns volume of sphere with radius x.",inline = True)
-    embedVar2.add_field(name = "``form sphereArea (x)``", value = "Returns surface area of sphere with radius x.",inline = True)
     
     
 
@@ -138,7 +134,7 @@ class Setups(commands.Cog):
 
 
 
-    paginationList = [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7,embedVar2]
+    paginationList = [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
     
     current = 0
     tip = postTips()
@@ -150,8 +146,8 @@ class Setups(commands.Cog):
         
         embed = paginationList[current],
         components = [ 
-          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Misc", value="1"), SelectOption(label="Trolls", value="2"), SelectOption(label="Games", value="3"), SelectOption(label="Setup", value="4"), SelectOption(label="Voice", value="5"), SelectOption(label="Math", value="6")])
-        ]
+          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Misc", value="1"), SelectOption(label="Trolls", value="2"), SelectOption(label="Games", value="3"), SelectOption(label="Setup", value="4"), SelectOption(label="Voice", value="5")])]
+        
     )
     
     while True:
