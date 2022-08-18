@@ -10,8 +10,8 @@ from keep_alive import keep_alive
 import datetime
 
 import json
-os.system('pip install git+https://github.com/kiki7000/discord.py-components.git')
-from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
+
+
 from other.upvoteExpiration import upvoteCheck
 from threading import Thread
 from other.asyncCmds import egg
@@ -85,9 +85,9 @@ def get_prefix(bot, message):
 class Bot(commands.AutoShardedBot):
   def __init__(self):
     intents = discord.Intents.default()
-    
+    intents.message_content = True
         
-    super().__init__(command_prefix=get_prefix, intents=intents, shard_count= 4, help_command= None)
+    super().__init__(command_prefix=get_prefix, intents=intents, shard_count= 2, help_command= None)
 
   async def on_ready(self):
     servers = len(self.guilds)
@@ -201,7 +201,7 @@ class Bot(commands.AutoShardedBot):
     current_time = datetime.datetime.now() 
 
     addDataSnipe(message.author.id, message.content, current_time, message.channel.nsfw)
-    #print(getDataSnipe(message.author.id))
+    print(getDataSnipe(message.author.id))
     
   
   
@@ -341,6 +341,14 @@ class Bot(commands.AutoShardedBot):
       with open("./json/upvoteData.json","w") as f:
         json.dump(file,f)
         f.close
+
+  async def setup_hook(self):
+    for filename in os.listdir('./cogs'):
+      if filename.endswith('.py'):
+
+    
+        await bot.load_extension(f'cogs.{filename[:-3]}')
+        print(f"\033[0;32;49m{filename} loaded")
       
     
 
@@ -353,7 +361,7 @@ class Bot(commands.AutoShardedBot):
 
 bot = Bot()
 
-DiscordComponents(bot)
+
 
   
   
@@ -388,25 +396,15 @@ async def patchnotes(ctx):
 
 
 
-#cogs
-for filename in os.listdir('./cogs'):
-  if filename.endswith('.py'):
-    bot.load_extension(f'cogs.{filename[:-3]}')
-    print(f"\033[0;32;49m{filename} loaded")
+
+
     
 
 
 
 
 
-bot.topggpy = topgg.DBLClient(bot, os.getenv('topgg token'), autopost=True, post_shard_count=True)
 
-
-@bot.event
-async def on_autopost_success():
-    print(
-        f"Posted server count ({bot.topggpy.guild_count}), shard count ({bot.shard_count})"
-    )
 
 @bot.command()
 async def servers(ctx):

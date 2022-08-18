@@ -8,6 +8,8 @@ from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 from mutagen.mp3 import MP3
 import math
+
+
 class Voice(commands.Cog):
 
   def __init__(self,bot):
@@ -150,5 +152,5 @@ class Voice(commands.Cog):
       await ctx.guild.voice_client.disconnect()
     except: 
       pass
-def setup(bot):
-    bot.add_cog(Voice(bot))
+async def setup(bot):
+  await bot.add_cog(Voice(bot))

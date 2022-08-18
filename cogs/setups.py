@@ -6,7 +6,7 @@ from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
 
 import json
 import asyncio
-from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
+
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import datetime
@@ -487,5 +487,5 @@ class Setups(commands.Cog):
       await channel.send(embed = discord.Embed(color = 0x0000AA, title = f"{feedback.type} from {feedback.author}",description = feedback.content).set_footer(text = feedback.time))
       
     
-def setup(bot):
-    bot.add_cog(Setups(bot))
+async def setup(bot):
+  await bot.add_cog(Setups(bot))

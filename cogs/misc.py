@@ -13,7 +13,7 @@ from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import requests
 from waifu import WaifuClient
-from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
+
 import asyncio
 import csv
 sys.path.insert(1,'./other')
@@ -467,6 +467,6 @@ class Misc(commands.Cog):
       toSend = await changeff(toSend)
     await ctx.send(toSend)
   
-def setup(bot):
-    bot.add_cog(Misc(bot))
+async def setup(bot):
+  await bot.add_cog(Misc(bot))
 

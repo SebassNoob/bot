@@ -12,7 +12,7 @@ import string
 
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
-from discord_components import DiscordComponents, Button, ButtonStyle,Select,SelectOption
+
 
 
 class Troll(commands.Cog):
@@ -321,6 +321,6 @@ class Troll(commands.Cog):
     await interaction.respond(type=4, content="You idiot lol\nhttps://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif", ephemeral=True)
 
     
-def setup(bot):
-    bot.add_cog(Troll(bot))
+async def setup(bot):
+  await bot.add_cog(Troll(bot))
 

@@ -51,7 +51,7 @@ class MainFeatures(commands.Cog):
           await ctx.send(' {}'.format(userToRoast.mention))
         color = int(await colorSetup(ctx.message.author.id),16)
         embedVar = discord.Embed( color=color,description = finalRoast)
-        embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
+        embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar)
           
         
         embedVar.set_footer(text="u suck")
@@ -300,5 +300,5 @@ class MainFeatures(commands.Cog):
       await ctx.send("there were no results returned, actually search for a real word next time, you moron.")
     
     
-def setup(bot):
-  bot.add_cog(MainFeatures(bot))
+async def setup(bot):
+  await bot.add_cog(MainFeatures(bot))

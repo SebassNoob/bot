@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord_components import Button, ButtonStyle
+
 import asyncio
 import random
 import json
@@ -18,7 +18,7 @@ import csv
 class Games(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
 
   @commands.command()
   @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
@@ -1266,5 +1266,8 @@ class Games(commands.Cog):
     
 
 
-def setup(bot):
-  bot.add_cog(Games(bot))
+  
+
+
+async def setup(bot):
+  await bot.add_cog(Games(bot))
