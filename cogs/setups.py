@@ -16,8 +16,14 @@ class Setups(commands.Cog):
   def __init__(self, bot):
         self.bot = bot
 
-  
-  @commands.command(name = "credits",aliases = ["vote","invite"])
+    
+  @commands.command()
+  @commands.is_owner()
+  async def sync(self, ctx) -> None:
+      
+    await self.bot.tree.sync()
+    
+  @commands.hybrid_command(name = "credits",aliases = ["vote","invite"])
   async def credit(self,ctx):
     view = discord.ui.View() 
     guilds = len(self.bot.guilds)

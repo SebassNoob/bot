@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 import csv
@@ -20,11 +21,10 @@ class MainFeatures(commands.Cog):
         self.bot = bot
 
 
-
-  @commands.command(name = 'roast', aliases = ['burn'])
+  @commands.hybrid_command()
   @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  async def roast(self,ctx,userToRoast : discord.Member= None):
-      
+  async def roast(self,ctx,user: discord.Member):
+        
         
         roastList1 =["Your face makes onions cry.","Light travels faster than sound, which is why you seemed bright until you spoke.","Those penis enlargement pills must be working — you’re twice the dick you were yesterday."," I treasure the time I don’t spend with you.","You’re entitled to your incorrect opinion.","I’d smack you, but that would be animal abuse.","Your birth certificate is an apology letter from the condom factory.","You must have been born on a highway because that's where most accidents happen.","Stop trying to be a smart ass, you're just an ass.","Why don't you slip into something more comfortable... like a coma."]
         roastList2=["Shock me, say something intelligent.","How old are you? - Wait I shouldn't ask, you can't count that high.","Have you been shopping lately? They're selling lives, you should go get one.","If I told you that I have a piece of dirt in my eye, would you move?","Stupidity is not a crime so you are free to go.","We can always tell when you are lying. Your lips move.","Are you always this stupid or is today a special occasion?","Don't you have a terribly empty feeling - in your skull?","Seriously? You were the sperm that won!?","Is your ass jealous of the amount of shit that came out of your mouth?"]
@@ -47,8 +47,7 @@ class MainFeatures(commands.Cog):
       
 
 
-        if userToRoast != '' and userToRoast!= None:
-          await ctx.send(' {}'.format(userToRoast.mention))
+        
         color = int(await colorSetup(ctx.message.author.id),16)
         embedVar = discord.Embed( color=color,description = finalRoast)
         embedVar.set_author(name="Roast from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar)
@@ -60,7 +59,7 @@ class MainFeatures(commands.Cog):
         if tip != None:
           
           await ctx.send(tip)
-        await ctx.send(embed=embedVar)
+        await ctx.send('{}'.format(user.mention),embed=embedVar)
 
 
   

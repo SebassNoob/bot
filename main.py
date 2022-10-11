@@ -105,6 +105,7 @@ class Bot(commands.AutoShardedBot):
       print(f"   - Shard {t[0]}: {t[1]} servers")
     print("\033[0;36;48m-----------------------------------------")
     await self.change_presence(activity=discord.Game(name=f"$help | annoying {servers} servers"))
+    await self.tree.sync()
     return
 
   async def on_guild_join(self,guild):
