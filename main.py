@@ -2,7 +2,7 @@
 import os
 import random
 import discord
-from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe
+from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU
 from restart import run_main
 from discord.ext import commands
 
@@ -202,18 +202,21 @@ class Bot(commands.AutoShardedBot):
     current_time = datetime.datetime.now() 
 
     addDataSnipe(message.author.id, message.content, current_time, message.channel.nsfw)
-    print(getDataSnipe(message.author.id))
+    
     
   
   
   
 
-
+  async def on_interaction(self, interaction):
+    addDataU(interaction.user.id)
+    
 
 
 
   #ON_MESSAGE
   async def on_message(self,message):
+    
     if message.author == self.user:
       return
     else:

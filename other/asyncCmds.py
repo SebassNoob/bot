@@ -2,6 +2,8 @@ import random
 import json
 import sqlite3
 from other.sqliteDB import get_db_connection
+import other.userSettings as userSettings 
+from typing import *
 
 def bool_to_int(bool):
   if bool == True:
@@ -10,27 +12,26 @@ def bool_to_int(bool):
     return 0 
   else:
     raise SyntaxError
-async def addDataU(uid):
-  
-  user = await getDataU()
-  if str(uid) in user:
-    return False
+
+    
+def addDataU(uid: int) -> bool:
+  if userSettings.get(uid) is None:
+    userSettings.insert({
+    "id" :uid,
+    "color": "000000",
+    "familyFriendly": bool_to_int(False),
+    "sniped": bool_to_int(True),
+    "dmblocker": bool_to_int(False)
+    })
+    
+    return True
   else:
-    user[str(uid)] = {}
-    user[str(uid)]["color"] = 'ffff00'
-    user[str(uid)]["familyFriendly"] = 0
-    user[str(uid)]["sniped"] = 1
-    user[str(uid)]["dmblocker"] = 0
-
-  with open("./json/userSettings.json","w") as f:
-    json.dump(user,f)
-  return True
-
-async def getDataU():
+    
+    return False
   
-  with open("./json/userSettings.json","r") as f:
-    users = json.load(f)
-  return users
+def getDataU(uid: int) -> Union[Dict[str, Any], None]:
+  
+  return userSettings.get(uid)
 
 async def addData(guildId):
   
@@ -54,12 +55,12 @@ async def getData():
     guilds = json.load(f)
   return guilds
 
-async def colorSetup(uid):
+def colorSetup(uid):
   
-  await addDataU(uid)
-  users = await getDataU()
-  color = users[str(uid)]["color"]
-  return color
+  addDataU(uid)
+  
+  
+  return int(getDataU(uid).get('color'), 16)
 
 
 async def changeff(string):
