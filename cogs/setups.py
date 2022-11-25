@@ -72,14 +72,14 @@ class Setups(commands.Cog):
       embedVar.set_author(name="Annoybot commands")
       embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**4**s cooldown.",inline = False)
       
-      embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``insult (*user)``", value = "The bot will generate an insult. \n**4**s cooldown.",inline = False)
       embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**4**s cooldown.",inline = False)
-      embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**4**s cooldown.",inline = False)
-      embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
+      embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (23 possibilities)\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``dmthreaten (user, *customthreat)``", value = "The bot DMs a user and threaten them. (13 possibilities)\n**10**s cooldown.",inline = False)
       embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**4**s cooldown.",inline = False)
       
       embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
-      embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. (20 possibilities) Warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
   
       
       
@@ -228,9 +228,6 @@ class Setups(commands.Cog):
   
   @settings_group.command(name = "menu", description="Shows what your settings are")
   async def settings(self,interaction: discord.Interaction):
-
-  
-  
     
     settings = getDataU(interaction.user.id)
     
@@ -246,6 +243,7 @@ class Setups(commands.Cog):
     await interaction.response.send_message(embed =em, ephemeral=True)
     
   @settings_group.command(name = "color", description="Changes the default embed color. Enter a hex code as a color.")
+  @app_commands.describe(color="The hex code of the color you want in your embeds.")
   async def color(self, interaction: discord.Interaction, color: app_commands.Range[str, 6, 6]):
     settings = getDataU(interaction.user.id)
     #validate

@@ -4,7 +4,7 @@ from discord.ext.commands import has_permissions
 
 import os
 import sys
-from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, familyFriendlySetup, changeff
+from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff
 import random
 import json
 import base64
@@ -466,6 +466,28 @@ class Misc(commands.Cog):
     if await familyFriendlySetup(ctx.author.id):
       toSend = await changeff(toSend)
     await ctx.send(toSend)
+
+  @commands.command()
+  async def urbandict(self,ctx,term):
+    
+  
+    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+    
+    querystring = {"term":term}
+    
+    headers = {
+        'x-rapidapi-key': "eb9abc1708msh9ff61d9af0e2802p1a89dejsncd366a92c2b6",
+        'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com"
+        }
+    
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    color = int(await colorSetup(ctx.message.author.id),16)
+    try:
+      em = discord.Embed(color = color, title=f"Urban Dictionary result for {term}", description = "Definition: "+response.json()['list'][0]["definition"]+"\n\nExamples: "+response.json()['list'][0]["example"])
+      await ctx.send(embed = em)
+    except:
+      await ctx.send("there were no results returned, actually search for a real word next time, you moron.")
+    
   
 async def setup(bot):
   await bot.add_cog(Misc(bot))

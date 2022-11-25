@@ -63,25 +63,23 @@ def colorSetup(uid):
   return int(getDataU(uid).get('color'), 16)
 
 
-async def changeff(string):
-  string = string.replace("fuck", "f**k")
-  string = string.replace("bitch", "bi**h")
-  string = string.replace("shit", "sh*t")
-  string = string.replace("ass", "a**")
-  string = string.replace("bastard", "b*stard")
-  string = string.replace("dick", "d**k")
-  string = string.replace("penis","pp")
-  string = string.replace("vagina","vag*na")
+def changeff(string: str) -> str:
+  to_replace = {
+    "fuck" :"f#k",
+    "bitch": "bi##h",
+    "shit": "sh#t",
+    "ass": "a##",
+    "bastard": "b#stard",
+    "dick": "d##k",
+    "penis": "pen#s",
+    "vagina": "vag#na"
+  }
+  for old, new in to_replace.items():
+    string = string.replace(old, new)
+  
   return string
   
 
-
-async def familyFriendlySetup(uid):
-  await addDataU(uid)
-  users = await getDataU()
-  state = users[str(uid)]["familyFriendly"]
-  
-  return bool_to_int(state)
 
 
 def getDataSnipe(uid):
