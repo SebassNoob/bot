@@ -15,8 +15,6 @@ import requests
 from waifu import WaifuClient
 
 
-from collections import defaultdict
-
 
 import other.serverSettings as serverSettings
 import asyncio
