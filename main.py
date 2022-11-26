@@ -5,7 +5,6 @@ import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU
 from restart import run_main
 from discord.ext import commands
-
 from keep_alive import keep_alive
 import datetime
 
@@ -36,46 +35,10 @@ import topgg
 #pull to bot
 #run
 
-#1.8 log:
-#OPENING COMMENT: 
-#- This is essentially a complete code rewrite of the bot by using discord.py 2.0 to support interactional-based components, instead of d.py 1.7.3 + discord-components 2.1.2 (as a temporary method to support interactions). 
-#- solves several bad code practices that have plagued this project (if anyone cares: json as db => sqlite3, bot going offline due to ratelimits => auto restart once timeout finishes). 
-#- Due to the decommission of discord gateway api v7 in a year, this update is completely necessary to keep the bot up and running. 
-#- I will probably add slash commands slowly, since message content privilaged intent has been approved for use on this bot, thus the May 1st deadline does not apply.
-#- On the future of the bot, new features supported by discord.py 2.0 will be added if there are any creative applications for them. (eg. member timeouts? modals?)
-#- This bot will continue to be maintained for the foreseeable future with bug fixes and the addition of new features.
-
-#- The full list of changes to the user experience are detailed below, with plans for future updates:
-
-#- ADD: proper error messages for certain edge case errors
-#- CHANGE: bot and most events are all organised into a class
-#- FIX: iplookup failing in some cases
-#- ADD: textwall command
-#- CHANGE: snipe cache clear 30 days => 2 hours
-
-#TODO:
-#- increase cooldowns add logging to cmds
-#- remove discord-components dependancy
-#- bump discord.py to 2.0
-#- rewrite all button and select code
-#- fix autoresponse erroring on adding key value pair
-#- rewrite snipe to use sqlite3 db
-
-#FUTURE:
-#- replace message based responses with interaction based components
-#- new commands involving new featues of d.py 2.0
-#- transition away from the default prefix of '$' to something like 'a$' or 'a.' since '$' is used very commonly to denote currency.
-
-
 
 
 def get_prefix(bot, message): 
-  try:
-    with open('./json/serverData.json', 'r') as f: 
-      prefixes = json.load(f) 
-    return prefixes[str(message.guild.id)]['Prefix']
-  except KeyError:
-    return '$'
+  return '$'
 
 
 
@@ -86,7 +49,7 @@ class Bot(commands.AutoShardedBot):
   def __init__(self):
     intents = discord.Intents.default()
     intents.message_content = True
-        
+    
     super().__init__(command_prefix=get_prefix, intents=intents, shard_count= 2, help_command= None)
 
   async def on_ready(self):
@@ -96,6 +59,8 @@ class Bot(commands.AutoShardedBot):
   
     count = {}
     for guild in self.guilds:
+      addData(guild.id)
+      
       if guild.shard_id not in count:
         count[guild.shard_id] = 1
       else:
@@ -110,7 +75,7 @@ class Bot(commands.AutoShardedBot):
 
   async def on_guild_join(self,guild):
     print(guild.name)
-    await addData(guild.id)
+    addData(guild.id)
     for channel in guild.text_channels:
       if channel.permissions_for(guild.me).send_messages:
       
@@ -222,29 +187,23 @@ class Bot(commands.AutoShardedBot):
     else:
       await self.process_commands(message)
     
-    try:
     
+    #autoresponse
+    if not message.guild:
+      return 
     
-      await addData(message.guild.id)
-      guildId = message.guild.id
-      guilds = await getData()
-      if guilds[str(guildId)]["autoresponse"] == 1:
+    conn = get_db_connection("./other/serverSettings.db")
+  
+  
+    data = conn.execute('SELECT autoresponse, autoresponse_content FROM serverSettings WHERE id = (?)', (message.guild.id, )).fetchone()
       
-        conn = get_db_connection(f'./other/data/{guildId}.db')
+    conn.close()
+    if bool(dict(data)['autoresponse']) and message.content in eval(dict(data)['autoresponse_content']).keys():
+      await message.channel.send(eval(dict(data)['autoresponse_content'])[message.content])
+        
       
-        data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
-        for keyword in data:
-          res_words = keyword[1].split(" ")
-        
-        
-          for word in message.content.split(" "):
-            if word in res_words:
-              res_words.remove(word)
-          if len(res_words) == 0:
-            await message.channel.send(keyword[2].replace(";",","))
-          else: 
-            continue
-
+    
+      
       if f'<@{self.user.id}>' in message.content or f'<@!{self.user.id}>' in message.content :
       
         if 'help' in message.content:
@@ -322,9 +281,7 @@ class Bot(commands.AutoShardedBot):
           
           
         
-    except Exception:
-      pass
-  
+    
     if message.channel.id == 864467615891324938 and "ty" in message.content and "for" in message.content and "upvoting" in message.content:
       data = message.content.split(" ")
       data = list(data)[1]

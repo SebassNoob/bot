@@ -3,7 +3,9 @@ import json
 import sqlite3
 from other.sqliteDB import get_db_connection
 import other.userSettings as userSettings 
+import other.serverSettings as serverSettings 
 from typing import *
+import csv
 
 def bool_to_int(bool):
   if bool == True:
@@ -33,28 +35,35 @@ def getDataU(uid: int) -> Union[Dict[str, Any], None]:
   
   return userSettings.get(uid)
 
-async def addData(guildId):
-  
-  guilds = await getData()
-  if str(guildId) in guilds:
-    return False
+def addData(guildId: int) -> bool:
+  with open("./json/autoresponse.csv",newline="") as file:
+    reader = list(csv.DictReader(file))
+    #reader is List[Dict[str, str]]
+    #construct dict of shape Dict[str, str]
+    autores = {}
+          
+    x = list(map(lambda i: {i['word']:i['response']}, reader))
+    x = list(map(lambda i: autores.update(i),x))
+    
+  if serverSettings.get(guildId) is None:
+    serverSettings.insert({
+    "id" :guildId,
+    "autoresponse": 1,
+    "autoresponse_content":f'{autores}',
+    "blacklist": '[]'
+    })
+    
+    return True
   else:
     
-    guilds[str(guildId)] = {}
-    guilds[str(guildId)]["autoresponse"] = 1
-    guilds[str(guildId)]["Prefix"] = '$'
-    
-    
+    return False
 
-  with open("./json/serverData.json","w") as f:
-    json.dump(guilds,f)
-  return True
 
-async def getData():
-  with open("./json/serverData.json","r") as f:
-    guilds = json.load(f)
-  return guilds
+def getData(id: int) -> Union[Dict[str, Any], None]:
+  
+  return serverSettings.get(id)
 
+  
 def colorSetup(uid):
   
   addDataU(uid)
