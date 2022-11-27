@@ -4,7 +4,7 @@ from discord.ext.commands import has_permissions
 from discord import app_commands
 import os
 import sys
-from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff
+from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
 import random
 import json
 import base64
@@ -13,67 +13,94 @@ from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import requests
 from waifu import WaifuClient
+from typing import *
 
 
-
+from pyinsults import insults
 import other.serverSettings as serverSettings
 import asyncio
 import csv
 sys.path.insert(1,'./other')
 from sqliteDB import create_db, get_db_connection
 
+class anime_embed(discord.Embed):
+  def __init__(self, pic_type: str, interaction_user: discord.Interaction.user, image_url: str):
+      
+    self.pic_type = pic_type
+    super().__init__(color=colorSetup(interaction_user.id))
+    self.set_author(name = f"{pic_type} requested by {interaction_user.display_name}",icon_url = interaction_user.display_avatar).set_image(url=image_url)
+  def define(self):
+    desc = {
+      "waifu" : "A fictional female character from  an anime, manga, or video game to whom one is romantically attracted",
+      "neko": "A woman with cat ears, whiskers, and sometimes paws or a tail.",
+      "shinobu": "A fictional character with this surname",
+      "megumin": "A fictional character with this surname" ,
+      "bully": "A woman who bullies others into submission",
+      "cuddle": "A person who is cuddling something",
+      "cry": "An anime character crying",
+      "hug": "An anime character hugging something",
+      "kiss": "An anime character kissing something",
+      "lick": "An anime character licking something",
+      "blush": "An anime character blushing",
+      "smile": "An anime character smiling",
+      "wave": "An anime character waving", 
+      "happy": "An anime character being happy",
+      "dance": "An anime character dancing"
+      
+    }
+    return desc[self.pic_type]                                                        
+      
+class nerd(discord.ui.View):
+  def __init__(self, em: anime_embed):
+    super().__init__()
+    self.em = em
 
+  @discord.ui.button(label="🤓 Hopefully apt description", style=discord.ButtonStyle.grey)
+  async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+    await interaction.response.send_message(self.em.define(), ephemeral=True)
+        
 
 
 class Misc(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
   
 
-
+  utils = app_commands.Group(name="utils", description="Random utilities that fit the rude theme.")
 
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  async def pick(self,ctx,*args):
+  @utils.command(name="pick", description="Picks a random option from a list of given words.")
+  @app_commands.describe(arguments="The hex code of the color you want in your embeds.")
+  async def pick(self,interaction: discord.Interaction, arguments: str):
     
+    choice = random.choice([arg.strip() for arg in arguments.split(',')])
     
-        if args ==():
-          await ctx.send(f"You're missing an argument: ``list`` in that command, dumbass.")
-
-        argList = []
-        for arg in args:
-          argList.append(arg)
-        
-        randomArg = argList[random.randint(0,len(argList)-1)]
-        await ctx.send(' {}'.format(ctx.author.mention)+" I pick:\n" + randomArg)
+    insult = changeff(insults.random_insult()) if bool(getDataU(interaction.user.id).get("familyFriendly")) else insults.random_insult()
+    
+    await interaction.response.send_message(f'{interaction.user.mention}\nI pick {choice}, you indecisive {insult}.')
         
 
 
 
   
-  @commands.command(name = "predict",aliases = ["8ball"])
-  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  async def predict(self,ctx,*args):
-        if args ==():
-          await ctx.send(f"You're missing an argument: ``question`` in that command, dumbass.")
-        question = ""
-        predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
-        randomPrediction = predictions[random.randint(0,14)]
+  @utils.command(name = "8ball", description="Gives you a yes/no answer based on a given question")
+  @app_commands.describe(question="The yes/no question you want to ask")
+  async def predict(self, interaction: discord.Interaction, question: str):
         
-         
-
-        for arg in args:
-          question = question +" "+ arg
-
-        color = int(await colorSetup(ctx.message.author.id),16)
-        embedVar5 = discord.Embed(color = color)
-        embedVar5.set_author(name="Question from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
-        embedVar5.add_field(name = question, value = randomPrediction,inline = False)
+    predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes, stupid.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
         
-        embedVar5.set_footer(text="u suck")
-        await ctx.channel.send(embed=embedVar5)
+    prediction = changeff(random.choice(predictions)) if bool(getDataU(interaction.user.id).get("familyFriendly")) else random.choice(predictions)
+      
+
+       
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color)
+      
+    em.add_field(name = question, value = prediction,inline = False)
+    em.set_footer(text=f"requested by {interaction.user.display_name}")
+    
+    await interaction.response.send_message(embed=em)
 
 
   autoresponse = app_commands.Group(name="autoresponse", description="The bot will respond to a list of predetermined words", guild_only=True)
@@ -118,9 +145,14 @@ class Misc(commands.Cog):
   @app_commands.checks.has_permissions(manage_guild=True)
   @app_commands.describe(id="The numeric id of the word response pair you want to remove. You can check this id at  /autoresponse menu")
   async def remove(self, interaction: discord.Interaction, id: int):
+    
     to_update = serverSettings.get(interaction.guild_id)
     key_values = list(eval(to_update['autoresponse_content']).items())
-    removed = key_values.pop(id)
+    try:
+      removed = key_values.pop(id)
+    except IndexError:
+      await interaction.response.send_message(content="❌ Enter a proper id, idiot. Use /autoresponse menu to check the id.", ephemeral = True)
+      return
     #id is equal to the index of the k-v pair in items()
     res = {}
     for (k,v) in key_values:
@@ -140,10 +172,8 @@ class Misc(commands.Cog):
     
     
   
-  @commands.command()
-  @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def meme(self,ctx):
+  @app_commands.command(name="meme", description="Sends a top meme from reddit")
+  async def meme(self, interaction: discord.Interaction):
   
 
 
@@ -155,112 +185,79 @@ class Misc(commands.Cog):
       async with cs.get(subreddits[random.randint(0,len(subreddits)-1)]) as r:
         res = await r.json()
         
-        color = int(await colorSetup(ctx.message.author.id),16)
+        color = colorSetup(interaction.user.id)
         
-        while True:
-          try:
-            randomn = random.randint(0,15)
-            embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
-            embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
-            break
-
-          except KeyError as e:
-            raise e
-            
-        tip = postTips()
+        try:
+          randomn = random.randint(0,15)
+          embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
-        if tip != None:
+          embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
           
-          await ctx.send(tip)
 
-        await ctx.send(embed=embed)
+        except KeyError as e:
+          raise e
+            
+        
 
-
-  @commands.command()
-
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def snipe(self,ctx, user: discord.Member):
+    await interaction.response.send_message(embed=embed)
 
 
-    
-    
-    settings  = await getDataU()
+  @app_commands.command(name="snipe", description="Sends the most recently deleted messaage of a user.")
+  @app_commands.guild_only()
+  @app_commands.describe(user="The user you want to snipe")
+  async def snipe(self,interaction: discord.Interaction, user: discord.Member):
+    addDataU(user.id)
+    if not bool(getDataU(user.id)['sniped']):
+      await interaction.response.send_message("❌ This guy can't be sniped, what a loser. (/settings sniped off)")
+      return
     #implement nsfw check
-
-    if settings[str(user.id)]["sniped"] == 0:
-      await ctx.reply("This guy can't be sniped, what a loser.")
-      raise Exception
-    
     
 
-
+    
 
     try:
-      message, time, nsfw =getDataSnipe(user.id)
+      message, time, nsfw = getDataSnipe(user.id)
     #if function returns none 
     except TypeError:
-      await ctx.reply("There's nothing to snipe!")
-      raise Exception
+      await interaction.response.send_message("There's nothing to snipe!")
+      return
     
-    if ctx.channel.nsfw == False and nsfw == True:
-      await ctx.send("The user you mentioned last deleted their message in a nsfw channel. 🔞")
-      raise Exception
+    if bool(getDataU(user.id)['familyFriendly']):
+      message = changeff(message)
+
     
-    color = int(await colorSetup(ctx.author.id),16)
+    if nsfw:
+      if isinstance(interaction.channel, discord.abc.GuildChannel) and not interaction.channel.nsfw:
+        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
+        return
+      elif isinstance(interaction.channel, discord.Thread) and not interaction.channel.parent.nsfw:
+        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
+        return
+    
+    color = colorSetup(interaction.user.id)
       
     embed = discord.Embed(color= color,description=message)        
     embed.set_footer(text=f"UTC {time}")
         
-    embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
-    tip = postTips()
-          
-    if tip != None:
-            
-      await ctx.send(tip)
-    await ctx.send(embed=embed)
+    embed.set_author(name= f"Quote from {user.name}", icon_url = user.display_avatar)
+    
+    await interaction.response.send_message(embed=embed)
 
   
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def waifu(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='waifu')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Waifu requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
+  
+
+  @app_commands.command(name="anime", description="Sends a pic of an anime woman")
+  @app_commands.describe(type="Type of picture you want to see")
+  async def anime(self, interaction: discord.Interaction, type: Literal['waifu', 'neko','shinobu', "megumin","bully","cuddle", "cry", "hug","kiss","lick","blush","smile","wave","happy","dance"]):
+    pic = WaifuClient().sfw(category=type)
+    em = anime_embed(type,interaction.user, pic)
     
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def neko(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='neko')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
     
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def shinobu(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='shinobu')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
+    await interaction.response.send_message(embed = em, view = nerd(em))
+    
+  
     
   @commands.command()
   @commands.check(CustomCooldown(1, 86400, 1, 86400, commands.BucketType.user, elements=getUserUpvoted()))
