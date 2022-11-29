@@ -397,7 +397,7 @@ keep_alive()
 try:
     bot.run(os.getenv('TOKEN'))
 except discord.errors.HTTPException as e:
-  raise e
+  print(e) 
   print("restarting in 10s...")
   time.sleep(10)
   system("python restart.py")
