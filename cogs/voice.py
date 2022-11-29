@@ -98,8 +98,8 @@ class Voice(commands.Cog):
         
     if seconds > audio.info.length:
       seconds = int(math.floor(float(audio.info.length)))
-      await interaction.response.send_message(f"(The track length is maxed at {seconds}s, so playing for that amount of time)\nNow playing a random earrape in your vc for {seconds}s. LOL")
-    await interaction.response.send_message("Now playing a random earrape in your vc for {}s. LOL".format(seconds))
+      await interaction.response.send_message(f"(The track length is maxed at {seconds}s, so playing for that amount of time)\nNow playing a random earrape piece in your vc for {seconds}s. LOL", view = noise_view())
+    await interaction.response.send_message("Now playing a random earrape piece in your vc for {}s. LOL".format(seconds), view = noise_view())
         
         
           
