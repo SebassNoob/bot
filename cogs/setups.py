@@ -17,15 +17,14 @@ import datetime
 class Setups(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
 
     
-  @commands.command()
-  @commands.is_owner()
-  async def sync(self, ctx) -> None:
-      
+  @app_commands.command(name="sync", description="Syncs the commandtree with the updated commands")
+  async def sync(self, interaction: discord.Interaction) -> None:
+    await interaction.response.defer(thinking=True)
     await self.bot.tree.sync()
-    await ctx.send("Synced!")
+    await interaction.followup.send("Commands have synced!")
     
   @app_commands.command(name = "info", description="Shows general information and support links.")
   async def credit(self, interaction: discord.Interaction):
