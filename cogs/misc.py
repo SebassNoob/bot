@@ -259,42 +259,20 @@ class Misc(commands.Cog):
     
   
     
-  @commands.command()
-  @commands.check(CustomCooldown(1, 86400, 1, 86400, commands.BucketType.user, elements=getUserUpvoted()))
-  async def daily(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    em = discord.Embed(color = color,description = "You've claimed your daily and recieved 30 minutes of lower cooldowns. [Upvote](https://top.gg/bot/844757192313536522) me to get a 12h extension!")
-    await ctx.send(embed = em)
-    with open("./json/upvoteData.json","r") as f:
-      file= json.load(f)
   
-    try:
-      d = {str(ctx.author.id): file[str(ctx.author.id)]+30}
-
-      file.update(d)
-    except KeyError:
-      file[str(ctx.author.id)] = 30
-    
-    
-    with open("./json/upvoteData.json","w") as f:
-      json.dump(file,f)
-      f.close
-
-
-  @commands.command()
-  async def iplookup(self,ctx,ip: str):
-    color = int(await colorSetup(ctx.author.id),16)
+  @app_commands.command(name = "iplookup", description="Finds the location of a given ip")
+  @app_commands.describe(ip="The ip you want to find the location of")
+  async def iplookup(self, interaction: discord.Interaction,ip: str):
+    color = colorSetup(interaction.user.id)
     url = f"http://ip-api.com/json/{ip}"
     res = requests.get(url).json()
     
-    for item in res.items():
-      if item[0] == "status":
-        if item[1] =="success":
+    
+    
+    if res['status'] != "success":
           
-          pass
-        else:
-          
-          await ctx.send("Thats not a valid ip, idiot.")
+      await interaction.response.send_message("❌ Thats not a valid ip, idiot.", ephemeral=True)
+      return
           
           
     try:
@@ -305,37 +283,29 @@ class Misc(commands.Cog):
       latitude = res['lat'] or "Unknown"  
       longitude = res['lon'] or "Unknown" 
       provider = res['isp'] or "Unknown" 
-    except:
-      await ctx.send("An unspecified error occured, the ip address probably is private. What a loser lmao.")
-    await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
+    except KeyError:
+      await interaction.response.send_message("❌ An unspecified error occured, the ip address probably is private. What a loser lmao.")
+      return
+    await interaction.response.send_message(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
       
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def textwall(self,ctx,num:int,*content):
-    #print(len(content))
-    #print(content)
-    if len(content) == 0:
-      await ctx.send("You forgot to say what you want to textwall! You're such an idiot.")
-      raise Exception("no args passed into textwall")
-    sents=""
-    for word in content:
-      sents = sents+ f" {word}"
-
-    sents = sents[1:]
-    toSend= ""
+  @app_commands.command(name="textwall", description="Sends a wall of repeated text in a single message")
+  @app_commands.describe(num = "The number of times to spam", content="What to spam")
+  async def textwall(self, interaction: discord.Interaction, num:int, content: str):
+    
+    toSend = ''
     for i in range(num):
-      toSend = toSend + f" {sents}"
-
+      toSend += f'{content.strip()} '
     if len(toSend) > 2000:
-      await ctx.send("Your text wall is too long (>2000 characters), you moron. ")
-      raise Exception("textwall too long")
-    if await familyFriendlySetup(ctx.author.id):
-      toSend = await changeff(toSend)
-    await ctx.send(toSend)
+      await interaction.response.send_message("❌ Your text wall is too long (>2000 characters), you moron.")
+      return
+    if bool(getDataU(interaction.user.id)['familyFriendly']):
+      toSend = changeff(toSend)
+    await interaction.response.send_message(toSend)
 
-  @commands.command()
-  async def urbandict(self,ctx,term):
+  @app_commands.command(name="urbandict", description="Looks up a term in urban dictionary")
+  @app_commands.describe(term = "The term you want to search")
+  async def urbandict(self, interaction: discord.Interaction, term: str):
     
   
     url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
@@ -348,12 +318,12 @@ class Misc(commands.Cog):
         }
     
     response = requests.request("GET", url, headers=headers, params=querystring)
-    color = int(await colorSetup(ctx.message.author.id),16)
+    color = colorSetup(interaction.user.id)
     try:
       em = discord.Embed(color = color, title=f"Urban Dictionary result for {term}", description = "Definition: "+response.json()['list'][0]["definition"]+"\n\nExamples: "+response.json()['list'][0]["example"])
-      await ctx.send(embed = em)
-    except:
-      await ctx.send("there were no results returned, actually search for a real word next time, you moron.")
+      await interaction.response.send_message(embed = em)
+    except IndexError:
+      await interaction.response.send_message("❌ there were no results returned, actually search for a real word next time, you moron.")
     
   
 async def setup(bot):

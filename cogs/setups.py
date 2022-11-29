@@ -34,7 +34,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.0.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
     buttons = [
       discord.ui.Button(
@@ -70,31 +70,29 @@ class Setups(commands.Cog):
       
       embedVar = discord.Embed(color = color)
       embedVar.set_author(name="Annoybot commands")
-      embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)",inline = False)
       
-      embedVar.add_field(name = "``insult (*user)``", value = "The bot will generate an insult. \n**4**s cooldown.",inline = False)
-      embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**4**s cooldown.",inline = False)
-      embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (23 possibilities)\n**4**s cooldown.",inline = False)
-      embedVar.add_field(name = "``dmthreaten (user, *customthreat)``", value = "The bot DMs a user and threaten them. (13 possibilities)\n**10**s cooldown.",inline = False)
-      embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``insult (*user)``", value = "The bot will generate an insult.",inline = False)
+      embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)",inline = False)
+      embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (23 possibilities).",inline = False)
+      embedVar.add_field(name = "``dmthreaten (user, *customthreat)``", value = "The bot DMs a user and threaten them. (13 possibilities).",inline = False)
+      embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.",inline = False)
       
-      embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
-      embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. (20 possibilities) Warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
+      embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.",inline = False)
+      embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. (20 possibilities) Warning, some jokes may be insensitive.",inline = False)
   
       
       
   
       embedVar3 = discord.Embed(color = color)
       embedVar3.set_author(name="Annoybot commands (misc)")
-      embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
-      embedVar3.add_field(name = "``predict (question)``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
-      embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
-      embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.\n**10**s cooldown.",inline = False)
-      embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
-      embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
-      embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
-      embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
-      embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
+      embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.",inline = False)
+      embedVar3.add_field(name = "``predict (question)``", value = "Predicts the answer to a yes/no question.",inline = False)
+      embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
+      embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
+      embedVar3.add_field(name = "``meme``", value = "Sends a meme.",inline = False)
+      embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.",inline = False)
+      embedVar3.add_field(name = "``anime (type)``", value = "Shows a picture of an anime girl.",inline = False)
       embedVar3.add_field(name = "``iplookup(ip)``", value = "Looks up somebody's ip LOL.",inline = False)
       embedVar3.add_field(name = "``urbandict(text)``", value = "looks for the definition of the given word on urban dictionary.",inline = False)
       

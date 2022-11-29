@@ -12,4 +12,4 @@ def clearSnipe():
     
     conn.commit()
     conn.close()
-    time.sleep(60*60*24)
+    time.sleep(60*60*2)

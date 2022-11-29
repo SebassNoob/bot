@@ -396,10 +396,11 @@ keep_alive()
 
 try:
     bot.run(os.getenv('TOKEN'))
-except discord.errors.HTTPException:
-    print("\n\n\nBLOCKED BY RATE LIMITS\nRESTARTING NOW\n\n\n")
-    time.sleep(10)
-    system("python restart.py")
+except discord.errors.HTTPException as e:
+  raise e
+  print("restarting in 10s...")
+  time.sleep(10)
+  system("python restart.py")
     
 
 
