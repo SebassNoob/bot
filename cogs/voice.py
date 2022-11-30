@@ -83,12 +83,13 @@ class Voice(commands.Cog):
   @app_commands.guild_only()
   @app_commands.describe(seconds="The number of seconds to play the earrape sound")
   async def earrape(self, interaction: discord.Interaction, seconds: Optional[int] = 5):
+    color= colorSetup(interaction.user.id) 
     try:
       
       channel = interaction.user.voice.channel
       voice = await channel.connect()
     except AttributeError:
-      await interaction.response.send_message(embed = discord.Embed(color = 0x000000, description = "❌ You are not in a VC, stupid."))
+      await interaction.response.send_message(embed = discord.Embed(color = color, description = "❌ You are not in a VC, stupid."))
       return
     
     

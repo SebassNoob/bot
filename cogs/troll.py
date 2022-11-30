@@ -1,15 +1,15 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 from discord.ext.commands import has_permissions
-import os 
+from typing import *
 
 from other.asyncCmds import colorSetup,addData,getDataU,addDataU,postTips
 
 import random
-import json
 import asyncio
 import string
-
+import datetime
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 
@@ -18,195 +18,141 @@ from other.upvoteExpiration import getUserUpvoted
 class Troll(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
 
         
 
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def channeltroll(self,ctx,user: discord.Member = None):
-    if user:
-      
-      randomstr = ''.join(random.choices(string.ascii_lowercase+string.digits,k=10))
-      trolledUser = user
-      
-      
-      guild = ctx.guild
-      
-      overwrites = {
-          guild.default_role: discord.PermissionOverwrite(read_messages=False),
-          guild.me: discord.PermissionOverwrite(read_messages=True),
-          trolledUser: discord.PermissionOverwrite(read_messages=True)
-          
-      }
-      await guild.create_text_channel(randomstr, overwrites=overwrites)
-      for channel in ctx.guild.channels:
-          if channel.name == randomstr:
-            channel_id = channel.id
-
-
-
-      tip = postTips()
-        
-      if tip != None:
-          
-        await ctx.send(tip)
-
-      await ctx.send(f"A new channel {channel.mention} was created. The bot will ping the trolled user 3 times to annoy them.")
-      
-          
-      
-      
-      channel = self.bot.get_channel(channel_id)
-      
-      def response(m):
-          return m.author == user
-
-      while True:   
-        try:
-          for i in range(3):
-            await channel.send(user.mention+" you've been trolled")
-            await asyncio.sleep(0.5)
-            
-          response = await self.bot.wait_for('message', check=response, timeout=120.0)
-          await channel.send(ctx.author.mention+" trolled you lol.")
-          await asyncio.sleep(1)
-          existing_channel = discord.utils.get(guild.channels, name=randomstr)
+  @app_commands.command(name = "channeltroll", description="Creates a temporary thread then pings a user once to mess with them")
+  @app_commands.describe(user="The user to ping")
+  @app_commands.checks.bot_has_permissions(send_messages_in_threads = True, create_public_threads=True, manage_threads = True)
+  @app_commands.guild_only()
+  async def channeltroll(self, interaction: discord.Interaction, user: discord.Member):
     
-    
-          if existing_channel is not None:
-            await existing_channel.delete()
-        
+    addDataU(user.id)
+    randomstr = ''.join(random.choices(string.ascii_lowercase+string.digits,k=10))
+    if isinstance(interaction.channel, discord.abc.GuildChannel):
+      channel = await interaction.channel.create_thread(name = randomstr, auto_archive_duration =1440)
+    elif isinstance(interaction.channel, discord.Thread):
+       channel = await interaction.channel.parent.create_thread(name = randomstr, auto_archive_duration =1440)
+    else:
+      raise Exception("exception in channeltroll: channel is unknown")
+
+      
+
+    await interaction.response.send_message(f"A new thread {channel.mention} was created. The bot will ping this user to annoy them.")
+      
           
-
-        except asyncio.TimeoutError:
-          existing_channel = discord.utils.get(guild.channels, name=randomstr)
-    
-    
-          if existing_channel is not None:
-            await existing_channel.delete()
-        break
-
-
-
-  
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-
-  
-
-  @commands.bot_has_guild_permissions(manage_nicknames=True)
-  async def nicktroll(self,ctx, member: discord.Member, *args):
-    if member:
-      bot_member = ctx.guild.get_member(self.bot.user.id)
-      if bot_member.top_role <= member.top_role:
-        await ctx.send("Can't do that, that member's top role is higher than mine.")
-      else:
-        if not args:
-          nick = ''.join(random.choices(string.ascii_letters+string.digits,k=10))
-        
-        else:
-          nick = ''
-          for arg in args:
-
-            nick = nick + ' ' + arg
-          
-          
-        await member.edit(nick=nick)
-
-        tip = postTips()
-        
-        if tip != None:
-          
-          await ctx.send(tip)
-
-        await ctx.send(f'Nickname was changed for {member} to **{nick}** for 5 minutes. ')
-        await asyncio.sleep(300.0)
-        await member.edit(nick=None)
-
       
-
-
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def dmtroll(self,ctx, user : discord.Member):
-    uid = user.id
-    users = await getDataU()
-    
-
-
-    async def command():
-
-      tip = postTips()
-        
-      if tip != None:
-          
-        await ctx.send(tip)
-      
-      channel = await user.create_dm()
-      
-      for i in range(3):
-        await channel.send(user.mention + " imagine getting pinged in DMs moron.")
-      await channel.send(f"Dmtroll from {ctx.author.name} in {ctx.guild.name}")
-      
-      
-      
-      
+    message = [
+      "We would like to contact you about your car's extended warranty.",
+      "You have a virus on your computer, call Microsoft Support at +91 6969 6969",
+      "Early incidents of trolling were considered to be the same as flaming, but this has changed with modern usage by the news media to refer to the creation of any content that targets another person. The Internet dictionary, NetLingo, suggests there are four grades of trolling: playtime trolling, tactical trolling, strategic trolling, and domination trolling. The relationship between trolling and flaming was observed in open-access forums in California, on a series of modem-linked computers.",
+      "早上好中国，我喜欢bing chilling",
+      "Suck on your dad",
+      "Hiya, we would like you to join us on mission to prove the earth is flat",
+      "🤓",
+      "Good evening sir, how would you like your coffee done today?",
+      "Hello, we have an arrest warrant for joe? Are you Joe?"
+    ]
+     
+       
     try:
-      if user.bot == True:
-        await ctx.send("The user you mentioned is a bot, idiot.")
-        raise Exception("User mentioned is a bot")
-      if users[str(uid)]["dmblocker"] == 0:
-        await ctx.send("The trolled user will be pinged 3 times through dms lol.")
       
-        await command()
+      await channel.send(f"Hello, {user.mention}. {random.choice(message)}")
+      
+            
+      await self.bot.wait_for('message', check= lambda m: m.author == user and m.channel == channel, timeout = 180)
+      await channel.send(f"courtesy of {interaction.user.mention}. this thread has been automatically archived, but you can keep it around if you'd like")
+      await asyncio.sleep(1)
+      
+          
+
+    except asyncio.TimeoutError:
+      pass
+    finally:
+      await channel.edit(archived = True)
+    
+
+
+
+  
+  @app_commands.command(name = "nicktroll", description = "Generates a temporary nickname for a user")
+  @app_commands.checks.bot_has_permissions(manage_nicknames = True)
+  @app_commands.describe(member="The member to troll", name = "A nick to give")
+  async def nicktroll(self, interaction: discord.Interaction, member: discord.Member, name: Optional[str]=None):
+    addDataU(member.id)
+    bot_member = interaction.guild.get_member(self.bot.user.id)
+    if bot_member.top_role <= member.top_role or member == interaction.guild.owner:
+      await interaction.response.send_message("❌ Can't do that, that member's top role is either equal to or higher than my top role.")
+    else:
+      if not name:
+         name = ''.join(random.choices(string.ascii_letters+string.digits,k=10))
+        
+      
+        
+          
+      await member.edit(nick=name)
+
         
 
-
-        
-      elif users[str(uid)]["dmblocker"] ==1:
-        await ctx.send("Sorry, the user you mentioned doesn't want to be dm'ed by me ;(")
-
+      await interaction.response.send_message(f'Nickname was changed for {member} to **{name}** for 3 minutes. ')
+      await asyncio.sleep(180.0)
+      await member.edit(nick=None)
 
       
-    except KeyError:
-      await addDataU(uid)
-      users[str(uid)]["dmblocker"] = 0
-      with open("./json/userSettings.json","w") as f:
-        json.dump(users,f)
 
-      await ctx.send("The trolled user will be pinged 3 times through dms lol.")
-      await command()
+
+  @app_commands.command(name = "dmtroll", description = "pings a user in DMs once")
+  @app_commands.describe(user="The user to ping")
+  @app_commands.guild_only()
+  async def dmtroll(self, interaction: discord.Interaction, user : discord.Member):
+    addDataU(user.id)
+    if bool(getDataU(user.id).get("dmblocker")) or user.bot:
+      await interaction.response.send_message(content="❌ The user you mentioned is either a bot, or does not want to be DM'ed. Bet you look stupid now.", ephemeral=True)
+      return 
+  
+    channel = await user.create_dm()
+      
+      
+    await channel.send(f"{user.mention} hey 😏, did u like the ping sound?\n/dmtroll from {interaction.user.display_name} in {interaction.guild.name}")
+      
+      
+      
+      
+    
+    await interaction.response.send_message("The trolled user has been pinged through dms lol.")
+      
+        
+        
 
       
 
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def ghosttroll(self,ctx,user: discord.Member):
+  @app_commands.command(name = "ghosttroll", description = "Ghostpings a user in 3 different channels")
+  @app_commands.describe(user="The user to ping")
+  @app_commands.guild_only()
+  async def ghosttroll(self, interaction: discord.Interaction ,user: discord.Member):
     
 
 
     allowedChannels = []
     
-    for channel in ctx.guild.channels:
-      if user.permissions_in(channel).send_messages and str(channel.type) ==  'text':
+    for channel in interaction.guild.channels:
+      if channel.permissions_for(user).send_messages and str(channel.type) ==  'text':
         
         allowedChannels.append(channel.id)
 
     if len(allowedChannels) != 0:
-      await ctx.send("The user will be ghost pinged in 3 channels to annoy them.")   
+      await interaction.response.send_message("The user will be ghost pinged in 3 channels to annoy them.")   
     else: 
-      await ctx.send("That user can't access any channels, dummy.")  
+      await interaction.response.send_message("That user can't access any channels, bruh wtf")  
 
     i = 3
-    while True:
+    while i !=0:
       
       try:
-        targetChannel = self.bot.get_channel(allowedChannels[random.randint(0,len(allowedChannels))])
+        targetChannel = self.bot.get_channel(random.choice(allowedChannels))
         
           
         message = await targetChannel.send("{}".format(user.mention))
@@ -214,111 +160,85 @@ class Troll(commands.Cog):
         await message.delete()
         i-=1
         await asyncio.sleep(1)
-        if i == 0:
-          break
+        
 
       except Exception:
-        pass
+        continue
 
 
   
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def fakemute(self,ctx,user: discord.Member,*args):
+  @app_commands.command(name = "fakemute", description = "Fakes a mute for a user")
+  @app_commands.describe(user="The user to 'mute'")
+  @app_commands.guild_only()
+  @app_commands.checks.bot_has_permissions(moderate_members = True)
+  async def fakemute(self, interaction: discord.Interaction ,user: discord.Member, reason: Optional[str]=None):
     
+    #check subset of permissions or role
+    if interaction.guild.get_member(self.bot.user.id).top_role <= user.top_role or  user.guild_permissions.administrator:
+      await interaction.response.send_message("❌ Can't do that, that member's top role is either equal to or higher than my top role.")
+      return
 
-    reason = ""
-    msg = ""
-    for arg in args:
-      msg =msg + arg
-    if msg == "":
+    
+    if not reason:
       reasons = ["Too annoying in chat.", "Rolled the Rick.", "Having an opinion.","Needing help.","Farting in vc","Breaking rule no. class 'c' section 'f' rule '12-02'. ","Being the alpha male","wearing a condom and livestreaming it."]
-      reason = reasons[random.randint(0,len(reasons)-1)]
-    else:
-      for arg in args:
-        reason = reason + " "+ arg
-    color = int(await colorSetup(ctx.message.author.id),16)
+      reason = random.choice(reasons)
+    
+    color = colorSetup(interaction.user.id)
     em = discord.Embed(color =  color)
     
-    em.add_field(name="**mute**",value="**Offender:** {}".format(user.mention)+"\n**Reason:** "+reason+"\n**Responsible mod:** {}".format(ctx.author),inline=False)
+    em.add_field(name="**Mute**",value=f"**Offender:** {user.mention}\n**Reason:** {reason}\n**Responsible mod:** {interaction.user.display_name}",inline=False)
 
-    em.set_footer(text="sike you thought")
+    em.set_footer(text="imagine")
 
+    await user.timeout(datetime.timedelta(seconds= 3))
               
-              
-    tip = postTips()
-        
-    if tip != None:
-          
-      await ctx.send(tip)
-    await ctx.send(embed=em)
+    
+    await interaction.response.send_message(embed=em)
 
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  
+  @app_commands.command(name = "fakeban", description = "Fakes a ban for a user")
+  @app_commands.describe(user="The user to 'ban'")
+  @app_commands.guild_only()
+  @app_commands.checks.bot_has_permissions(moderate_members = True, manage_nicknames=True)
+  async def fakeban(self, interaction,user: discord.Member):
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color =  color)
+    
+    em.add_field(name="**Ban**",value=f"**Offender:** {user.mention}\n**Responsible mod:** {interaction.user.display_name}",inline=False)
 
-  @commands.bot_has_guild_permissions(create_instant_invite=True,kick_members=True)
-  @has_permissions(kick_members = True)
-  async def fakeban(self,ctx,user: discord.Member):
-    
-    
-    await ctx.send("This command will only KICK the member, but not ban them. Are you sure you want to continue?\n`yes` or `no`")
-    channel = await user.create_dm()
-    def check(msg):
-      return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in ['yes','no']
+    em.set_footer(text="imagine")
+    await interaction.response.send_message(embed=em)
+    await asyncio.sleep(0.1)
+    await user.edit(nick=f'!<{user.id}>')
+    await user.timeout(datetime.timedelta(seconds= 3))
     try:
-      msg = await self.bot.wait_for("message",timeout=30,check=check)
-      if msg.content == "yes":
-        try:
-          invite = await ctx.channel.create_invite(max_uses=1,unique=True)
-
-          msg_1=await channel.send(f"You've been 'banned' from {user.guild.name} \nlmfao get trolled by {ctx.author.name}")
-          msg_2=await channel.send(str(invite))
-          await user.kick()
-          await ctx.send("The user has been kicked and sent an invite.")
-        except:
-          await ctx.send("Sorry, that user's top role is higher than mine, so I can't kick them.")
-          await self.bot.http.delete_message(channel.id, msg_1.id)
-          await self.bot.http.delete_message(channel.id, msg_2.id)
-
-          await channel.send(f"LOL {ctx.author.name} tried to troll you but failed.")
-      if msg.content == "no":
-        await ctx.send("ok, cancelled.")
+      await self.bot.wait_for('message', check= lambda m: m.author == user, timeout = 180)
     except asyncio.TimeoutError:
-      await ctx.send("ok, cancelled.")
+      pass
+    finally:
+      await user.edit(nick=None)
+    
+    
+    
+  @app_commands.command(name = "nitrotroll", description = "Sends a fake nitro embed")
+  async def nitrotroll(self, interaction: discord.Interaction):
+    em = discord.Embed(color = 0x7289da, title = "A wild gift appears!", description = "Nitro classic (3 months)\nThis link will expire in 12 hours, claim it now!").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png")
+    
+    class claim(discord.ui.View):
+      def __init__(self):
+        super().__init__()
 
-
-  @commands.command(pass_context = True)
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  @commands.bot_has_guild_permissions(manage_messages=True)
-  async def nitrotroll(self,ctx):
-    await ctx.message.delete()
-    em = discord.Embed(color = 0x000000, title = "A wild gift appears!", description = "Nitro classic (3 months)\nThis link will expire in 12 hours, claim it now!").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png")
-    msg = await ctx.send("https://dicsord.com/gifts/get9troll3d5you2m0r0n",embed = em, components = [ 
-              [
-                  Button(
-                      label = "\ufeff\ufeff\ufeff\ufeff\ufeff\ufeffClaim\ufeff\ufeff\ufeff\ufeff\ufeff\ufeff",
-                      id = "claim",
-                      style = ButtonStyle.green
-                      
-                      
-                  )]])
-    interaction = await self.bot.wait_for("button_click",check = lambda i: i.component.id == "claim", timeout = None)
-    await msg.edit(
-    embed = discord.Embed(color = 0x000000, title = "You received a gift, but...", description = "The gift link has either expired or has been revoked.\nThe sender can still create a new link to send again.").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png"),components = [ 
-              [
-                  Button(
-                      label = "\ufeff\ufeff\ufeff\ufeff\ufeffClaimed\ufeff\ufeff\ufeff\ufeff\ufeff",
-                      id = "claim",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  )]])
-
-    await interaction.respond(type=4, content="You idiot lol\nhttps://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif", ephemeral=True)
+      @discord.ui.button(label="Claim", style=discord.ButtonStyle.green)
+      async def claim(self, interaction: discord.Interaction, button: discord.ui.Button):
+        button.style = discord.ButtonStyle.grey
+        button.disabled = True
+        em = discord.Embed(color = 0x000000, title = "You received a gift, but...", description = "The gift link has either expired or has been revoked.\nThe sender can still create a new link to send again.").set_thumbnail(url ="https://i.imgur.com/w9aiD6F.png")
+        await interaction.response.edit_message(embed = em, view=self)
+        await interaction.followup.send(content="You idiot lol\nhttps://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif", ephemeral=True)
+        
+    await interaction.response.send_message(content = "https://dicsord.com/gifts/get9troll3d5you2m0r0n")
+    await interaction.channel.send(embed = em, view = claim())
 
     
 async def setup(bot):
