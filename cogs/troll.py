@@ -237,8 +237,10 @@ class Troll(commands.Cog):
         await interaction.response.edit_message(embed = em, view=self)
         await interaction.followup.send(content="You idiot lol\nhttps://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif", ephemeral=True)
         
-    await interaction.response.send_message(content = "https://dicsord.com/gifts/get9troll3d5you2m0r0n")
-    await interaction.channel.send(embed = em, view = claim())
+    await interaction.response.send_message(content=".")
+    msg = await interaction.original_response()
+    await msg.delete()
+    await interaction.channel.send(content = "https://dicsord.com/gifts/get9troll3d5you2m0r0n", embed = em, view = claim())
 
     
 async def setup(bot):
