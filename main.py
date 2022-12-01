@@ -21,6 +21,9 @@ sys.path.insert(1,'./other')
 import sqlite3
 from sqliteDB import get_db_connection
 from os import system
+system("pip install spacy")
+system("python -m spacy download en_core_web_sm")
+
 import topgg
 
 

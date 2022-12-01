@@ -1,16 +1,19 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 
+import spacy
+from typing import *
+import json
 import asyncio
 import random
-import json
 import string
 from other.asyncCmds import colorSetup
 from other.customCooldown import CustomCooldown
 from other.upvoteExpiration import getUserUpvoted
 import threading
-
 import time
+import datetime
 import math
 from pyinsults import insults
 import csv
@@ -713,96 +716,72 @@ class Games(commands.Cog):
 
         
 
-  @commands.command()
-  @commands.bot_has_guild_permissions(add_reactions = True)
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def vocabularygame(self,ctx):
+  @app_commands.command(name = "vocabularygame", description = "Test your vocabulary with this game")
+  @app_commands.checks.bot_has_permissions(add_reactions = True)
+  async def vocabularygame(self,interaction: discord.Interaction):
     
     
 
-    wait = await ctx.reply("Please wait...")
+    await interaction.response.defer(thinking=True)
     file = open("./json/words.txt","r")
-    words = file.readlines()
-    listWords =[]
-    for word in words:
+    words = [w.lower().replace('\n','') for w in file.readlines()]
     
-      word = word[:-1]
-      word = word.lower()
-        
-      listWords.append(word) 
-
-    freq ={}
-    for word in listWords:
-      
-
-      try:
-        freq[word] +=1
-      except KeyError:
-        freq[word] = 1
-
-    listWords = list(freq)
-    for word in listWords:
-      if len(word) == 1:
-        listWords.remove(word)
 
     vowels = ["a","e","i","o","u"]
-    randomLetters = ''.join(random.choices(string.ascii_lowercase,k=7))
+    randomLetters = ''.join(random.choices(string.ascii_lowercase,k=9))
     for i in range(3):
       randomLetters = randomLetters + vowels[random.randint(0,4)]
-    await wait.edit(f"With the letters ``{randomLetters}`` type as many words as you can within 30s!")
+      
+    await interaction.followup.send(f"With the letters ``{randomLetters}`` type as many words as you can within 30s!")
     
     reqLetters= list(randomLetters)
     
     def check(str,set):
-      reqLetters = sorted(set)
-      
       
       try:
         for c in list(str):
           
-          reqLetters.remove(c)
+          set.remove(c)
+          set.append(c)
       except ValueError:
+        
         return False
       return True
     
       
     
 
-    def backgroundVocab():
-      global timerVocab
-      timerVocab = 30
-      while True:
+    
+    def timer(t): 
+      while t !=0:
         time.sleep(1)
-        timerVocab -= 1
-        if timerVocab == 0:
-          break
-      
-    
-    
-    threading.Thread(name='backgroundVocab', target=backgroundVocab).start()
+        t -=1
+      return
+    thr = threading.Thread(target = timer, args = (30,))
+    thr.start()
     score = 0                             
     combo = 0
     maxcombo = 0
     accuracy = 0
     correct = 0
     used_words = []
-    d = 0
+    bonus = 0
     
-    while timerVocab != 0:
+    while thr.is_alive():
+      
       
       
       try:
 
         msg = await self.bot.wait_for(
         "message",
-        check = lambda i: i.author.id == ctx.author.id and i.channel.id == ctx.channel.id, 
-        timeout = timerVocab
+        check = lambda i: i.author.id == interaction.user.id and i.channel.id == interaction.channel.id, 
+        timeout = 1
       )
         
 
         
-        if msg.content in listWords and msg.content not in used_words and check(msg.content,reqLetters) == True:
-          
+        if msg.content in words and msg.content not in used_words and check(msg.content,reqLetters):
           await msg.add_reaction("✅")
           used_words.append(msg.content)
           correct +=1
@@ -812,89 +791,148 @@ class Games(commands.Cog):
             maxcombo+=1
           
           score+= combo*25
-        elif check(reqLetters,msg.content) == False or msg.content not in listWords:
+        elif not check(msg.content,reqLetters) or msg.content not in words:
           used_words.append(msg.content)
           combo = 0
-          
-        
         
         
       except asyncio.TimeoutError:
-        break
+        continue
     try:
       accuracy = correct/len(used_words)
     except ZeroDivisionError:
       accuracy = 0
-    d = score*(accuracy/8)
-    score +=d
+      
+    bonus = score*(accuracy/8)
+    score += bonus
         
+    
       
       
-      
-    color = int(await colorSetup(ctx.message.author.id),16)
+    color = colorSetup(interaction.user.id)
     em = discord.Embed(color=color)
-    em.add_field(name = "``Stats``",value=f"Accuracy: {math.ceil(accuracy*100)}%\nNumber of correct words: {correct}\nMax combo: {maxcombo}\nAccuracy bonus: +{math.ceil(d)}\n**Total score: {math.ceil(score)}**",inline=False)
-    await ctx.send(embed = em)
+    em.add_field(name = "``Stats``",value=f"Accuracy: {math.ceil(accuracy*100)}%\nNumber of correct words: {correct}\nMax combo: {maxcombo}\nAccuracy bonus: +{math.ceil(bonus)}\n**Total score: {math.ceil(score)}**",inline=False)
+    await interaction.channel.send(embed = em)
     
     
         
     
     
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def typingrace(self,ctx):
+  @app_commands.command(name = "typingrace", description = "Race against others to see who can type the quickest")
+  @app_commands.checks.bot_has_permissions(add_reactions = True)
+  async def typingrace(self, interaction: discord.Interaction):
     
-    
-   
-    instructions = await ctx.send("Typing race will start!\nPress the button to join!", 
-    components = [
-      [
-        Button(
-          label = "Join",
-          id = "join",
-          style = ButtonStyle.green
-          ),
-          Button(
-          label = "Start",
-          id = "start",
-          style = ButtonStyle.blue
-          )
-        ]])
+    class join_race(discord.ui.View):
+      def __init__(self):
+        super().__init__()
+        self.joined = [] #List[discord.Member]
+        with open('./json/typingrace.txt', 'r') as f:
+          self.text = random.choice([l.replace('\n','') for l in f.readlines()])
+          self.anticheat_text = '\u200b'.join([char for char in self.text])
+      def disable_buttons(self):
+        for b in self.children:
+          b.disabled=True
+
+        return self
+      @discord.ui.button(label="Join race!", style = discord.ButtonStyle.blurple)
+      async def join(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user in self.joined:
+          await interaction.response.send_message(f"You've already joined, {insults.long_insult()}", ephemeral = True)
+          return
+        self.joined.append(interaction.user)
+        await interaction.response.send_message("You've joined the race successfully.", ephemeral = True)
+      @discord.ui.button(label="Start race!", style = discord.ButtonStyle.blurple)
+      async def start(self, interaction: discord.Interaction, button: discord.ui.Button):
         
-    players = []
+        await interaction.response.edit_message(view = self.disable_buttons())
+        await interaction.channel.send(embed = discord.Embed(color = colorSetup(interaction.user.id)).add_field(name="Typing race starts now! Type the following within 180s:", value= f"``{self.anticheat_text}``", inline = False).set_footer(text=f"Participating users: {', '.join([str(u.display_name) for u in self.joined])}"))
+    race_buttons = join_race()
+    await interaction.response.send_message(content="Join the typing race here!", view = race_buttons)
+    st_time = datetime.datetime.now()
+    #race_buttons.text for text
     
+    def timer(t): 
+      while t !=0:
+        time.sleep(1)
+        t -=1
+      return
+    thr = threading.Thread(target = timer, args = (180,))
+    thr.start()
+    accuracy = 0
+    wpm = 0 
+    penalty = 0
     
-    while True:
+    leaderboards = {}
+    def check_accuracy(input, text):
+      nlp = spacy.load('en_core_web_sm')
+      return nlp(input).similarity(nlp(text))
       
+    while thr.is_alive():
       try:
-        interaction = await self.bot.wait_for(
-                  "button_click",
-                  check = lambda i: i.component.id in["join","start"] and i.channel.id == ctx.channel.id, 
-                  timeout = 60.0 
-              )
-        if interaction.component.id == "start" and len(players) == 0:
-          await instructions.delete()
-          await ctx.send("I guess no one wants to join the game.")
-          raise Exception("no on")
-        if interaction.user.id not in players and interaction.component.id == "join":
-     
-          players.append(interaction.user.id)
-        
-          await interaction.respond(type=4, content="You successfully joined the game!", ephemeral=True)
-        elif interaction.component.id == "start":
-          await instructions.delete()
-          break
-        else:
-          await interaction.respond(type=4, content="You've already joined the game, idiot.", ephemeral=True)
-          
+        msg = await self.bot.wait_for("message", check = lambda i: i.author in race_buttons.joined and i.channel.id == interaction.channel.id,timeout = 1)
+        time_taken = (datetime.datetime.now() - st_time).total_seconds()
+        await msg.add_reaction("✅")
+
+        #calc score
+        accuracy = round(check_accuracy(msg.content, race_buttons.text), 3) #round to 3sf
+        if accuracy < 0: accuracy = 0
+        race_buttons.joined.remove(msg.author)
+        wpm = math.ceil(len(msg.content.split(" "))/(time_taken/60))
+
+        penalty = math.floor(wpm*(1-accuracy))
+        wpm -= penalty
+
+        leaderboards[msg.author.id] = {
+          "accuracy": accuracy,
+          "penalty": penalty,
+          "wpm": wpm
+        }
         
         
       except asyncio.TimeoutError:
-        await instructions.delete()
-        await ctx.send("I guess no one wants to join or start the game.")
-      
+        continue
+
+    def arr_in_order(lb: List[Tuple[int, Dict[str, int]]]):
+
+      arranged_lb = []
+
+      for item in lb:
+        
+        if arranged_lb == list():
+
+          arranged_lb.append(item)
+
+          continue
+
+        for i, wpm in enumerate(arranged_lb):
+          
+          if item[1]['wpm'] <= wpm[1]['wpm']:
+            
+            arranged_lb.insert(i,item)
+            break
+          elif item[1]['wpm'] > wpm[1]['wpm']:
+            arranged_lb.append(item)
+            break
+            
+          
+            
+
+      return arranged_lb[::-1]
+
+    disp = arr_in_order(leaderboards.items())
+
+    em = discord.Embed(color = 0xffffff, description = "**Leaderboard**")
+    for place, player in enumerate(disp, start = 1):
+
+      user = await self.bot.fetch_user(player[0])
+
+      em.add_field(name =f"{place}/ {user.display_name}", value = f"Accuracy: {player[1]['accuracy']*100}%\nPenalty:{player[1]['penalty']} wpm\nTotal:{player[1]['wpm']} wpm", inline= False)
     
+    await interaction.channel.send(embed = em)
+      
+      
+    '''
     def backgroundTyping():
       global timerTyping
       timerTyping = 180
@@ -908,28 +946,7 @@ class Games(commands.Cog):
     threading.Thread(name = 'backgroundTyping', target = backgroundTyping).start()
     await ctx.send("Type the sentence below!")
     texts = [
-      "She could hear him in the shower singing with a joy she hoped he'd retain after she delivered the news.",
-      "We have young kids who often walk into our room at night for various reasons including clowns in the closet.",
-      "She had that tint of craziness in her soul that made her believe she could actually make a difference.",
-      "When I cook spaghetti, I like to boil it a few minutes past al dente so the noodles are super slippery.",
-      "He felt that dining on the bridge brought romance to his relationship with his cat.",
-      "She couldn't decide of the glass was half empty or half full so she drank it.",
-      "The urgent care center was flooded with patients after the news of a new deadly virus was made public.",
-      "The Tsunami wave crashed against the raised houses and broke the pilings as if they were toothpicks.",
-      "The complicated school homework left the parents trying to help their kids quite confused.",
-      "The battle over coal continued to rage Tuesday afternoon during a hearing held by the House Oversight and Investigations Subcommittee on the community impacts of impending Environmental Protection Agency regulations for power plants.",
-      "They want a presidential nominee who fights for them, and who is pitching a fresh and dramatic plan for improving their lives in immediate, concrete ways.",
-      "Gowdy's letter comes a day after a senior State official told Gowdy in a letter that Finer's appearance 'will not be possible' and that State 'cannot participate' in a hearing Gowdy's staff suggested holding next week.",
-      "In Chicago, a regional housing authority that covers eight counties, including Cook County, is working to move families from the inner city to higher-opportunity neighborhoods.",
-      "Meanwhile, here is the Lorne Michaels-backed show I wish had lasted for 40 years, or at least more years than it did: the Toronto-based Kids in the Hall.",
-      "Lillian, Kimmy's hippie-haired landlady, is making stilted peace with the fact that the only home she has ever known—her New York neighborhood—is rapidly evolving away from her.",
-      "Johnson, the Chicago native joined Marathon Pharmaceuticals, which specializes in making drugs for hard-to-treat ailments most people have never heard of.",
-      "My avowed purpose in composing that text, as any swot who has suffered the Duty and Dullness rampant in our Schools must know, was to employ my modest pen as a scourge against human Folly and the vanities of the Age.",
-      "How do you think about distinguishing between intellectual curiosity and commercial intent -- or, I guess, between different forms of interest?",
-      "If there's been one overarching theme to the Republican presidential primary in the last week or two, it's been that past coming back to haunt the contenders.",
-      "A growing body of literature now suggests that the earlier we turn back the clock in kids’ development, the more profound the impact of their environment.",
-      "The rise in popularity of the more violent sport of American football over the past forty years may reflect shifts in militaristic ideology, from the Cold War to current overseas conflicts.",
-      "There is some fun gossip: I didn't know, for example, that show-runner Matthew Weiner started working on the landmark drama while co-writing for Becker."
+      
       ]
     
     random_text = texts[random.randint(0,len(texts)-1)]
@@ -998,271 +1015,136 @@ class Games(commands.Cog):
     em2 = discord.Embed(color = color)
     em2.add_field(name = "``Leaderboard``",value = finalText,inline = False)
     await ctx.send(embed = em2)
+'''
 
 
 
-
-  @commands.command(name = "wouldyourather",aliases = ["wyr"])
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def wouldyourather(self,ctx):
-   
-    option1= [
-      "lose a car",
-      "have the ability to see 10 minutes into the future",
-      "have telekinesis",
-      "be in a coma for 10 years",
-      "lose your vision",
-      "find a cockroach in your bed",
-      "drink from a toilet bowl",
-      "become vegan",
-      "always lie",
-      "speak any language",
-      "eat someone's vomit",
-      "let somebody read your DMs",
-      "drink pee",
-      "only eat raw food",
-      "be able to tell the future",
-      "have US$1 million now",
-      "clean the toilet with a toothbrush",
-      "be reincarnated as a plant",
-      "be always criticized",
-      "get 10 books free",
-      "know when you are going to die",
-      ]
-    option2 =[
-      "lose all the pictures you have ever taken",
-      "have the ability to see 150 years into the future",
-      "have telepathy",
-      "be jailed for 5 years",
-      "lose all memories",
-      "find some strange white sticky stuff on your bed",
-      "eat from the trashcan",
-      "cannabalise people you see",
-      "always tell the truth",
-      "speak to animals",
-      "drink someone's blood",
-      "let somebody see your camera roll",
-      "brush teeth with solid fuel",
-      "only eat expired food",
-      "be able to recall your past with perfect clarity",
-      "have US$5 000 every week for the rest of your life",
-      "lick the floor",
-      "be reincarnated as a mosquito",
-      "be always ignored",
-      "get to watch 1 movie free",
-      "know how you are going to die",
-      ]
-      
-    randomQnNo = random.randint(0,len(option1)-1)
-    options = (option1[randomQnNo],option2[randomQnNo])
+  @app_commands.command(name = "wouldyourather", description="Generates a would you rather question")
+  async def wouldyourather(self, interaction: discord.Interaction):
+    with open('./json/wyr_options.json', 'r') as f:
+      options_list = list(json.load(f).items())
+      options_tuple = random.choice(options_list)
     
-    color = int(await colorSetup(ctx.message.author.id),16)
+      #tuple[str,str]
+    class options(discord.ui.View):
+      def __init__(self):
+        super().__init__()
+        self.who = {
+          "op1": [],
+          "op2": []
+        }
+        self.voted = []
+      @discord.ui.button(label="Option 1", style=discord.ButtonStyle.green)
+      async def op1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id in self.voted:
+          await interaction.response.send_message(f"You've already voted, you {insults.long_insult()}. ", ephemeral=True)
+          return
+        await interaction.response.send_message("You voted for option 1!", ephemeral=True)
+        
+        self.who['op1'].append(interaction.user.display_name)
+        self.voted.append(interaction.user.id)
+        
+      @discord.ui.button(label="Option 2", style=discord.ButtonStyle.green)
+      async def op2(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id in self.voted:
+          await interaction.response.send_message(f"You've already voted, you {insults.long_insult()}. ", ephemeral = True)
+          return
+        await interaction.response.send_message("You voted for option 2!", ephemeral=True)
+        self.who['op2'].append(interaction.user.display_name)
+        self.voted.append(interaction.user.id)
+
+      def results(self):
+        return (self.who, self.voted)
+        
+    
+    
+    color = colorSetup(interaction.user.id)
     em = discord.Embed(color = color)
-    em.add_field(name = "Would you rather...", value = f"1. {options[0]}\n2. {options[1]}",inline = False)
+    em.add_field(name = "Would you rather...", value = f"1. {options_tuple[0]}\n2. {options_tuple[1]} ",inline = False)
     em.set_footer(text = "Best played in a voice call!")
-    embed1= await ctx.send(embed = em)
-    interaction = await ctx.send("You have 30s to select one of the below!", 
-    components = [
-      [
-        Button(
-          label = "Option 1",
-          id = "1",
-          style = ButtonStyle.green
-          ),
-          Button(
-          label = "Option 2",
-          id = "2",
-          style = ButtonStyle.blue
-          )
-        ]])
+    view= options()
+    await interaction.response.send_message("You have 30s to select one of the below!",embed = em, view = view)
+    
         
-    def backgroundWYR():
-      global timerWYR
-      timerWYR= 30
-      while True:
-        time.sleep(1)
-        timerWYR -= 1
-        if timerWYR == 0:
-          break
-      
+    await asyncio.sleep(10)  
     
     
-    threading.Thread(name='backgroundWYR', target=backgroundWYR).start()
-    respondents = []
-    voted1 = 0 
-    voted2 = 0 
-    totalvoted = 0
-    while timerWYR !=0:
-      
-      try:
-        click = await self.bot.wait_for(
-                  "button_click",
-                  check = lambda i: i.component.id in["1","2"] and i.channel.id == ctx.channel.id and i.message.id == interaction.id, 
-                  timeout = timerWYR
-                )
-                
-                
-        if click.user.id not in respondents:
-          
-          totalvoted +=1
-        
-          await click.respond(type=4, content=f"You voted for option {click.component.id}!", ephemeral=True)
-        elif click.user.id in respondents:
-          await click.respond(type=4, content=f"You've already voted, you {insults.long_insult()}. ", ephemeral=True)
-          
-          
-        
-        if click.component.id == "1" and click.user.id not in respondents:
-          respondents.append(click.user.id)
-          voted1 += 1
-        elif click.component.id== "2" and click.user.id not in respondents:
-          respondents.append(click.user.id)
-          voted2 +=1
-        
-        
-      except asyncio.TimeoutError:
-        await interaction.delete()
-        await embed1.delete()
-        break
-      
+    
+    results, voted= view.results()
+    for b in view.children:
+      b.disabled = True
+    interaction_msg = await interaction.original_response()
+    await interaction.followup.edit_message(interaction_msg.id, view=view)
+    class review_results(discord.ui.View):
+      def __init__(self, results, em_color):
+        super().__init__()
+        self.results = results
+        self.color = em_color
+      @discord.ui.button(label = "See who voted for what", style=discord.ButtonStyle.blurple)
+      async def clback(self, interaction: discord.Interaction, button: discord.ui.Button):
+        em = discord.Embed(color = self.color, description=f"Option 1: {', '.join(self.results['op1'])}\nOption 2: {', '.join(self.results['op2'])}")
+        await interaction.response.send_message(embed = em, ephemeral =True)
     em2 = discord.Embed(color = color)
     try:
-      em2.add_field(name = "Results!", value = f"``{(voted1/totalvoted)*100}%`` {options[0]}\n``{(voted2/totalvoted)*100}%`` {options[1]}",inline = False)
+      em2.add_field(name = "Results!", value = f"``{(len(results['op1'])/len(voted))*100}%`` {options_tuple[0]}\n``{(len(results['op2'])/len(voted))*100}%`` {options_tuple[1]}",inline = False)
     except ZeroDivisionError:
-      em2.add_field(name = "Results!", value = f"``0%`` {options[0]}\n``0%`` {options[1]}",inline = False)
+      em2.add_field(name = "Results!", value = f"``0%`` {options_tuple[0]}\n``0%`` {options_tuple[1]}",inline = False)
     em2.set_footer(text = "Best played in a voice call!")
-    await ctx.send(embed = em2)
+    await interaction.channel.send(embed = em2, view = review_results(results, color))
       
 
 
-  @commands.command(name="tord",aliases = ["truthordare"])
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def truthordare(self,ctx):
-    color = int(await colorSetup(ctx.message.author.id),16)
+  @app_commands.command(name="truthordare", description="Generates a truth or dare question")
+  async def truthordare(self, interaction: discord.Interaction):
+    color = colorSetup(interaction.user.id)
+    with open("./json/TorD.csv",newline="") as file:
+      arr = list(csv.DictReader(file))
+      #looks like List[Dict[str, Union[int, str]]]
 
-    
-    interaction = await ctx.send("Truth or dare?",
-    components = [
-      [
-        Button(
-          label = "Truth",
-          id = "0",
-          style = ButtonStyle.green
-          ),
-          Button(
-          label = "Dare",
-          id = "1",
-          style = ButtonStyle.red
-          )
-        ]])
-    
-    try:
-      click = await self.bot.wait_for("button_click",
-      check = lambda i: i.component.id in["0","1"] and i.channel.id == ctx.channel.id and i.message.id == interaction.id, 
-        timeout = 30.0)
-      if click.component.id == "0":
-        
-        arr = []
-        with open("./json/TorD.csv",newline="") as file:
-          reader = csv.DictReader(file)
-          for row in reader:
-            arr.append(row)
-            
-        
-        def choose():
-          while True:
-            ran = random.randint(0,len(arr)-1)
-          
-            if arr[ran]["type"] == "0":
-            
-              break
-          return arr[ran]["content"]
-            
-        color = int(await colorSetup(ctx.message.author.id),16)
-       
-        em = discord.Embed(color = color, title = "Truth", description = choose())
-        em.set_footer(text = "imagine being a pussy")
-        
-        await interaction.delete()
-        a= await ctx.send(embed = em)
-        b= await ctx.send("\u200b",
-        components = [[
-        Button(
-          label = "Reroll!",
-          id = "reroll",
-          style = ButtonStyle.green
-          )]]
-          )
-        
-         
-        reroll = await self.bot.wait_for(
-          "button_click",
-          check =lambda i: i.component.id =="reroll" and i.channel.id == ctx.channel.id, 
-          timeout = None
-        )
-          
-        
-        em2 = discord.Embed(color = color, title = "Truth", description = choose())
-        em2.set_footer(text = "imagine being a pussy")
-        await a.edit(embed = em2)
-        await b.delete()
-        
-        
-        
-        
-        
-        
-        
-        #fmlfmlfmlfmflmflfmlfmflmflmflfmlfmlfmflmfl
-      elif click.component.id == "1":
+    class tord(discord.ui.View):
+      def __init__(self):
+        super().__init__()
+      def reroll(self):
+        class reroll(discord.ui.View):
+          def __init__(self, func):
+            super().__init__()
+            self.func = func
+          @discord.ui.button(label="reroll", style=discord.ButtonStyle.grey)
+          async def re(self, interaction: discord.Interaction, button: discord.ui.Button):
 
-        arr = []
-        with open("./json/TorD.csv",newline="") as file:
-          reader = csv.DictReader(file)
-          for row in reader:
-            arr.append(row)
-            
+            await self.func.callback(interaction)
         
-        def choose():
-          while True:
-            ran = random.randint(0,len(arr)-1)
-          
-            if arr[ran]["type"] == "1":
-            
-              break
-          return arr[ran]["content"].replace(";",",")
-            
-        color = int(await colorSetup(ctx.message.author.id),16)
-       
-        em = discord.Embed(color = color, title = "Dare", description = choose())
+        return reroll
 
         
-        await interaction.delete()
-        a= await ctx.send(embed = em)
-        b= await ctx.send("\u200b",
-        components = [[
-        Button(
-          label = "Reroll!",
-          id = "reroll",
-          style = ButtonStyle.green
-          )]]
-          )
+      @discord.ui.button(label="Truth", style=discord.ButtonStyle.green)
+      async def op1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        #type == 0 means truth
+
+        choices = list(filter(lambda i: i['type'] == "0",arr))
+        truth = random.choice(choices)['content']
         
-         
-        reroll = await self.bot.wait_for(
-          "button_click",
-          check =lambda i: i.component.id =="reroll" and i.channel.id == ctx.channel.id, 
-          timeout = None
-        )
-          
+        await interaction.response.edit_message(content = truth, view = self.reroll()(self.op1))
         
-        em2 = discord.Embed(color = color, title = "Dare", description = choose())
         
-        await a.edit(embed = em2)
-        await b.delete()
-    except asyncio.TimeoutError:
-      pass
-   
+        
+      @discord.ui.button(label="Dare", style=discord.ButtonStyle.green)
+      async def op2(self, interaction: discord.Interaction, button: discord.ui.Button):
+
+        choices = list(filter(lambda i: i['type'] == "1",arr))
+        dare = random.choice(choices)['content']
+        
+        await interaction.response.edit_message(content=dare, view = self.reroll()(self.op2))
+        
+
+        
+    await interaction.response.send_message("Truth or dare?", view =tord() )
+
+        
+
+            
+        
+
     
 
 
