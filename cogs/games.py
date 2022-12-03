@@ -20,11 +20,6 @@ import csv
 
 
 
-# This example requires the 'message_content' privileged intent to function.
-
-from typing import List
-from discord.ext import commands
-import discord
 
 # Defines a custom button that contains the logic of the game.
 # The ['TicTacToe'] bit is for type hinting purposes to tell your IDE or linter
@@ -155,10 +150,133 @@ class TicTacToe(discord.ui.View):
         return None
 
 
+class MemButton(discord.ui.Button['Mem']):
+    def __init__(self, x: int, y: int):
+
+        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', row=y)
+        self.x = x
+        self.y = y
+
+    # This function is called whenever this particular button is pressed
+    # This is part of the "meat" of the game logic
+    async def callback(self, interaction: discord.Interaction):
+        
+        assert self.view is not None
+        view: MemGame = self.view
+        for child in view.children:
+          child.label = '\u200b'
+          child.style = discord.ButtonStyle.secondary
+        if view.check(self.x, self.y): #if check is true (passed)
+          
+
+          #edit the button properties
+          self.style=discord.ButtonStyle.success
+          self.label = "✓" #TODO: replace witha unicode tick
+          
+        else:
+          self.style = discord.ButtonStyle.danger
+          self.label = "✗" #TODO: replace with unicode cross
+          for child in view.children:
+            child.disabled = True
+          view.stop()
+          expectedTime = ((view.level*(view.level+1))/2)*(3.5+view.level)
+    
+          bonus = expectedTime/((datetime.datetime.now() - view.time).total_seconds())
+          if bonus <1:
+            bonus = 1
+          score = view.level*bonus
+          color = colorSetup(view.interaction.user.id)
+          em = discord.Embed(color=color)
+          em.add_field(name="stats",value=f"Level: {view.level}\nTime bonus: \u00D7{round(bonus,2)}\n**Score: {math.ceil(score)}**",inline = False)
+          await interaction.channel.send(embed = em)
+        await interaction.response.edit_message(content = f"Memory Game: Level {view.level}\nReplicate the sequence of highlighted squares to the best of your memory.", view=view)
+        if view.pattern == []:
+          await view.levelup()
 
 
+# This is our actual board View
+class MemGame(discord.ui.View):
+
+    children: List[MemButton]
 
 
+    def __init__(self, interaction: discord.Interaction):
+
+        super().__init__()
+
+        self.level = 1
+        self.pattern = [] #list[tuple[x,y]]
+        self.interaction = interaction
+        self.time = datetime.datetime.now()
+        
+        for x in range(3):
+            for y in range(3):
+                self.add_item(MemButton(x, y))
+    async def async_init(self):
+      self.original_res = await self.interaction.original_response()
+    def generate_pattern(self):
+      coords = [(a.x, a.y) for a in self.children] # a list of coords eg. (0,1) corresponding to each button pressed 
+      self.pattern.append(random.choice(coords))
+      return 
+    async def instructions(self):
+      #edit the view (level) times displaying the color as green 
+      for child in self.children:
+        child.label = '\u200b'
+        child.disabled = True
+
+
+       
+      await self.original_res.edit(content = f"Memory Game: Level {self.level}\nReplicate the sequence of highlighted squares to the best of your memory.", view = self)
+      
+      
+      for i, coord in enumerate(self.pattern, start = 1):
+        x, y = coord
+        #set properties of the child
+        for child in self.children:
+
+          child.style = discord.ButtonStyle.secondary
+          child.label = '\u200b'
+
+        def get_child(child):
+          if child.x == x and child.y == y:
+            return True
+          return False
+          #unsure
+        
+        child = list(filter(get_child, self.children))[0]
+
+        child.style = discord.ButtonStyle.success
+        child.label = i
+        await self.original_res.edit(view = self)
+        await asyncio.sleep(1)
+        
+      for child in self.children:
+        child.disabled = False
+        child.style = discord.ButtonStyle.secondary
+        child.label = '\u200b'
+        
+      await self.original_res.edit(view = self)
+        
+      return 
+    def check(self, x: int, y: int) -> bool:
+      #check if x,y is first in pattern
+      if (x,y) == self.pattern[0]:
+        self.pattern.remove((x,y))
+        
+        return True
+      return False
+    async def levelup(self):
+      self.level += 1
+      for i in range(self.level):
+        self.generate_pattern()
+      await asyncio.sleep(1)
+      await self.instructions()
+      
+    async def start(self):
+      self.generate_pattern()
+      await self.instructions()
+
+    
 
 
 class Games(commands.Cog):
@@ -166,410 +284,15 @@ class Games(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def memorygame(self,ctx):
+  @app_commands.command(name = "memorygame", description = "Sets up a game to test your visual memory")
+  async def memorygame(self, interaction: discord.Interaction):
+    view = MemGame(interaction)
     
-    failed = 0
-    level = 1
-    color = int(await colorSetup(ctx.message.author.id),16)
-    em = discord.Embed(color = color)
-    em.add_field(name="Instructions:",value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
-
-
-    a= await ctx.send(embed=em)
-    possibilities = ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]
+    await interaction.response.send_message(content = f"Memory Game: Level {view.level}\nReplicate the sequence of highlighted squares to the best of your memory.", view = view)
+    await view.async_init()
+    await view.start()
     
 
-    while failed != 1:
-      cur_list = []
-      for i in range(level):
-        cur_list.append(possibilities[random.randint(0,8)])
-
-      instruct = await ctx.reply(f"Memory game: Level {level}",components = [ 
-              [
-                  Button(
-                      label = "\u200b",
-                      id = "a1",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a2",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a3",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "b1",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b2",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b3",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "c1",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c2",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c3",
-                      style = ButtonStyle.grey,
-                      disabled = True
-                  )
-              ]
-          ]
-
-      )
-      for i in range(len(cur_list)):
-        styles = {}
-        for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-          styles[id] = ButtonStyle.grey
-
-        styles[cur_list[i]] = ButtonStyle.green
-
-        labels = {}
-        for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-          labels[id] = "\u200b"
-
-        labels[cur_list[i]] = str(i+1)
-
-        await instruct.edit(
-                    type = 7,
-                    
-                    components = [ 
-                [
-                    Button(
-                        label = labels["a1"],
-                        id = "a1",
-                        style = styles["a1"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["a2"],
-                        id = "a2",
-                        style = styles["a2"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["a3"],
-                        id = "a3",
-                        style =styles["a3"],
-                        disabled = True
-                        
-                    )
-                ],
-                [
-                  Button(
-                        label = labels["b1"],
-                        id = "b1",
-                        style = styles["b1"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["b2"],
-                        id = "b2",
-                        style = styles["b2"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["b3"],
-                        id = "b3",
-                        style = styles["b3"],
-                        disabled = True
-                    )
-                ],
-                [
-                  Button(
-                        label = labels["c1"],
-                        id = "c1",
-                        style = styles["c1"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["c2"],
-                        id = "c2",
-                        style = styles["c2"],
-                        disabled = True
-                        
-                    ),
-                    Button(
-                        label = labels["c3"],
-                        id = "c3",
-                        style = styles["c3"],
-                        disabled = True
-                    )
-                ]
-            ])
-        await asyncio.sleep(1)
-
-
-
-      await instruct.delete()
-
-
-      #test below
-      
-      def success(arg):
-        
-        if arg in cur_list[0]:
-          
-          return True
-        else:
-          return False
-
-      mainMessage = await ctx.reply(f"Memory game: Level {level}",
-        components = [ 
-              [
-                  Button(
-                      label = "\u200b",
-                      id = "a1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a3",
-                      style = ButtonStyle.grey,
-                      
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "b1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b3",
-                      style = ButtonStyle.grey,
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "c1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c3",
-                      style = ButtonStyle.grey,
-                  )
-              ]
-          ]
-
-      )
-          
-
-      def backgroundMem():
-        global timerMem
-        timerMem = 0
-        while True:
-          time.sleep(1)
-          timerMem += 1
-        
-
-
-      score = 0
-      
-      threading.Thread(name='backgroundMem', target=backgroundMem).start()
-      
-      
-      
-      while True:
-        try:
-              interaction = await self.bot.wait_for(
-                  "button_click",
-                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"] and i.channel.id == ctx.channel.id, 
-                  timeout = 30.0 
-              )
-
-              if interaction.user.id != ctx.author.id:
-                await interaction.respond(type=4, content="This isn't your game, idiot.", ephemeral=True)
-              else:
-                labels = {}
-                for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-                  labels[id] = "\u200b"
-
-                
-                
-                styles = {}
-                for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-                  styles[id] = ButtonStyle.grey
-
-                
-                if success(interaction.component.id) == True:
-                  styles[interaction.component.id] = ButtonStyle.green
-                  labels[interaction.component.id] = "✓"
-                  try:
-                    cur_list.pop(0)
-                  except:
-                    pass
-
-                  
-                  
-                elif success(interaction.component.id) == False:
-                  styles[interaction.component.id] = ButtonStyle.red
-                  labels[interaction.component.id] = "✗"
-                  failed = 1
-                  
-                
-                await interaction.respond(
-                      type = 7,
-                      
-                      components = [ 
-                  [
-                      Button(
-                          label = labels["a1"],
-                          id = "a1",
-                          style = styles["a1"],
-                          
-                      ),
-                      Button(
-                          label = labels["a2"],
-                          id = "a2",
-                          style = styles["a2"],
-                          
-                      ),
-                      Button(
-                          label = labels["a3"],
-                          id = "a3",
-                          style =styles["a3"],
-                          
-                      )
-                  ],
-                  [
-                    Button(
-                          label = labels["b1"],
-                          id = "b1",
-                          style = styles["b1"],
-                          
-                      ),
-                      Button(
-                          label = labels["b2"],
-                          id = "b2",
-                          style = styles["b2"],
-                          
-                      ),
-                      Button(
-                          label = labels["b3"],
-                          id = "b3",
-                          style = styles["b3"],
-                      )
-                  ],
-                  [
-                    Button(
-                          label = labels["c1"],
-                          id = "c1",
-                          style = styles["c1"],
-                          
-                      ),
-                      Button(
-                          label = labels["c2"],
-                          id = "c2",
-                          style = styles["c2"],
-                          
-                      ),
-                      Button(
-                          label = labels["c3"],
-                          id = "c3",
-                          style = styles["c3"],
-                      )]])
-              
-
-        except asyncio.TimeoutError:
-          await ctx.send("You ran out of time.")
-          await a.delete()
-          await mainMessage.delete()
-
-
-        
-        
-        if len(cur_list) == 0:
-          level+=1
-          await mainMessage.delete()
-          break
-        elif failed == 1:
-          timer = 0
-          await asyncio.sleep(1)
-          timer = timerMem
-          break
-
-    expectedTime = ((level*level+1)/2)*(5+level)
-    
-    bonus = expectedTime/timer
-    if bonus <1:
-      bonus = 1
-    score = level*bonus
-    await mainMessage.delete()
-    await a.delete()
-    color = int(await colorSetup(ctx.message.author.id),16)
-    em = discord.Embed(color=color)
-    em.add_field(name="stats",value=f"Level: {level}\nTime bonus: \u00D7{round(bonus,2)}\n**Score: {math.ceil(score)}**",inline = False)
-    await ctx.send(embed = em)
     
   @app_commands.command(name = "tictactoe", description="Starts a game of tictactoe with another user")
   @app_commands.describe(user = "The user you want to challenge")
