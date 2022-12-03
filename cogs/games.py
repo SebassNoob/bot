@@ -18,6 +18,149 @@ import math
 from pyinsults import insults
 import csv
 
+
+
+# This example requires the 'message_content' privileged intent to function.
+
+from typing import List
+from discord.ext import commands
+import discord
+
+# Defines a custom button that contains the logic of the game.
+# The ['TicTacToe'] bit is for type hinting purposes to tell your IDE or linter
+# what the type of `self.view` is. It is not required.
+class TicTacToeButton(discord.ui.Button['TicTacToe']):
+    def __init__(self, x: int, y: int):
+        # A label is required, but we don't need one so a zero-width space is used
+        # The row parameter tells the View which row to place the button under.
+        # A View can only contain up to 5 rows -- each row can only have 5 buttons.
+        # Since a Tic Tac Toe grid is 3x3 that means we have 3 rows and 3 columns.
+        super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', row=y)
+        self.x = x
+        self.y = y
+
+    # This function is called whenever this particular button is pressed
+    # This is part of the "meat" of the game logic
+    async def callback(self, interaction: discord.Interaction):
+        assert self.view is not None
+        view: TicTacToe = self.view
+        state = view.board[self.y][self.x]
+        if state in (view.X, view.O):
+            return
+
+        if view.current_player == view.user1:
+            if interaction.user.id != view.user1.id:
+              await interaction.response.send_message(content = "It's not your turn, stupid", ephemeral = True)
+              return
+            self.style = discord.ButtonStyle.danger
+            self.label = 'X'
+            self.disabled = True
+            view.board[self.y][self.x] = view.X
+            view.current_player = view.user2
+            content = f"It is now {view.user2.mention}'s' turn"
+        else:
+            if interaction.user.id != view.user2.id:
+              await interaction.response.send_message(content = "It's not your turn, stupid", ephemeral = True)
+              return
+            self.style = discord.ButtonStyle.success
+            self.label = 'O'
+            self.disabled = True
+            view.board[self.y][self.x] = view.O
+            view.current_player = view.user1
+            content = f"It is now {view.user1.mention}'s turn"
+
+        winner = view.check_board_winner()
+        if winner is not None:
+            if winner == view.X:
+                content = f'{view.user1.mention} won!'
+            elif winner == view.O:
+                content = f'{view.user2.mention} won!'
+            else:
+                content = "It's a tie!"
+
+            for child in view.children:
+                child.disabled = True
+
+            view.stop()
+
+        await interaction.response.edit_message(content=content, view=view)
+
+
+# This is our actual board View
+class TicTacToe(discord.ui.View):
+    # This tells the IDE or linter that all our children will be TicTacToeButtons
+    # This is not required
+    children: List[TicTacToeButton]
+    X = -1
+    O = 1
+    Tie = 2
+
+    def __init__(self, user1: discord.User, user2: discord.User):
+
+        super().__init__()
+        self.current_player = user1
+        self.board = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ]
+        self.user1 = user1
+        self.user2 = user2
+        
+
+        # Our board is made up of 3 by 3 TicTacToeButtons
+        # The TicTacToeButton maintains the callbacks and helps steer
+        # the actual game.
+        for x in range(3):
+            for y in range(3):
+                self.add_item(TicTacToeButton(x, y))
+
+        
+    
+    
+    # This method checks for the board winner -- it is used by the TicTacToeButton
+    def check_board_winner(self):
+        for across in self.board:
+            value = sum(across)
+            if value == 3:
+                return self.O
+            elif value == -3:
+                return self.X
+
+        # Check vertical
+        for line in range(3):
+            value = self.board[0][line] + self.board[1][line] + self.board[2][line]
+            if value == 3:
+                return self.O
+            elif value == -3:
+                return self.X
+
+        # Check diagonals
+        diag = self.board[0][2] + self.board[1][1] + self.board[2][0]
+        if diag == 3:
+            return self.O
+        elif diag == -3:
+            return self.X
+
+        diag = self.board[0][0] + self.board[1][1] + self.board[2][2]
+        if diag == 3:
+            return self.O
+        elif diag == -3:
+            return self.X
+
+        # If we're here, we need to check if a tie was made
+        if all(i != 0 for row in self.board for i in row):
+            return self.Tie
+
+        return None
+
+
+
+
+
+
+
+
 class Games(commands.Cog):
   
   def __init__(self, bot):
@@ -428,291 +571,10 @@ class Games(commands.Cog):
     em.add_field(name="stats",value=f"Level: {level}\nTime bonus: \u00D7{round(bonus,2)}\n**Score: {math.ceil(score)}**",inline = False)
     await ctx.send(embed = em)
     
-  @commands.command(name = "tictactoe",aliases = ["ttt"])
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def tictactoe(self,ctx,user: discord.Member):
-    if user == ctx.author:
-        await ctx.reply("You can't play a game of TicTacToe with yourself, you moron.")
-        raise Exception("ttt'ed self")
-    elif user.bot:
-        await ctx.send("You can't play TicTacToe with a bot, stupid.")
-        raise Exception("ttt'ed bot")
-    
-
-    def getTurns():
-      
-      involved_users = [user.id, ctx.author.id]
-      turn = random.randint(0,1)
-      turnByTurn =[]
-      for i in range(9):
-        if turn+1 == 2:
-          turn = -1
-        turnByTurn.append(involved_users[turn+1])
-        turn+=1
-      return turnByTurn
-
-    turn_list = getTurns()
-    turn = 0
-    userSquares =[]
-    authorSquares =[]
-    userwin = 0
-    authorwin = 0
-    variable = ""
-    if turn_list[0] == user.id:
-      variable = user.mention
-    else:
-      variable = ctx.author.mention
-    turnNotif = await ctx.send(f"TicTacToe game between {user.name} and {ctx.author.name}\nYour turn {variable}")
-    
-    
-    mainMessage = await ctx.send("\u200b",
-        components = [ 
-              [
-                  Button(
-                      label = "\u200b",
-                      id = "a1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "a3",
-                      style = ButtonStyle.grey,
-                      
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "b1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "b3",
-                      style = ButtonStyle.grey,
-                  )
-              ],
-              [
-                Button(
-                      label = "\u200b",
-                      id = "c1",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c2",
-                      style = ButtonStyle.grey,
-                      
-                  ),
-                  Button(
-                      label = "\u200b",
-                      id = "c3",
-                      style = ButtonStyle.grey,
-                  )
-              ]
-          ]
-
-      )
-      
-    
-      
-    
-
-    def success(squares):
-      if "a1" in squares and "a2" in squares and "a3" in squares:
-        return True
-      if "b1" in squares and "b2" in squares and "b3" in squares:
-        return True
-      if "c1" in squares and "c2" in squares and "c3" in squares:
-        return True
-      if "a1" in squares and "b1" in squares and "c1" in squares:
-        return True
-      if "a2" in squares and "b2" in squares and "c2" in squares:
-        return True
-      if "a3" in squares and "b3" in squares and "c3" in squares:
-        return True
-      if "a1" in squares and "b2" in squares and "c3" in squares:
-        return True
-      if "a3" in squares and "b2" in squares and "c1" in squares:
-        return True
-      else: 
-        return False
-      
-      
-
-    while True:
-        try:
-              
-              interaction = await self.bot.wait_for(
-                  "button_click",
-                  check = lambda i: i.component.id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"] and i.channel.id == ctx.channel.id, 
-                  timeout = 30.0 
-              )
-              if interaction.user.id != turn_list[turn]:
-                await interaction.respond(type=4, content="It isn't your turn, idiot.", ephemeral=True)
-              else:
-                
-                if turn_list[turn] == user.id:
-                  userSquares.append(interaction.component.id)
-                elif turn_list[turn] == ctx.author.id:
-                  authorSquares.append(interaction.component.id)
-                
-
-                
-                if success(userSquares) == True:
-                  userwin = 1 
-                if success(authorSquares) == True:
-                  authorwin = 1
-                else:
-                  if turn != 8:
-                    turn+= 1
-                  else:
-                    await asyncio.sleep(1)
-                    await mainMessage.delete()
-                    await ctx.send(f"You tied! Rip lol you suck.")
-                    break
-                
-                
-
-                labels = {}
-                for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-                  labels[id] = "\u200b"
-
-
-                styles = {}
-                for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-                  styles[id] = ButtonStyle.grey
-
-                disabled = {}
-                for id in ["a1", "a2","a3","b1","b2","b3","c1","c2","c3"]:
-                  disabled[id] = False
-
-
-                for id in userSquares:
-                  labels[id] = "X"
-                  styles[id] = ButtonStyle.red
-                  disabled[id] = True
-                for id in authorSquares:
-                  labels[id] = "O"
-                  styles[id] = ButtonStyle.green
-                  disabled[id] =True
-
-                
-
-                await interaction.respond(
-                      
-                      type = 7,
-                      
-                      components = [ 
-                  [
-                      Button(
-                          label = labels["a1"],
-                          id = "a1",
-                          style = styles["a1"],
-                          disabled = disabled["a1"]
-                          
-                      ),
-                      Button(
-                          label = labels["a2"],
-                          id = "a2",
-                          style = styles["a2"],
-                          disabled = disabled["a2"]
-                          
-                      ),
-                      Button(
-                          label = labels["a3"],
-                          id = "a3",
-                          style =styles["a3"],
-                          disabled = disabled["a3"]
-                          
-                      )
-                  ],
-                  [
-                    Button(
-                          label = labels["b1"],
-                          id = "b1",
-                          style = styles["b1"],
-                          disabled = disabled["b1"]
-                          
-                      ),
-                      Button(
-                          label = labels["b2"],
-                          id = "b2",
-                          style = styles["b2"],
-                          disabled = disabled["b2"]
-                          
-                      ),
-                      Button(
-                          label = labels["b3"],
-                          id = "b3",
-                          style = styles["b3"],
-                          disabled = disabled["b3"]
-                      )
-                  ],
-                  [
-                    Button(
-                          label = labels["c1"],
-                          id = "c1",
-                          style = styles["c1"],
-                          disabled = disabled["c1"]
-                          
-                      ),
-                      Button(
-                          label = labels["c2"],
-                          id = "c2",
-                          style = styles["c2"],
-                          disabled = disabled["c2"]
-                          
-                      ),
-                      Button(
-                          label = labels["c3"],
-                          id = "c3",
-                          style = styles["c3"],
-                          disabled = disabled["c3"]
-                      )]])
-              
-                if userwin == 1:
-                  await asyncio.sleep(1)
-                  await mainMessage.delete()
-                  await ctx.send(f"{user.name} wins this round!")
-                  break
-                if authorwin == 1:
-                  await asyncio.sleep(1)
-                  await mainMessage.delete()
-                  await ctx.send(f"{ctx.author.name} wins this round!")
-                  break
-                
-                variable = ""
-                if turn_list[turn] == user.id:
-                  variable = user.mention
-                else:
-                  variable = ctx.author.mention
-
-                await turnNotif.edit(f"TicTacToe game between {user.name} and {ctx.author.name}\nYour turn {variable}")
-                
-        
-
-        except asyncio.TimeoutError:
-          
-          await ctx.send("You ran out of time.")
-          
-          await mainMessage.delete()
-          break
+  @app_commands.command(name = "tictactoe", description="Starts a game of tictactoe with another user")
+  @app_commands.describe(user = "The user you want to challenge")
+  async def tictactoe(self, interaction: discord.Interaction , user: discord.User):
+    await interaction.response.send_message(content = f"TicTacToe: {interaction.user.mention} goes first", view = TicTacToe(interaction.user, user))
 
         
 
