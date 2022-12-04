@@ -1,13 +1,13 @@
 
 import os
-import random
+
 import discord
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU
 from restart import run_main
 from discord.ext import commands
 from keep_alive import keep_alive
 import datetime
-
+import asyncio
 import json
 
 
@@ -18,7 +18,7 @@ import time
 from other.snipeTimeout import clearSnipe
 import sys
 sys.path.insert(1,'./other')
-import sqlite3
+
 from sqliteDB import get_db_connection
 from os import system
 system("pip install spacy")
@@ -59,11 +59,15 @@ class Bot(commands.AutoShardedBot):
     servers = len(self.guilds)
     print("\033[0;36;48m-----------------------------------------")
     print(f" * {self.user} connected to {servers} servers")
-  
+    members = 0
     count = {}
-    for guild in self.guilds:
+    for i, guild in enumerate(self.guilds):
       addData(guild.id)
-      
+      a = await self.fetch_guild(guild.id)
+      members += a.approximate_member_count
+      #prevent instant ratelimiting
+      if i%30 == 0:
+        await asyncio.sleep(0.5)
       if guild.shard_id not in count:
         count[guild.shard_id] = 1
       else:
@@ -72,7 +76,7 @@ class Bot(commands.AutoShardedBot):
     
       print(f"   - Shard {t[0]}: {t[1]} servers")
     print("\033[0;36;48m-----------------------------------------")
-    await self.change_presence(activity=discord.Game(name=f"$help | annoying {servers} servers"))
+    await self.change_presence(activity=discord.Game(name=f"/help | annoying {servers} servers ({members} members)"))
     await self.tree.sync()
     return
 

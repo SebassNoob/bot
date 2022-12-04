@@ -160,9 +160,12 @@ class MemButton(discord.ui.Button['Mem']):
     # This function is called whenever this particular button is pressed
     # This is part of the "meat" of the game logic
     async def callback(self, interaction: discord.Interaction):
+      
         
         assert self.view is not None
         view: MemGame = self.view
+        if interaction.user.id != view.interaction.user.id:
+          await interaction.response.send_message("Not your game!", ephemeral = True)
         for child in view.children:
           child.label = '\u200b'
           child.style = discord.ButtonStyle.secondary
