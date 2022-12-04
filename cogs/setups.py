@@ -133,11 +133,11 @@ class Setups(commands.Cog):
       embedVar7 = discord.Embed(color = color)
       embedVar7.set_author(name="Annoybot commands (voice)")
       embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
-      embedVar7.add_field(name = "``fart``", value = "Joins your VC and plays a fart sfx",inline = False)
-      embedVar7.add_field(name = "``micblow``", value = "Joins your VC and simulates blowing into a mic",inline = False)
-      embedVar7.add_field(name = "``scream``", value = "Joins your VC and screams into it.",inline = False)
-      embedVar7.add_field(name = "``rickroll``", value = "plays the legendary rick astley song and force everyone to listen.",inline = False)
-      embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
+      embedVar7.add_field(name = "``playnoise fart``", value = "Joins your VC and plays a fart sfx",inline = False)
+      embedVar7.add_field(name = "``playnoise micblow``", value = "Joins your VC and simulates blowing into a mic",inline = False)
+      embedVar7.add_field(name = "``playnoise scream``", value = "Joins your VC and screams into it.",inline = False)
+      embedVar7.add_field(name = "``playnoise rickroll``", value = "plays the legendary rick astley song and force everyone to listen.",inline = False)
+
       return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
 
 
