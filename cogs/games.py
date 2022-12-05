@@ -9,8 +9,8 @@ import asyncio
 import random
 import string
 from other.asyncCmds import colorSetup
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 import threading
 import time
 import datetime

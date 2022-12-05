@@ -1,15 +1,21 @@
 import discord
 import os
-from discord.ext import commands
+
 from discord import app_commands
+import sqlite3
+import datetime
+
 #TODO: implement upvote check
-def CustomCooldown(interaction: discord.Interaction):
-  
-  if interaction.user.id == os.environ['uid']:
+async def CustomCooldown(interaction: discord.Interaction):
+  if interaction.user.id == int(os.environ['uid']):
+
     return None
-  if 858200514914287646 in [a.id for a in interaction.user.mutual_guilds]:
-    #12 commands per 30 seconds, triggers a 30 sec cooldown
+  guild = interaction.client.get_guild(858200514914287646) 
+  
+  if guild and guild.get_member(interaction.user.id): 
+
     return app_commands.Cooldown(12,30)
-  #10 commands per 30 seconds, triggers a 30 sec cooldown
-  return app_commands.Cooldown(10,30)
+
+  
+  return app_commands.Cooldown(8,30)
   

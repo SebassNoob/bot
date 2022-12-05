@@ -9,8 +9,8 @@ import random
 import json
 import base64
 import aiohttp
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 import requests
 from waifu import WaifuClient
 from typing import *

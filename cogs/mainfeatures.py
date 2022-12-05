@@ -9,8 +9,8 @@ import random
 
 from typing import *
 import requests
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 from dadjokes import Dadjoke
 from pyinsults import insults
 

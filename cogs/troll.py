@@ -10,8 +10,8 @@ import random
 import asyncio
 import string
 import datetime
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 
 
 

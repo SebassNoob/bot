@@ -5,8 +5,8 @@ import random
 import asyncio
 from discord import FFmpegPCMAudio
 from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 from mutagen.mp3 import MP3
 import math
 from typing import *

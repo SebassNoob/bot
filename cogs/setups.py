@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips
+from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips, getData, addData
 from discord import app_commands
 from typing import List
 import json
@@ -10,10 +10,10 @@ import asyncio
 import re
 from typing import *
 import other.userSettings as userSettings
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 import datetime
-import other.userSettings as userSettings
+import other.serverSettings as serverSettings
 
 class Setups(commands.Cog):
   
@@ -23,6 +23,7 @@ class Setups(commands.Cog):
     
   @app_commands.command(name="sync", description="Syncs the commandtree with the updated commands")
   async def sync(self, interaction: discord.Interaction) -> None:
+    
     await interaction.response.defer(thinking=True)
     await self.bot.tree.sync()
     await interaction.followup.send("Commands have synced!")
@@ -366,7 +367,65 @@ class Setups(commands.Cog):
       view.add_item(button)
     await interaction.response.send_message(content="Here are our legal documents, nerd.", view=view)
     
-      
+  server_group = app_commands.Group(name="serversettings", description="Shows the settings for this server")
+
+  @server_group.command(name = "menu", description="Shows the menu for server settings")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_menu(self, interaction: discord.Interaction):
+    settings = getData(interaction.guild.id)
+    blacklist_ids = [userid for userid in eval(settings.get('blacklist'))]
+    blacklist = []
+    for uid in blacklist_ids:
+      a=await interaction.client.fetch_user(uid)
+      blacklist.append(a.name)
+
+    color = colorSetup(interaction.user.id)
+    blacklist = ', '.join(blacklist) or None 
+    em = discord.Embed(color = color)
+    em.set_author(name = 'Annoybot Server Settings')
+    em.add_field(name = "Autoresponse (autoresponse)",value = f"Current: **{bool(settings.get('autoresponse'))}**\nTurns /autoresponse on/off" ,inline= False)
+    em.add_field(name = "Blacklist users (blacklist)", value = f"Current list: **{blacklist}**\nBlacklists certain users from using annoybot commands " ,inline= False)
+
+    
+    await interaction.response.send_message(embed =em, ephemeral=True)
+    
+  @server_group.command(name = "autoresponse", description="Turns /autoresponse on or off")
+  @app_commands.describe(onoff = "On or off")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_auto(self, interaction: discord.Interaction, onoff : Literal['on','off']):
+    settings = getData(interaction.guild.id)
+    
+    settings['autoresponse'] = 1 if onoff =='on' else 0
+    serverSettings.update(interaction.guild.id, settings)
+
+    
+    await interaction.response.send_message(f"✅ autoresponse setting updated to **{onoff}**",ephemeral=True)
+    
+    
+  @server_group.command(name = "blacklist", description="Blacklists certain users from using the bot")
+  @app_commands.describe(modify="add/remove people from the blacklist", user = "User to blacklist/unblacklist")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_black(self, interaction: discord.Interaction, modify: Literal['add','remove'], user:discord.Member):
+    settings = getData(interaction.guild.id)
+    
+    blacklist= eval(settings['blacklist']) #List[discord.Member]
+    if modify =="add":
+      blacklist.append(user.id)
+      await interaction.response.send_message(f"✅ Added {user.display_name} to blacklist",ephemeral=True)
+
+    elif modify == "remove":
+      try:
+        blacklist.remove(user.id)
+        await interaction.response.send_message(f"✅ Removed {user.display_name} to blacklist",ephemeral=True)
+      except ValueError:
+        await interaction.response.send_message("❌ This user is not currently blacklisted????",ephemeral=True)
+        return
+    settings['blacklist'] = f'{blacklist}'
+
+    serverSettings.update(interaction.guild.id, settings)
+
+    
+    
       
   
 async def setup(bot):
