@@ -27,23 +27,6 @@ system("python -m spacy download en_core_web_sm")
 
 
 
-#methodology for updating
-
-#commit changes in bot
-#pull changes to bot-1
-#write + test code in bot-1
-#sysexit bot
-#for all changed files in bot, copy and paste manually into bot-1
-#commit to repo
-#pull to bot
-#run
-
-
-
-def get_prefix(bot, message): 
-  return '$'
-
-
 async def blacklist_check(interaction: discord.Interaction):
 
   if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):
@@ -60,7 +43,7 @@ class Bot(commands.AutoShardedBot):
     intents = discord.Intents.default()
     intents.message_content = True
     
-    super().__init__(command_prefix=get_prefix, intents=intents, shard_count= 2, help_command= None)
+    super().__init__(command_prefix="$", intents=intents, shard_count= 2, help_command= None)
     
 
 
@@ -217,12 +200,6 @@ class Bot(commands.AutoShardedBot):
         ]
         await message.channel.send(random.choice(angry_responses))
           
-          
-        
-
-
-    
-      
 
 
   async def setup_hook(self):
@@ -232,83 +209,10 @@ class Bot(commands.AutoShardedBot):
     
         await bot.load_extension(f'cogs.{filename[:-3]}')
         print(f"\033[0;32;49m{filename} loaded")
-      
-    
-
-
-      
-    
   
-
 
 
 bot = Bot()
-
-
-
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@bot.command()
-async def patchnotes(ctx):
-  color = int(await colorSetup(ctx.message.author.id),16)
-  em = discord.Embed(color = color)
-  em.add_field(name = "1.8.0 part I", value = "``**1.8.0 part I**\nThis serves as a bridging update for the future release of discord.py 2.0, as well as general updates to the bot.\n- ADD: proper error messages for common errors\n- FIX: iplookup failing in some cases\n- ADD: textwall command\n- CHANGE: snipe cache clear 30 days => 2 hours\n- CHANGE: snipe is now more reliable (database will not corrupt) but slightly slower\n- FIX: (hopefully) resolves poor uptime lately \n- CHANGE: Privacy policy got an update\n- ADD: more dark humor yay``",inline = False)
-  await ctx.send(embed = em)
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-@bot.command()
-async def servers(ctx):
-  for server in bot.guilds:
-    print(server.name, server.id)
-
-  
-
-@bot.command()
-async def sysexit(ctx):
-  
-  if int(ctx.author.id) == int(os.getenv("uid")):
-    await ctx.send("Bot has been taken offline.")
-    sys.exit()
-
-@bot.command()
-async def restart(ctx):
-  if int(ctx.author.id) == int(os.getenv("uid")):
-    await ctx.send("Bot is restarting...")
-    system("python restart.py")
-
-    
 
 
 Thread(target=clearSnipe).start()

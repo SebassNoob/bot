@@ -21,12 +21,6 @@ class Setups(commands.Cog):
     self.bot = bot
 
     
-  @app_commands.command(name="sync", description="Syncs the commandtree with the updated commands")
-  async def sync(self, interaction: discord.Interaction) -> None:
-    
-    await interaction.response.defer(thinking=True)
-    await self.bot.tree.sync()
-    await interaction.followup.send("Commands have synced!")
     
   @app_commands.command(name = "info", description="Shows general information and support links.")
   async def credit(self, interaction: discord.Interaction):
@@ -55,6 +49,13 @@ class Setups(commands.Cog):
       ),
     
     ] 
+    async def cl(interaction: discord.Interaction):
+      em = discord.Embed(color = color, title = "1.8.0 pt 2", description = "Key changes:\nCHANGED: message commands -> slash commands\nCHANGED: cooldowns have been replaced with an entirely new system -- ratelimits\n- Default: 8 commands/30s, after which you get timed out for 30s\n- Members of support server: 12 commands/30s, 30s timeout\n- This is to prevent spam without being too interfering with command usage\nREMOVED: math features (low usage)\nREMOVED: $prefix, $daily (redundant)\nADDED: /serversettings for manage_server perms, to blacklist users who are too annoying and to toggle autoresponse\nCHANGED: /usersettings have been wiped to facilitate migration\n\nOther changes:\nADDED: a few new darkjokes, insults and uninspirational quotes\nCHANGED: waifu, shinobu and neko commands have been recategorised into /anime, with many more options to choose from\nCHANGED: pick and 8ball have been recategorised into /utils\nCHANGED: /micblow, /scream, /fart, /rickroll have been recatagorised under /playnoise\nCHANGED: /channeltroll no of pings 3->1, uses threads instead of a text channel\nCHANGED: /nicktroll duration 5->3 minutes\nCHANGED: /dmtroll no of pings 3->1\nCHANGED: /fakemute times out the given user for 3s instead of just sending some random embed\nCHANGED: /fakeban times out the user for 3s and nicks them to their id, to give the illusion that they have been banned\nCHANGED: /vocabularygame now only accepts words that are valid in Scrabble, and letters given 10 -> 12\nADDED: /wouldyourather now shows who voted for what option\nCHANGED: /truthordare can be rerolled multiple times\nREMOVED: /disconnect as the bot can be disconnected via a button now\n\ndas it lol")
+      await interaction.response.send_message(embed=em)
+
+    pn = discord.ui.Button(style = discord.ButtonStyle.primary, label = "Patch Notes")
+    pn.callback = cl
+    view.add_item(pn)
     for button in buttons:
       view.add_item(item=button)
     
