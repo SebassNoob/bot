@@ -300,6 +300,12 @@ class Games(commands.Cog):
   @app_commands.command(name = "tictactoe", description="Starts a game of tictactoe with another user")
   @app_commands.describe(user = "The user you want to challenge")
   async def tictactoe(self, interaction: discord.Interaction , user: discord.User):
+    if user.id == interaction.user.id:
+      await interaction.response.send_message(content = "You can't challange yourself, silly", ephemeral = True)
+      return
+    if user.bot:
+      await interaction.response.send_message(content = "You can't challenge a bot, duh?", ephemeral = True)
+      return
     await interaction.response.send_message(content = f"TicTacToe: {interaction.user.mention} goes first", view = TicTacToe(interaction.user, user))
 
         
@@ -520,90 +526,6 @@ class Games(commands.Cog):
     await interaction.channel.send(embed = em)
       
       
-    '''
-    def backgroundTyping():
-      global timerTyping
-      timerTyping = 180
-      while True:
-        time.sleep(1)
-        timerTyping -= 1
-        if timerTyping == 0:
-          break
-    
-    
-    threading.Thread(name = 'backgroundTyping', target = backgroundTyping).start()
-    await ctx.send("Type the sentence below!")
-    texts = [
-      
-      ]
-    
-    random_text = texts[random.randint(0,len(texts)-1)]
-    shown_text = random_text.replace("","\u200b")
-    await ctx.send(f"``{shown_text}``")
-    accuracy = 0
-    wpm = 0 
-    penalty = 0
-    leaderboards = {}
-    while timerTyping != 0:
-      try:
-        msg = await self.bot.wait_for(
-        "message", check = lambda i: i.author.id in players and i.channel.id == ctx.channel.id,timeout = timerTyping)
-        
-        def checkAccuracy(j):
-          correct = 0
-          accuracy = 0
-          a = random_text.split(" ")
-          b = j.split(" ")
-          
-          for i in range(len(a)):
-            try:
-
-              if b[i] == a[i]:
-                correct += 1
-            except:
-              pass
-              
-          accuracy = correct/len(a)
-          return accuracy
-          
-        players.remove(msg.author.id)
-
-        accuracy = checkAccuracy(msg.content) 
-        
-        wpm = len(msg.content)/(180-timerTyping)
-        penalty = wpm*(1-accuracy)
-        wpm -= penalty
-  
-        leaderboards[msg.author.name] = wpm
-        
-        color = int(await colorSetup(msg.author.id),16)
-        em = discord.Embed(color = color)
-        
-        em.add_field(name = "``stats``", value = f"Characters/second: {round(len(msg.content)/(180-timerTyping),2)}\nAccuracy: {round(accuracy*100,2)}%\nInaccuracy penalty: -{round(penalty,2)}\n**Final score: {round(wpm,2)}**")
-        await msg.reply(embed = em)
-        if len(players) == 0:
-          break
-      except asyncio.TimeoutError:
-        break
-    leaderboards = str(sorted(leaderboards.items(), key = lambda kv:(kv[1], kv[0]),reverse = True))[1:-1]
-    
-    leaderboards = leaderboards.split(")")
-    newLeaderboards=[]
-    for l in leaderboards:
-      h = l[1:].replace(",",": ").replace("'","").replace("(","")
-      newLeaderboards.append(h)
-      
-      if l == '':
-        newLeaderboards.remove(l)
-    finalText = ""
-    for l in newLeaderboards:
-      
-      finalText = finalText+"\n"+l
-    color = int(await colorSetup(ctx.author.id),16)
-    em2 = discord.Embed(color = color)
-    em2.add_field(name = "``Leaderboard``",value = finalText,inline = False)
-    await ctx.send(embed = em2)
-'''
 
 
 

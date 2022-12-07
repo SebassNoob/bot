@@ -102,16 +102,16 @@ class Setups(commands.Cog):
       embedVar4 = discord.Embed(color = color)
       embedVar4.set_author(name="Annoybot commands (trolls)")
       
-      embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
+      embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **manage_channels** permission.",inline = False)
       embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
       embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
   
       embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
       
   
-      embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
+      embedVar4.add_field(name = "``fakeban (user)``", value = "Times out a user for 3s, nicks them to their id (to give the illusion of being banned) and sends a fake ban reason",inline = False)
   
-      embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
+      embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user, timing them out for 3s. If no reason is given, a random one will be generated. ",inline = False)
       embedVar4.add_field(name = "``nitrotroll``",value = "Fakes a nitro gift in chat. Clicking on claim will produce a rickroll. Requires **manage_messages** permissions.")
       
       embedVar5 = discord.Embed(color = color)
@@ -125,8 +125,6 @@ class Setups(commands.Cog):
       
       embedVar6 = discord.Embed(color = color)
       embedVar6.set_author(name="Annoybot commands (setup)")
-      embedVar6.add_field(name = "``daily``", value = "Gives you 30mins of reduced cooldowns once per day!",inline = False)
-      embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
       embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
       embedVar6.add_field(name = "``info``", value = "Sends links to support this bot!",inline = False)
       embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)

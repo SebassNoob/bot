@@ -28,7 +28,8 @@ system("python -m spacy download en_core_web_sm")
 
 
 async def blacklist_check(interaction: discord.Interaction):
-
+  if not interaction.guild:
+    return True
   if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):
     em = discord.Embed(color = 0x000000, description = f"You have been banned from using this bot in this server: {interaction.guild.name}\nAsk the mods to unban you (/serversettings) or use this bot in another server.")
     await interaction.response.send_message(embed = em)
@@ -134,8 +135,15 @@ class Bot(commands.AutoShardedBot):
   
       
     current_time = datetime.datetime.now() 
+    if isinstance(message.channel, discord.abc.GuildChannel):
+      nsfw = message.channel.nsfw 
+    elif isinstance(message.channel, discord.Thread):
+      nsfw = message.channel.parent.nsfw
+    else:
+      nsfw = True
 
-    addDataSnipe(message.author.id, message.content, current_time, message.channel.nsfw)
+    addDataSnipe(message.author.id, message.content, current_time, nsfw)
+    
     
     
   
@@ -144,7 +152,7 @@ class Bot(commands.AutoShardedBot):
   
   async def on_interaction(self, interaction):
     addDataU(interaction.user.id)
-    #handles bot bans in servers
+
     
     
     
