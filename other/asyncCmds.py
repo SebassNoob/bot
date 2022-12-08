@@ -2,6 +2,10 @@ import random
 import json
 import sqlite3
 from other.sqliteDB import get_db_connection
+import other.userSettings as userSettings 
+import other.serverSettings as serverSettings 
+from typing import *
+import csv
 
 def bool_to_int(bool):
   if bool == True:
@@ -10,77 +14,81 @@ def bool_to_int(bool):
     return 0 
   else:
     raise SyntaxError
-async def addDataU(uid):
-  
-  user = await getDataU()
-  if str(uid) in user:
-    return False
-  else:
-    user[str(uid)] = {}
-    user[str(uid)]["color"] = 'ffff00'
-    user[str(uid)]["familyFriendly"] = 0
-    user[str(uid)]["sniped"] = 1
-    user[str(uid)]["dmblocker"] = 0
 
-  with open("./json/userSettings.json","w") as f:
-    json.dump(user,f)
-  return True
-
-async def getDataU():
-  
-  with open("./json/userSettings.json","r") as f:
-    users = json.load(f)
-  return users
-
-async def addData(guildId):
-  
-  guilds = await getData()
-  if str(guildId) in guilds:
-    return False
+    
+def addDataU(uid: int) -> bool:
+  if userSettings.get(uid) is None:
+    userSettings.insert({
+    "id" :uid,
+    "color": "000000",
+    "familyFriendly": bool_to_int(False),
+    "sniped": bool_to_int(True),
+    "dmblocker": bool_to_int(False)
+    })
+    
+    return True
   else:
     
-    guilds[str(guildId)] = {}
-    guilds[str(guildId)]["autoresponse"] = 1
-    guilds[str(guildId)]["Prefix"] = '$'
-    
-    
-
-  with open("./json/serverData.json","w") as f:
-    json.dump(guilds,f)
-  return True
-
-async def getData():
-  with open("./json/serverData.json","r") as f:
-    guilds = json.load(f)
-  return guilds
-
-async def colorSetup(uid):
+    return False
   
-  await addDataU(uid)
-  users = await getDataU()
-  color = users[str(uid)]["color"]
-  return color
+def getDataU(uid: int) -> Union[Dict[str, Any], None]:
+  
+  return userSettings.get(uid)
+
+def addData(guildId: int) -> bool:
+  with open("./json/autoresponse.csv",newline="") as file:
+    reader = list(csv.DictReader(file))
+    #reader is List[Dict[str, str]]
+    #construct dict of shape Dict[str, str]
+    autores = {}
+          
+    x = list(map(lambda i: {i['word']:i['response']}, reader))
+    x = list(map(lambda i: autores.update(i),x))
+    
+  if serverSettings.get(guildId) is None:
+    serverSettings.insert({
+    "id" :guildId,
+    "autoresponse": 1,
+    "autoresponse_content":f'{autores}',
+    "blacklist": '[]'
+    })
+    
+    return True
+  else:
+    
+    return False
 
 
-async def changeff(string):
-  string = string.replace("fuck", "f**k")
-  string = string.replace("bitch", "bi**h")
-  string = string.replace("shit", "sh*t")
-  string = string.replace("ass", "a**")
-  string = string.replace("bastard", "b*stard")
-  string = string.replace("dick", "d**k")
-  string = string.replace("penis","pp")
-  string = string.replace("vagina","vag*na")
+def getData(id: int) -> Union[Dict[str, Any], None]:
+  
+  return serverSettings.get(id)
+
+  
+def colorSetup(uid):
+  
+  addDataU(uid)
+  
+  
+  return int(getDataU(uid).get('color'), 16)
+
+
+def changeff(string: str) -> str:
+  to_replace = {
+    "fuck" :"f#k",
+    "bitch": "bi##h",
+    "shit": "sh#t",
+    "ass": "a##",
+    "bastard": "b#stard",
+    "dick": "d##k",
+    "penis": "pen#s",
+    "vagina": "vag#na"
+  }
+  for old, new in to_replace.items():
+    string = string.replace(old, new)
+  
   return string
   
 
-
-async def familyFriendlySetup(uid):
-  await addDataU(uid)
-  users = await getDataU()
-  state = users[str(uid)]["familyFriendly"]
-  
-  return bool_to_int(state)
 
 
 def getDataSnipe(uid):

@@ -1,25 +1,21 @@
+import discord
+import os
 
+from discord import app_commands
+import sqlite3
+import datetime
 
-from discord.ext import commands
+#TODO: implement upvote check
+async def CustomCooldown(interaction: discord.Interaction):
+  if interaction.user.id == int(os.environ['uid']):
 
-class CustomCooldown:
-    def __init__(self, rate: int, per: float, alter_rate: int, alter_per: float, bucket: commands.BucketType, *, elements):
+    return None
+  guild = interaction.client.get_guild(858200514914287646) 
+  
+  if guild and guild.get_member(interaction.user.id): 
 
-        intElementArray = []
-        for element in elements:
-          
-          intElementArray.append(int(element))
-        self.elements = intElementArray
-        self.default_mapping = commands.CooldownMapping.from_cooldown(rate, per, bucket)
-        self.altered_mapping = commands.CooldownMapping.from_cooldown(alter_rate, alter_per, bucket)
+    return app_commands.Cooldown(12,30)
 
-    def __call__(self, ctx: commands.Context):
-        key = self.altered_mapping._bucket_key(ctx.message)
-        if key in self.elements:
-            bucket = self.altered_mapping.get_bucket(ctx.message)
-        else:
-            bucket = self.default_mapping.get_bucket(ctx.message)
-        retry_after = bucket.update_rate_limit()
-        if retry_after:
-            raise commands.CommandOnCooldown(bucket, retry_after)
-        return True
+  
+  return app_commands.Cooldown(8,30)
+  

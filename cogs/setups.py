@@ -2,29 +2,34 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup, addData ,addDataU,getDataU,postTips
-
+from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips, getData, addData
+from discord import app_commands
+from typing import List
 import json
 import asyncio
+import re
+from typing import *
+import other.userSettings as userSettings
 
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
 import datetime
+import other.serverSettings as serverSettings
 
 class Setups(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
 
-  
-  @commands.command(name = "credits",aliases = ["vote","invite"])
-  async def credit(self,ctx):
+    
+    
+  @app_commands.command(name = "info", description="Shows general information and support links.")
+  async def credit(self, interaction: discord.Interaction):
     view = discord.ui.View() 
     guilds = len(self.bot.guilds)
     username = await self.bot.fetch_user(int(os.environ['uid']))
-    color = int(await colorSetup(ctx.message.author.id),16)
+    color = colorSetup(interaction.user.id)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.0.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
     buttons = [
       discord.ui.Button(
@@ -44,103 +49,143 @@ class Setups(commands.Cog):
       ),
     
     ] 
+    async def cl(interaction: discord.Interaction):
+      em = discord.Embed(color = color, title = "1.8.0 pt 2", description = "Key changes:\nCHANGED: message commands -> slash commands\nCHANGED: cooldowns have been replaced with an entirely new system -- ratelimits\n- Default: 8 commands/30s, after which you get timed out for 30s\n- Members of support server: 12 commands/30s, 30s timeout\n- This is to prevent spam without being too interfering with command usage\nREMOVED: math features (low usage)\nREMOVED: $prefix, $daily (redundant)\nADDED: /serversettings for manage_server perms, to blacklist users who are too annoying and to toggle autoresponse\nCHANGED: /usersettings have been wiped to facilitate migration\n\nOther changes:\nADDED: a few new darkjokes, insults and uninspirational quotes\nCHANGED: waifu, shinobu and neko commands have been recategorised into /anime, with many more options to choose from\nCHANGED: pick and 8ball have been recategorised into /utils\nCHANGED: /micblow, /scream, /fart, /rickroll have been recatagorised under /playnoise\nCHANGED: /channeltroll no of pings 3->1, uses threads instead of a text channel\nCHANGED: /nicktroll duration 5->3 minutes\nCHANGED: /dmtroll no of pings 3->1\nCHANGED: /fakemute times out the given user for 3s instead of just sending some random embed\nCHANGED: /fakeban times out the user for 3s and nicks them to their id, to give the illusion that they have been banned\nCHANGED: /vocabularygame now only accepts words that are valid in Scrabble, and letters given 10 -> 12\nADDED: /wouldyourather now shows who voted for what option\nCHANGED: /truthordare can be rerolled multiple times\nREMOVED: /disconnect as the bot can be disconnected via a button now\n\ndas it lol")
+      await interaction.response.send_message(embed=em)
+
+    pn = discord.ui.Button(style = discord.ButtonStyle.primary, label = "Patch Notes")
+    pn.callback = cl
+    view.add_item(pn)
     for button in buttons:
       view.add_item(item=button)
     
-    await ctx.send(embed = embedVar3, view=view)
+    await interaction.response.send_message(embed = embedVar3, view=view)
 
 
 
 
   
-  @commands.command(name = "cmds", aliases = ["commands","cmd","help"])
-  async def pages(self,ctx):
-    
+  @app_commands.command(name = "help", description = "Shows a list of commands that you can use")
+  async def pages(self, interaction: discord.Interaction):
+    color = colorSetup(interaction.user.id)
+    def contents() -> List[discord.Embed]:
+      
+      embedVar = discord.Embed(color = color)
+      embedVar.set_author(name="Annoybot commands")
+      embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)",inline = False)
+      
+      embedVar.add_field(name = "``insult (*user)``", value = "The bot will generate an insult.",inline = False)
+      embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)",inline = False)
+      embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (23 possibilities).",inline = False)
+      embedVar.add_field(name = "``dmthreaten (user, *customthreat)``", value = "The bot DMs a user and threaten them. (13 possibilities).",inline = False)
+      embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.",inline = False)
+      
+      embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.",inline = False)
+      embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. (20 possibilities) Warning, some jokes may be insensitive.",inline = False)
+  
+      
+      
+  
+      embedVar3 = discord.Embed(color = color)
+      embedVar3.set_author(name="Annoybot commands (misc)")
+      embedVar3.add_field(name = "``utils pick (list)``", value = "Randomly chooses from a list of arguments the user provides.",inline = False)
+      embedVar3.add_field(name = "``utils predict (question)``", value = "Predicts the answer to a yes/no question.",inline = False)
+      embedVar3.add_field(name = "``autoresponse menu/add/remove``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
+      embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
+      embedVar3.add_field(name = "``meme``", value = "Sends a meme.",inline = False)
+      embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.",inline = False)
+      embedVar3.add_field(name = "``anime (type)``", value = "Shows a picture of an anime girl.",inline = False)
+      embedVar3.add_field(name = "``iplookup(ip)``", value = "Looks up somebody's ip LOL.",inline = False)
+      embedVar3.add_field(name = "``urbandict(text)``", value = "looks for the definition of the given word on urban dictionary.",inline = False)
+      
+  
+      embedVar4 = discord.Embed(color = color)
+      embedVar4.set_author(name="Annoybot commands (trolls)")
+      
+      embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **manage_channels** permission.",inline = False)
+      embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
+      embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
+  
+      embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
+      
+  
+      embedVar4.add_field(name = "``fakeban (user)``", value = "Times out a user for 3s, nicks them to their id (to give the illusion of being banned) and sends a fake ban reason",inline = False)
+  
+      embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user, timing them out for 3s. If no reason is given, a random one will be generated. ",inline = False)
+      embedVar4.add_field(name = "``nitrotroll``",value = "Fakes a nitro gift in chat. Clicking on claim will produce a rickroll. Requires **manage_messages** permissions.")
+      
+      embedVar5 = discord.Embed(color = color)
+      embedVar5.set_author(name="Annoybot commands (games)")
+      embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
+      embedVar5.add_field(name = "``tictactoe (user)``", value = "Play tictactoe with a friend!",inline = False)
+      embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
+      embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
+      embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
+      embedVar5.add_field(name = "``truthordare``", value = "Play a game of truth or dare with your friends. Best played in a VC or physically!", inline = False)
+      
+      embedVar6 = discord.Embed(color = color)
+      embedVar6.set_author(name="Annoybot commands (setup)")
+      embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
+      embedVar6.add_field(name = "``info``", value = "Sends links to support this bot!",inline = False)
+      embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
+      embedVar6.add_field(name = "``legal``", value = "Shows legal stuff. eh.", inline = False)
+  
+      embedVar7 = discord.Embed(color = color)
+      embedVar7.set_author(name="Annoybot commands (voice)")
+      embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
+      embedVar7.add_field(name = "``playnoise fart``", value = "Joins your VC and plays a fart sfx",inline = False)
+      embedVar7.add_field(name = "``playnoise micblow``", value = "Joins your VC and simulates blowing into a mic",inline = False)
+      embedVar7.add_field(name = "``playnoise scream``", value = "Joins your VC and screams into it.",inline = False)
+      embedVar7.add_field(name = "``playnoise rickroll``", value = "plays the legendary rick astley song and force everyone to listen.",inline = False)
 
-    color = int(await colorSetup(ctx.message.author.id),16)
-    embedVar = discord.Embed(color = color)
-    embedVar.set_author(name="Annoybot commands")
-    embedVar.add_field(name = "``roast (*user)``", value = "Give[s](<https://www.bit.ly/IqT6zt>) a random roast to a mentioned user. (40 possibilities)\n**4**s cooldown.",inline = False)
-    
-    embedVar.add_field(name = "``swear``", value = "The bot will swear at you.\n**4**s cooldown.",inline = False)
-    embedVar.add_field(name = "``urmom``", value = "Gives a random Ur Momma joke. (30 possibilities)\n**4**s cooldown.",inline = False)
-    embedVar.add_field(name = "``uninspire``", value = "Gives a random uninspirational quote. (20 possibilities)\n**4**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dmthreaten (user,*reason)``", value = "The bot DMs a user and threaten them. (10 possibilities)\n**10**s cooldown.",inline = False)
-    embedVar.add_field(name = "``dadjoke``", value = "Sends a dad joke.\n**4**s cooldown.",inline = False)
-    
-    embedVar.add_field(name = "``dumbdeath(user)``", value = "Creates a fictional dumb death for the meantioned user.\n**3**s cooldown.",inline = False)
-    embedVar.add_field(name = "``darkjoke``", value = "Sends a dark joke. warning, some jokes may be insensitive.\n**4**s cooldown.",inline = False)
-
-    
-    
-
-    embedVar3 = discord.Embed(color = color)
-    embedVar3.set_author(name="Annoybot commands (misc)")
-    embedVar3.add_field(name = "``pick (list)``", value = "Randomly chooses from a list of arguments the user provides.\n**4**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``predict (question)``", value = "Predicts the answer to a yes/no question.\n**4**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``autoresponse``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_messages** permission.\n**4**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.\n**10**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``meme``", value = "Sends a meme.\n**14**s cooldown.",inline = False)
-    embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``waifu``", value = "Shows a picture of a waifu.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``neko``", value = "Shows a picture of a neko.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``shinobu``", value = "Shows a picture of a shinobu.\n**6**s cooldown",inline = False)
-    embedVar3.add_field(name = "``iplookup(ip)``", value = "Looks up somebody's ip LOL.",inline = False)
-    embedVar3.add_field(name = "``urbandict(text)``", value = "looks for the definition of the given word on urban dictionary.",inline = False)
-    
-
-    embedVar4 = discord.Embed(color = color)
-    embedVar4.set_author(name="Annoybot commands (trolls)\nAll troll commands have a 10s cooldown.")
-    
-    embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private new channel and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the channel is deleted.\nRequires bot to have **manage_channels** permission.",inline = False)
-    embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
-    embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
-
-    embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
-    
-
-    embedVar4.add_field(name = "``fakeban (user)``", value = "Fakes a ban for the trolled user. WARNING: USER WILL BE KICKED. Requires bot to have **create_instant_invite** and **kick_members** permissions and user needs **kick_members** permission. ",inline = False)
-
-    embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user. If no reason is given, a random one will be generated. ",inline = False)
-    embedVar4.add_field(name = "``nitrotroll``",value = "Fakes a nitro gift in chat. Clicking on claim will produce a rickroll. Requires **manage_messages** permissions.")
-    
-    embedVar5 = discord.Embed(color = color)
-    embedVar5.set_author(name="Annoybot commands (games)\nAll games commands have a 10s cooldown.")
-    embedVar5.add_field(name = "``memorygame``", value = "Memorise the pattern shown at the start of the level and try to replicate it from memory afterward.",inline = False)
-    embedVar5.add_field(name = "``tictactoe (user)``", value = "Play tictactoe with a friend!",inline = False)
-    embedVar5.add_field(name = "``vocabularygame``",value = "Test your vocabulary skills with this game! Requires bot to have **add_reaction** permission.", inline = False)
-    embedVar5.add_field(name = "``typingrace``",value = "Race with others and see who can type the fastest!", inline = False)
-    embedVar5.add_field(name = "``wouldyourather``",value = "Challenge your friends to a would you rather game. Best experienced in a VC!", inline = False)
-    embedVar5.add_field(name = "``truthordare``", value = "Play a game of truth or dare with your friends. Best played in a VC or physically!", inline = False)
-    
-    embedVar6 = discord.Embed(color = color)
-    embedVar6.set_author(name="Annoybot commands (setup)")
-    embedVar6.add_field(name = "``daily``", value = "Gives you 30mins of reduced cooldowns once per day!",inline = False)
-    embedVar6.add_field(name = "``patchnotes``", value = "Shows the latest patch notes!",inline = False)
-    embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
-    embedVar6.add_field(name = "``changeprefix (prefix)``", value = "Changes the bot's prefix in the server.",inline = False)
-    embedVar6.add_field(name = "``vote``", value = "Sends links to support this bot!",inline = False)
-    embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
-    embedVar6.add_field(name = "``legal``", value = "Shows legal stuff. eh.", inline = False)
-
-    embedVar7 = discord.Embed(color = color)
-    embedVar7.set_author(name="Annoybot commands (voice)\nAll voice commands have a 10s cooldown.")
-    embedVar7.add_field(name = "``earrape (*duration)``", value = "Joins your VC and plays a random earrape song",inline = False)
-    embedVar7.add_field(name = "``fart``", value = "Joins your VC and plays a fart sfx",inline = False)
-    embedVar7.add_field(name = "``micblow``", value = "Joins your VC and simulates blowing into a mic",inline = False)
-    embedVar7.add_field(name = "``scream``", value = "Joins your VC and screams into it.",inline = False)
-    embedVar7.add_field(name = "``rickroll``", value = "plays the legendary rick astley song and force everyone to listen.",inline = False)
-    embedVar7.add_field(name = "``disconnect``", value = "Disconnects the bot from the VC.",inline = False)
+      return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
 
 
-
-    paginationList = [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
     
-    current = 0
-    tip = postTips()
+    class options(discord.ui.Select):
+      def __init__(self):
+        options = [
+          discord.SelectOption(label="Core features", description = "A list of features considered to be the main highlights.", emoji="🌌"),
+          
+          discord.SelectOption(label="Troll", description="Commands to troll your friends", emoji ="👺"),
+          discord.SelectOption(label= "Voice", description="Commands used in voice channels to be annoying", emoji="🎤"),
+          discord.SelectOption(label="Games", description="Games you can play with friends", emoji ="🎲"),
+          discord.SelectOption(label="Misc", description="Contains some random features.", emoji="🌎"),
+          discord.SelectOption(label="Setup", description = "Commands to aid in configuration of the bot", emoji = "⚙️")
+        ]
+        super().__init__(placeholder='Choose a category.', min_values=1, max_values=1, options=options)
+      async def callback(self, interaction: discord.Interaction):
+        view = discord.ui.View()
+        view.add_item(item=options())
+        value = self.values[0]
         
-    if tip != None:
-      await ctx.send(tip)
+        pages = contents()
+        get_page = {
+          "Core features": pages[0],
+          "Setup": pages[4],
+          "Troll": pages[2],
+          "Voice": pages[5],
+          "Games": pages[3],
+          "Misc": pages[1]
+          
+        }
+        
+        await interaction.response.edit_message(embed= get_page.get(value), view = view)
+        
+    
+
+    
+
+
+    
+    
+    
+    view = discord.ui.View()
+    view.add_item(item=options())
+    await interaction.response.send_message(content = "The values in brackets are additional arguments you're supposed to give.\n* denotes an optional argument.\nAll commands have a ratelimit of 10 commands per 30 seconds", embed = contents()[0], view = view )
+
+    #legacy code
+    '''
     instruct = await ctx.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument."))
     mainMessage = await ctx.send(
         
@@ -173,315 +218,214 @@ class Setups(commands.Cog):
           await mainMessage.delete()
           await instruct.delete()
           break
-            
-
-  #-------------------end
-  @commands.command(pass_context=True)
-  @has_permissions(administrator=True) 
-  async def changeprefix(self,ctx, prefix):
-      await addData(ctx.guild.id)
-      with open('./json/serverData.json', 'r') as f:
-          prefixes = json.load(f)
-
-      d = {"Prefix" : prefix}
-      prefixes[str(ctx.guild.id)].update(d)
+'''
 
 
 
-      with open('./json/serverData.json', 'w') as f:
-          json.dump(prefixes, f)
-
-      await ctx.send(f'Prefix changed to: {prefix}')
-
-  @commands.command()
-  async def settings(self,ctx, option = None, arg = None):
-
+  settings_group = app_commands.Group(name="settings", description="Shows your settings for the bot")
   
   
-    uid = ctx.message.author.id
-
-    await addDataU(uid)
+  @settings_group.command(name = "menu", description="Shows what your settings are")
+  async def settings(self,interaction: discord.Interaction):
     
-    users = await getDataU()
+    settings = getDataU(interaction.user.id)
     
-    colors = ["red","yellow",'blue','green','magenta','purple','brown','black']
-    hexCodes = ["ff0000",'ffff00','0000ff','00ff00','ff00ff','800080','964b00','000000']
-    onoff = ["off",'on']
+    color = colorSetup(interaction.user.id)
+      
+    em = discord.Embed(color = color)
+    em.set_author(name = 'Annoybot User Settings')
+    em.add_field(name = "Preferred embed colour (color)",value = f"Current: **{settings.get('color')}**\nChanges the colour of embed sent through the bot to a specific colour." ,inline= False)
+    em.add_field(name = "Family Friendly (familyfriendly)", value = f"Current: **{bool(settings.get('familyFriendly'))}**\nCensors some swear words. " ,inline= False)
+    em.add_field(name = "Can be sniped (sniped)", value = f"Current: **{bool(settings.get('sniped'))}**\nDetermines if you can be sniped by others." ,inline= False)
+    em.add_field(name = "Can be dm'ed (dmblocker)", value = f"Current: **{bool(settings.get('dmblocker'))}**\nDetermines if you can be dm'ed by the bot." ,inline= False)
     
+    await interaction.response.send_message(embed =em, ephemeral=True)
+    
+  @settings_group.command(name = "color", description="Changes the default embed color. Enter a hex code as a color.")
+  @app_commands.describe(color="The hex code of the color you want in your embeds.")
+  async def color(self, interaction: discord.Interaction, color: app_commands.Range[str, 6, 6]):
+    settings = getDataU(interaction.user.id)
+    #validate
+    if not re.search("^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", color):
+      
+      await interaction.response.send_message("❌ Enter a valid hex code, idiot.", ephemeral=True)
+      return 
+    settings['color'] = color
+    userSettings.update(interaction.user.id, settings)
+    await interaction.response.send_message(f"✅ Colour setting updated to **{color}**", ephemeral=True)
+    
+  @settings_group.command(name = "familyfriendly", description="Censors some swear words.")
+  async def ff(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+    settings = getDataU(interaction.user.id)
+    
+    settings['familyFriendly'] = 1 if onoff =='on' else 0
+    userSettings.update(interaction.user.id, settings)
+    await interaction.response.send_message(f"✅ familyfriendly setting updated to **{onoff}**", ephemeral=True)
 
-    try:
-      if option.lower() == "color":
-        if arg.lower() in colors:
-          code = hexCodes[colors.index(arg.lower())]
-          await addDataU(uid)
-          users = await getDataU()
-        
-          d = {"color" : code}
-          users[str(uid)].update(d)
-
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("Embed color is now **"+colors[hexCodes.index(users[str(uid)]["color"])]+"**")
-          
-        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
-          
-          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
-
-      if option.lower() == "familyfriendly":
-        
-        if arg.lower() == 'on' or arg.lower() == 'enable':
-          
-          await addDataU(uid)
-          users = await getDataU()
-        
-          d = {"familyFriendly" : 1}
-          users[str(uid)].update(d)
-
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("Family friendly mode is now **on**.")
-
-        if arg.lower() == 'off' or arg.lower() == 'disable':
-          
-          await addDataU(uid)
-          users = await getDataU()
-        
-          d = {"familyFriendly" : 0}
-          users[str(uid)].update(d)
-
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("Family friendly mode is now **off**.")
-          
-        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
-          
-          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
-
-
-
-
-      if option.lower() == "sniped":
-        
-        if arg.lower() == 'on' or arg.lower() == 'enable':
-          
-          await addDataU(uid)
-          users = await getDataU()
-        
-          d = {"sniped" : 1}
-          users[str(uid)].update(d)
-
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("The ability to be sniped is now **on**.")
-
-        if arg.lower() == 'off' or arg.lower() == 'disable':
-          
-          await addDataU(uid)
-          users = await getDataU()
-        
-          d = {"sniped" : 0}
-          users[str(uid)].update(d)
-
-          with open("./json/userSettings.json","w") as f:
-            json.dump(users,f)
-          await ctx.send("The ability to be sniped is now **off**.")
-          
-        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
-          
-          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
-      if option == "dmblocker":
-        if arg.lower() == "on" or arg.lower() == "enable":
-          await addDataU(uid)
-          users = await getDataU()
-          try:
-            d = {"dmblocker" : 1}
-            users[str(uid)].update(d)
-
-            with open("./json/userSettings.json","w") as f:
-              json.dump(users,f)
-            await ctx.send("DM-blocker is now **on**.")
-          except KeyError:
-            users[str(uid)]["dmblocker"] = 1
-            with open("./json/userSettings.json","w") as f:
-              json.dump(users,f)
-            await ctx.send("DM-blocker is now **on**.")
-        if arg.lower() == "off" or arg.lower() == "disable":
-          await addDataU(uid)
-          users = await getDataU()
-          try:
-            d = {"dmblocker" : 0}
-            users[str(uid)].update(d)
-
-            with open("./json/userSettings.json","w") as f:
-              json.dump(users,f)
-            await ctx.send("DM-blocker is now **off**.")
-          except KeyError:
-            users[str(uid)]["dmblocker"] = 0
-            with open("./json/userSettings.json","w") as f:
-              json.dump(users,f)
-            await ctx.send("DM-blocker is now **off**.")
-        elif arg.lower() != "off" and arg.lower() != "disable" and arg.lower() != "on" and arg.lower() != "enable":
-          
-          await ctx.send("You're missing an argument: ``value`` in that command, dumbass.")
-    except:
-        pass
+  @settings_group.command(name = "sniped", description="Allows your messages to be stored to be sniped by /snipe")
+  async def sniped(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+    settings = getDataU(interaction.user.id)
+    
+    settings['sniped'] = 1 if onoff =='on' else 0
+    userSettings.update(interaction.user.id, settings)
+    await interaction.response.send_message(f"✅ sniped setting updated to **{onoff}**")
+    
+  @settings_group.command(name = "dmblocker", description="Blocks the bot from sending private messages to you.")
+  async def dmblocker(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+    settings = getDataU(interaction.user.id)
+    
+    settings['dmblocker'] = 1 if onoff =='on' else 0
+    userSettings.update(interaction.user.id, settings)
+    await interaction.response.send_message(f"✅ dmblocker setting updated to **{onoff}**")
+    
   
-      
-      
-    if option == None:
+  @app_commands.command(name = "ping", description="Shows connectivity information of the bot")
+  async def ping(self, interaction: discord.Interaction):
+    shard = self.bot.get_shard(interaction.guild.shard_id)
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color=color,description = f'Pong!🏓\nPing: {round(shard.latency * 1000)}ms\nShard {shard.id} of {shard.shard_count}')
+    
+    await interaction.response.send_message(embed = em)
+
+  #TODO: after all json 'db' have been rewritten
+  @app_commands.command(name = "removedata", description="removes all your data from the bot")
+  async def removedata(self, interaction: discord.Interaction):
+    class rmdata(discord.ui.View):
+      def __init__(self, interaction: discord.Interaction):
+        super().__init__()
+        self.value = None
+        self.interaction = interaction
+      @discord.ui.button(label = "Confirm", style = discord.ButtonStyle.danger)
+      async def cfm(self, interaction: discord.Interaction, button: discord.ui.Button):
+
+        if interaction.user.id != self.interaction.user.id:
+          await interaction.response.send_message(content = "Not your menu, idiot", ephemeral=True)
+          return
+        self.value = True
+        for child in self.children:
+          child.disabled = True
+        await self.interaction.edit_original_response(content = "confirmed. good riddance!", view=self)
+        await interaction.response.defer()
+        userSettings.delete(interaction.user.id)
         
-      colorDisp = colors[hexCodes.index(users[str(uid)]["color"])]
-      color = int(await colorSetup(ctx.message.author.id),16)
-      
-      em = discord.Embed(color = color)
-      em.set_author(name = 'Annoybot User Settings')
-      em.add_field(name = "Preferred embed colour (color)",value = "Current: **"+colorDisp +"**\nChanges the colour of embed sent through the bot to a specific colour. Options are ``red``, ``yellow``, ``blue``, ``green``, ``magenta``, ``purple``, ``brown``, ``black``" ,inline= False)
-      em.add_field(name = "Family Friendly (familyFriendly)",value = "Current: **"+onoff[users[str(uid)]["familyFriendly"]] +"**\nCensors some swear words. Options are ``on`` or ``off``" ,inline= False)
-      em.add_field(name = "Can be sniped (sniped)",value = "Current: **"+onoff[users[str(uid)]["sniped"]] +"**\nDetermines if you can be sniped by others.\nOptions are ``on`` or ``off``" ,inline= False)
-      em.add_field(name = "Can be dm'ed (dmblocker)",value = "Current: **"+onoff[users[str(uid)]["dmblocker"]] +"**\nDetermines if you can be dm'ed by the bot.\nOptions are ``on`` or ``off``" ,inline= False)
-      await ctx.send(embed =em)
-    
-
-
-  @commands.command()
-  async def ping(self,ctx):
-    shard = self.bot.get_shard(ctx.guild.shard_id)
-    color = int(await colorSetup(ctx.message.author.id),16)
-    em = discord.Embed(color=color,description = f'Pong!🏓\nPing: {round(shard.latency * 1000)}ms\nShard id: {ctx.guild.shard_id}')
-    
-    await ctx.send(embed = em)
-
-  @commands.command()
-  async def removedata(self,ctx):
-    await ctx.send("This command will ERASE ALL YOUR DATA. Type ``yes`` or ``no`` to continue.")
-    try:
-      msg = await self.bot.wait_for("message",check = lambda i: i.author.id==ctx.author.id,timeout = 30)
-      if msg.content.lower() == "yes":
-        uid = ctx.author.id
-        with open("./json/userSnipeCache.json","r") as f:
-          snipe = json.load(f)
-          
-        with open("./json/userSettings.json","r") as f:
-          settings = json.load(f)
-          
-        with open("./json/upvoteData.json","r") as f:
-          upvote = json.load(f)
-          
-        with open("./json/egg.json","r") as f:
-          egg = json.load(f)
-          
-        toDelete =[snipe,settings,upvote,egg]
-        for i in range(4):
-          try:
-            del toDelete[i][str(uid)]
-          except:
-            pass
-        with open("./json/userSnipeCache.json","w") as f:
-          json.dump(snipe,f)
-        with open("./json/userSettings.json","w") as f:
-          json.dump(settings,f)
-        with open("./json/upvoteData.json","w") as f:
-         json.dump(upvote,f)
-        with open("./json/egg.json","w") as f:
-         json.dump(egg,f)
-         
-        await ctx.send("Thanks for freeing up my drive space, good riddance.")
-      elif msg.content.lower() =="no":
-        await ctx.send("ok, I won't be erasing your data today.")
         
-      else:
-        await ctx.send("ok, I won't be erasing your data today.")
-    except asyncio.TimeoutError:
-      await ctx.send("ok, I won't be erasing your data today.")
+      @discord.ui.button(label = "Cancel", style = discord.ButtonStyle.primary)
+      async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.value = False
+        for child in self.children:
+          child.disabled = True
+        await self.interaction.edit_original_response(content = "cancelled, sad.", view=self)
+        await interaction.response.defer()
+
+    view = rmdata(interaction)
+    await interaction.response.send_message(content="Are you sure you wanna remove your data from the bot?\nYou will lose your personal settings.", view = view) 
+    await view.wait()
     
-  @commands.command()
-  async def legal(self,ctx):
-    await ctx.send("Here is our legal documents and stuff. Who cares though??",
+
+    if view.value is None:
+      for child in view.children:
+        child.disabled = True
+      await interaction.edit_original_response(content = "Timed out, loser", view = view)
+    
+    
+        
+    
+  @app_commands.command(name="legal", description="Shows the licence, privacy policy and TOS.")
+  async def legal(self, interaction: discord.Interaction):
+    view = discord.ui.View() 
+
     components = [ 
-              [
-                  Button(
-                      label = "licence",
-                      url = "https://pastebin.com/7rGBHDCU",
-                      style = 5
+      discord.ui.Button(
+        label = "licence",
+        url = "https://pastebin.com/7rGBHDCU",
+        style = discord.ButtonStyle.link
                       
-                  ),
-                  Button(
-                      label = "privacy policy",
-                      url = "https://pastebin.com/fS86u0Hw",
-                      style = 5
+      ),
+      discord.ui.Button(
+        label = "privacy policy",
+        url = "https://pastebin.com/fS86u0Hw",
+        style = discord.ButtonStyle.link
                       
-                  ),
-                  Button(
-                      label = "terms of service",
-                      url = "https://pastebin.com/43VFzdJx",
-                      style = 5
-                      
-                      
-                  ),
-                  Button(
-                      label = "README.md",
-                      url = "https://pastebin.com/e7jLvVHr",
-                      style = 5
+      ),
+      discord.ui.Button(
+        label = "terms of service",
+        url = "https://pastebin.com/43VFzdJx",
+        style = discord.ButtonStyle.link
                       
                       
-                  )
-              ]]
-    )
-      
-      
-  @commands.command()
-  async def feedback(self,ctx):
-    class feedback():
-      def __init__(self,author,content,type):
-        self.author = author
-        self.content = content
-        self.type = type
-      
-      
-        current_time = datetime.datetime.now() 
-  
-        if len(str(current_time.minute)) ==1:
-          minute = "0"+str(current_time.minute)
-      
-        else:
-          minute = str(current_time.minute)
-      
-      
-        self.time = str(current_time.day) +'-'+str(current_time.month) +'-'+str(current_time.year) +' at ' +str(current_time.hour) +':' + minute
-        
-    options = await ctx.send("What type of feedback would you like to provide?",
-    components = [ 
-              [
-                  Button(
-                      label = "suggestion",
-                      id = "suggestion",
-                      style = 3
-                      ),
-                  Button(
-                      label = "complaint",
-                      id = "complaint",
-                      style = 3
-                      ),
-                  Button(
-                      label = "report",
-                      id = "report",
-                      style = 3
-                      )
+      ),
+      discord.ui.Button(
+        label = "README.md",
+        url = "https://pastebin.com/e7jLvVHr",
+        style = discord.ButtonStyle.link
                       
-                    ]])
-    interaction = await self.bot.wait_for("button_click",check = lambda i: i.author.id == ctx.author.id and i.channel.id == ctx.channel.id and i.component.id in ["suggestion","complaint","report"],timeout = None)
-    await options.delete()
-    await ctx.send("please type out your feedback, or ``cancel`` to stop.")
-    content = await self.bot.wait_for("message",check = lambda msg: msg.author.id == ctx.author.id,timeout = None)
-    if content.content == "cancel":
-      await ctx.send("cancelled")
-      raise Exception("cancelled during feedback")
-    else:
-      feedback = feedback(ctx.author.name,content.content,interaction.component.id)
-      await ctx.send("Thank you for your feedback!")
-      channel = self.bot.get_channel(858206261904015360)
-      await channel.send(embed = discord.Embed(color = 0x0000AA, title = f"{feedback.type} from {feedback.author}",description = feedback.content).set_footer(text = feedback.time))
-      
+                      
+      )
+    ]
+    for button in components:
+      view.add_item(button)
+    await interaction.response.send_message(content="Here are our legal documents, nerd.", view=view)
     
+  server_group = app_commands.Group(name="serversettings", description="Shows the settings for this server")
+
+  @server_group.command(name = "menu", description="Shows the menu for server settings")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_menu(self, interaction: discord.Interaction):
+    settings = getData(interaction.guild.id)
+    blacklist_ids = [userid for userid in eval(settings.get('blacklist'))]
+    blacklist = []
+    for uid in blacklist_ids:
+      a=await interaction.client.fetch_user(uid)
+      blacklist.append(a.name)
+
+    color = colorSetup(interaction.user.id)
+    blacklist = ', '.join(blacklist) or None 
+    em = discord.Embed(color = color)
+    em.set_author(name = 'Annoybot Server Settings')
+    em.add_field(name = "Autoresponse (autoresponse)",value = f"Current: **{bool(settings.get('autoresponse'))}**\nTurns /autoresponse on/off" ,inline= False)
+    em.add_field(name = "Blacklist users (blacklist)", value = f"Current list: **{blacklist}**\nBlacklists certain users from using annoybot commands " ,inline= False)
+
+    
+    await interaction.response.send_message(embed =em, ephemeral=True)
+    
+  @server_group.command(name = "autoresponse", description="Turns /autoresponse on or off")
+  @app_commands.describe(onoff = "On or off")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_auto(self, interaction: discord.Interaction, onoff : Literal['on','off']):
+    settings = getData(interaction.guild.id)
+    
+    settings['autoresponse'] = 1 if onoff =='on' else 0
+    serverSettings.update(interaction.guild.id, settings)
+
+    
+    await interaction.response.send_message(f"✅ autoresponse setting updated to **{onoff}**",ephemeral=True)
+    
+    
+  @server_group.command(name = "blacklist", description="Blacklists certain users from using the bot")
+  @app_commands.describe(modify="add/remove people from the blacklist", user = "User to blacklist/unblacklist")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def s_black(self, interaction: discord.Interaction, modify: Literal['add','remove'], user:discord.Member):
+    settings = getData(interaction.guild.id)
+    
+    blacklist= eval(settings['blacklist']) #List[discord.Member]
+    if modify =="add":
+      blacklist.append(user.id)
+      await interaction.response.send_message(f"✅ Added {user.display_name} to blacklist",ephemeral=True)
+
+    elif modify == "remove":
+      try:
+        blacklist.remove(user.id)
+        await interaction.response.send_message(f"✅ Removed {user.display_name} to blacklist",ephemeral=True)
+      except ValueError:
+        await interaction.response.send_message("❌ This user is not currently blacklisted????",ephemeral=True)
+        return
+    settings['blacklist'] = f'{blacklist}'
+
+    serverSettings.update(interaction.guild.id, settings)
+
+    
+    
+      
+  
 async def setup(bot):
   await bot.add_cog(Setups(bot))

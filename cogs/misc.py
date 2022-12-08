@@ -1,279 +1,179 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-
+from discord import app_commands
 import os
 import sys
-from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, familyFriendlySetup, changeff
+from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
 import random
 import json
 import base64
 import aiohttp
-from other.customCooldown import CustomCooldown
-from other.upvoteExpiration import getUserUpvoted
+
+
 import requests
 from waifu import WaifuClient
+from typing import *
 
+
+from pyinsults import insults
+import other.serverSettings as serverSettings
 import asyncio
 import csv
 sys.path.insert(1,'./other')
 from sqliteDB import create_db, get_db_connection
 
+class anime_embed(discord.Embed):
+  def __init__(self, pic_type: str, interaction_user: discord.Interaction.user, image_url: str):
+      
+    self.pic_type = pic_type
+    super().__init__(color=colorSetup(interaction_user.id))
+    self.set_author(name = f"{pic_type} requested by {interaction_user.display_name}",icon_url = interaction_user.display_avatar).set_image(url=image_url)
+  def define(self):
+    desc = {
+      "waifu" : "A fictional female character from  an anime, manga, or video game to whom one is romantically attracted",
+      "neko": "A woman with cat ears, whiskers, and sometimes paws or a tail.",
+      "shinobu": "A fictional character with this surname",
+      "megumin": "A fictional character with this surname" ,
+      "bully": "A woman who bullies others into submission",
+      "cuddle": "A person who is cuddling something",
+      "cry": "An anime character crying",
+      "hug": "An anime character hugging something",
+      "kiss": "An anime character kissing something",
+      "lick": "An anime character licking something",
+      "blush": "An anime character blushing",
+      "smile": "An anime character smiling",
+      "wave": "An anime character waving", 
+      "happy": "An anime character being happy",
+      "dance": "An anime character dancing"
+      
+    }
+    return desc[self.pic_type]                                                        
+      
+class nerd(discord.ui.View):
+  def __init__(self, em: anime_embed):
+    super().__init__()
+    self.em = em
 
+  @discord.ui.button(label="🤓 Hopefully apt description", style=discord.ButtonStyle.grey)
+  async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+    await interaction.response.send_message(self.em.define(), ephemeral=True)
+        
 
 
 class Misc(commands.Cog):
   
   def __init__(self, bot):
-        self.bot = bot
+    self.bot = bot
   
 
-
+  utils = app_commands.Group(name="utils", description="Random utilities that fit the rude theme.")
 
   
-  @commands.command()
-  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  async def pick(self,ctx,*args):
+  @utils.command(name="pick", description="Picks a random option from a list of given words.")
+  @app_commands.describe(arguments="The hex code of the color you want in your embeds.")
+  async def pick(self,interaction: discord.Interaction, arguments: str):
     
+    choice = random.choice([arg.strip() for arg in arguments.split(',')])
     
-        if args ==():
-          await ctx.send(f"You're missing an argument: ``list`` in that command, dumbass.")
-
-        argList = []
-        for arg in args:
-          argList.append(arg)
-        
-        randomArg = argList[random.randint(0,len(argList)-1)]
-        await ctx.send(' {}'.format(ctx.author.mention)+" I pick:\n" + randomArg)
+    insult = changeff(insults.random_insult()) if bool(getDataU(interaction.user.id).get("familyFriendly")) else insults.random_insult()
+    
+    await interaction.response.send_message(f'{interaction.user.mention}\nI pick {choice}, you indecisive {insult}.')
         
 
 
 
   
-  @commands.command(name = "predict",aliases = ["8ball"])
-  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
-  async def predict(self,ctx,*args):
-        if args ==():
-          await ctx.send(f"You're missing an argument: ``question`` in that command, dumbass.")
-        question = ""
-        predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
-        randomPrediction = predictions[random.randint(0,14)]
+  @utils.command(name = "8ball", description="Gives you a yes/no answer based on a given question")
+  @app_commands.describe(question="The yes/no question you want to ask")
+  async def predict(self, interaction: discord.Interaction, question: str):
         
-         
-
-        for arg in args:
-          question = question +" "+ arg
-
-        color = int(await colorSetup(ctx.message.author.id),16)
-        embedVar5 = discord.Embed(color = color)
-        embedVar5.set_author(name="Question from"+' {}'.format(ctx.author), icon_url = ctx.author.avatar_url)
-        embedVar5.add_field(name = question, value = randomPrediction,inline = False)
+    predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes, stupid.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
         
-        embedVar5.set_footer(text="u suck")
-        await ctx.channel.send(embed=embedVar5)
-        
-
-  @commands.command(name = "autoresponse")
-
-  @commands.check(CustomCooldown(1, 4, 1, 2, commands.BucketType.user, elements=getUserUpvoted()))
- 
-  async def autoresponse(self,ctx):
-    arr=[]
-    guildId = ctx.message.guild.id
-    
-    try:
-      #tries to create db with guildId as name, under ./other/data
-      #uses schema.sql as format
-      #if already exists error raised, ignore new creation
-      create_db(f'./other/data/{guildId}.db','./other/schema.sql')
-      print(f"created {guildId}")
-    except:
-      pass
-    conn = get_db_connection(f'./other/data/{guildId}.db')
-    cur = conn.cursor()
-    data = conn.execute('SELECT * FROM autoresponse ORDER BY id').fetchall()
-    
-    if len(data)== 0:
+    prediction = changeff(random.choice(predictions)) if bool(getDataU(interaction.user.id).get("familyFriendly")) else random.choice(predictions)
       
-      with open("./json/autoresponse.csv",newline="") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            arr.append(row)
-        for pair in arr:
-          conn.execute('INSERT INTO autoresponse (keyword,res) VALUES (?,?)',(pair["word"],pair["response"]))
-          conn.commit()
+
+       
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color)
+      
+    em.add_field(name = question, value = prediction,inline = False)
+    em.set_footer(text=f"requested by {interaction.user.display_name}")
+    
+    await interaction.response.send_message(embed=em)
 
 
+  autoresponse = app_commands.Group(name="autoresponse", description="The bot will respond to a list of predetermined words", guild_only=True)
 
+  @autoresponse.command(name = "menu", description= "A list of words the bot will respond to in your server.")
+  async def auto_menu(self, interaction: discord.Interaction):
+    
+    key_values = eval(serverSettings.get(interaction.guild_id)['autoresponse_content']).items()
+    
     desc = "ID/Keyword: Response\n"
-    for row in cur.execute('SELECT * FROM autoresponse'):
-      desc=desc+f'\n{row[0]} {row[1]}: {row[2]}'
-
-    
-    guilds = await getData()
-
-    
-    
-    
-    color = int(await colorSetup(ctx.message.author.id),16)
+    for i, row in enumerate(key_values):
+      desc=desc+f'\n{i} {row[0]}: {row[1]}'
+    color = colorSetup(interaction.user.id)
     em = discord.Embed(color = color,description = f"``{desc}``")
     em.set_author(name = "Autoresponse keywords")
-    button_color = "" #for on/off
-    label = "" #for on/off
-    
-    
-    disabled_button = None
-    if guilds[str(guildId)]["autoresponse"] == 1:
-      button_color= ButtonStyle.green
-      label = "on"
-      
-    elif guilds[str(guildId)]["autoresponse"] == 0:
-      button_color = ButtonStyle.red
-      label = "off"
-      
-    if ctx.author.guild_permissions.manage_messages == True or int(ctx.author.id) == int(os.getenv("uid")):
-      disabled_button = False
-    elif ctx.author.guild_permissions.manage_messages == False:
-      disabled_button = True
-    msg = await ctx.send(embed=em, 
-    components = [ 
-              [
-                  Button(
-                      label = label,
-                      id = "selector",
-                      style = button_color,
-                      disabled = disabled_button
-                      
-                  ),
-                  Button(
-                    label = "Add",
-                    id="add",
-                    style= ButtonStyle.blue,
-                    disabled = disabled_button
-                    
-                  ),
-                  Button(
-                    label = "Remove",
-                    id="rm",
-                    style= ButtonStyle.blue,
-                    disabled = disabled_button
-                    
-                  )
-              ]])
-    
-    
-    
-    while True:
-      try:
-        interaction = await self.bot.wait_for(
-                  "button_click",
-                  check = lambda i: i.component.id in ["selector","add","rm"] and i.channel.id == ctx.channel.id, 
-                  timeout = 30.0 
-              )
-              
-        if interaction.user.id != ctx.author.id:
-          await interaction.respond(type=4, content="This isn't your menu, idiot.", ephemeral=True)
-          
-        def write():
-          
-          with open("./json/serverData.json","w") as f:
-            
-            json.dump(guilds,f)
-            f.close()
-
-        if interaction.component.id == "selector":
-          if guilds[str(guildId)]["autoresponse"] == 1:        
-            d = {"autoresponse" : 0}
-            guilds[str(ctx.guild.id)].update(d)
-            button_color= ButtonStyle.red
-            label = "off"
-            write()
-          
-      
-          elif guilds[str(guildId)]["autoresponse"] == 0:
-            d = {"autoresponse" : 1}
-            guilds[str(ctx.guild.id)].update(d)
-            button_color= ButtonStyle.green
-            label = "on"
-            write()   
-
-        if interaction.component.id == "add":
-            
-            await interaction.respond(type=4,content="what keyword would you like to add?",ephemeral=False)
-            
-            key= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
-            await ctx.send("what should the response be?")
-
-
-            res= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
-            conn.execute('INSERT INTO autoresponse (keyword,res) VALUES (?,?)',(key.content,res.content))
-            await ctx.send("confirmed")
-            disabled_button= True
-
-        if interaction.component.id == "rm":
-            
-            await interaction.respond(type=4,content="type the id of the autoresponse pair you want to delete.",ephemeral=False)
-            
-            id= await self.bot.wait_for("message",check = lambda i: i.channel.id==ctx.channel.id and i.author.id == ctx.author.id, timeout=None)
-            try:
-              id = int(id.content)
-              cur.execute('DELETE FROM autoresponse WHERE id=(?)',(id,))
-              await ctx.send("confirmed.")
-              disabled_button = True
-            except:
-              await ctx.send("don't be an idiot you donkey, actually provide an id number.")
-              disabled_button=True
-        
-        conn.commit()
-        desc = "ID/Keyword: Response\n"
-        for row in cur.execute('SELECT * FROM autoresponse'):
-          desc=desc+f'\n{row[0]} {row[1]}: {row[2]}'
-
-    
+    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
+    await interaction.response.send_message(embed=em)
     
 
+  @autoresponse.command(name="add", description="Add autoresponse keywords")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  @app_commands.describe(word="The word you want the bot to respond to", response="The resulting response to the aforementioned word")
+  async def add(self, interaction: discord.Interaction, word: str, response: str):
+    to_update = serverSettings.get(interaction.guild_id)
+    key_values = eval(to_update['autoresponse_content'])
+    key_values.update({word: response})
+    
+    to_update['autoresponse_content']= f'{key_values}'
+    
+    serverSettings.update(interaction.guild_id, to_update)
+    
+    desc = "ID/Keyword: Response\n"
+    for i, row in enumerate(key_values.items()):
+      desc=desc+f'\n{i} {row[0]}: {row[1]}'
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color,description = f"``{desc}``")
+    em.set_author(name = "Autoresponse keywords")
+    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
+    await interaction.response.send_message(content = f"✅ Added ``{word} : {response}``. Here is the new list.",embed=em)
+    
+  @autoresponse.command(name="remove", description="Remove autoresponse keywords")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  @app_commands.describe(id="The numeric id of the word response pair you want to remove. You can check this id at  /autoresponse menu")
+  async def remove(self, interaction: discord.Interaction, id: int):
+    
+    to_update = serverSettings.get(interaction.guild_id)
+    key_values = list(eval(to_update['autoresponse_content']).items())
+    try:
+      removed = key_values.pop(id)
+    except IndexError:
+      await interaction.response.send_message(content="❌ Enter a proper id, idiot. Use /autoresponse menu to check the id.", ephemeral = True)
+      return
+    #id is equal to the index of the k-v pair in items()
+    res = {}
+    for (k,v) in key_values:
+     res[k] = v
+    to_update['autoresponse_content']= f'{res}'
+    serverSettings.update(interaction.guild_id, to_update)
     
     
+    desc = "ID/Keyword: Response\n"
+    for i, row in enumerate(key_values):
+      desc=desc+f'\n{i} {row[0]}: {row[1]}'
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color,description = f"``{desc}``")
+    em.set_author(name = "Autoresponse keywords")
+    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
+    await interaction.response.send_message(content = f"✅ Removed ``{removed[0]} : {removed[1]}``. Here is the new list.",embed=em)
     
-        color = int(await colorSetup(ctx.message.author.id),16)
-        em = discord.Embed(color = color,description = f"``{desc}``")
-        await msg.edit(embed=em)
-        await interaction.respond(                     
-                      type = 7,
-                      
-                      components = [[
-      
-                  Button(
-                      label = label,
-                      id = "selector",
-                      style = button_color,
-                      disabled = disabled_button
-                      
-                  ),
-                  Button(
-                    label = "Add",
-                    id="add",
-                    style= ButtonStyle.blue,
-                    disabled = disabled_button
-                    
-                  ),
-                  Button(
-                    label = "Remove",
-                    id="rm",
-                    style= ButtonStyle.blue,
-                    disabled = disabled_button
-                    
-                  )
-              ]])
-      except asyncio.TimeoutError:
-        await msg.delete()
-        
+    
   
-
-  @commands.command()
-  @commands.check(CustomCooldown(1,  14, 1, 7, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def meme(self,ctx):
+  @app_commands.command(name="meme", description="Sends a top meme from reddit")
+  async def meme(self, interaction: discord.Interaction):
   
 
 
@@ -285,149 +185,94 @@ class Misc(commands.Cog):
       async with cs.get(subreddits[random.randint(0,len(subreddits)-1)]) as r:
         res = await r.json()
         
-        color = int(await colorSetup(ctx.message.author.id),16)
+        color = colorSetup(interaction.user.id)
         
-        while True:
-          try:
-            randomn = random.randint(0,15)
-            embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
-            embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
-            break
-
-          except KeyError as e:
-            raise e
-            
-        tip = postTips()
+        try:
+          randomn = random.randint(0,15)
+          embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
-        if tip != None:
+          embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
           
-          await ctx.send(tip)
 
-        await ctx.send(embed=embed)
+        except KeyError as e:
+          raise e
+            
+        
 
-
-  @commands.command()
-
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-
-  async def snipe(self,ctx, user: discord.Member):
+    await interaction.response.send_message(embed=embed)
 
 
-    
-    
-    settings  = await getDataU()
+  @app_commands.command(name="snipe", description="Sends the most recently deleted messaage of a user.")
+  @app_commands.guild_only()
+  @app_commands.describe(user="The user you want to snipe")
+  async def snipe(self,interaction: discord.Interaction, user: discord.Member):
+    addDataU(user.id)
+    if not bool(getDataU(user.id)['sniped']):
+      await interaction.response.send_message("❌ This guy can't be sniped, what a loser. (/settings sniped off)")
+      return
     #implement nsfw check
-
-    if settings[str(user.id)]["sniped"] == 0:
-      await ctx.reply("This guy can't be sniped, what a loser.")
-      raise Exception
-    
     
 
-
+    
 
     try:
-      message, time, nsfw =getDataSnipe(user.id)
+      message, time, nsfw = getDataSnipe(user.id)
     #if function returns none 
     except TypeError:
-      await ctx.reply("There's nothing to snipe!")
-      raise Exception
+      await interaction.response.send_message("There's nothing to snipe!")
+      return
     
-    if ctx.channel.nsfw == False and nsfw == True:
-      await ctx.send("The user you mentioned last deleted their message in a nsfw channel. 🔞")
-      raise Exception
+    if bool(getDataU(user.id)['familyFriendly']):
+      message = changeff(message)
+
     
-    color = int(await colorSetup(ctx.author.id),16)
+    if nsfw:
+      if isinstance(interaction.channel, discord.abc.GuildChannel) and not interaction.channel.nsfw:
+        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
+        return
+      elif isinstance(interaction.channel, discord.Thread) and not interaction.channel.parent.nsfw:
+        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
+        return
+    
+    color = colorSetup(interaction.user.id)
       
     embed = discord.Embed(color= color,description=message)        
     embed.set_footer(text=f"UTC {time}")
         
-    embed.set_author(name= f"{user.name}", icon_url = user.avatar_url)
-    tip = postTips()
-          
-    if tip != None:
-            
-      await ctx.send(tip)
-    await ctx.send(embed=embed)
+    embed.set_author(name= f"Quote from {user.name}", icon_url = user.display_avatar)
+    
+    await interaction.response.send_message(embed=embed)
 
   
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def waifu(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='waifu')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Waifu requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
-    
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def neko(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='neko')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
-    
-  @commands.command()
-  @commands.check(CustomCooldown(1, 6, 1, 3, commands.BucketType.user, elements=getUserUpvoted()))
-  async def shinobu(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    pic = WaifuClient().sfw(category='shinobu')
-    em = discord.Embed(color = color)
-    em.set_author(name = f"Neko requested by {ctx.author.name}",icon_url = ctx.author.avatar_url)
-    em.set_image(url = pic)
-    tip = postTips()
-    if tip != None:
-      await ctx.send(tip)
-    await ctx.send(embed = em)
-    
-  @commands.command()
-  @commands.check(CustomCooldown(1, 86400, 1, 86400, commands.BucketType.user, elements=getUserUpvoted()))
-  async def daily(self,ctx):
-    color = int(await colorSetup(ctx.author.id),16)
-    em = discord.Embed(color = color,description = "You've claimed your daily and recieved 30 minutes of lower cooldowns. [Upvote](https://top.gg/bot/844757192313536522) me to get a 12h extension!")
-    await ctx.send(embed = em)
-    with open("./json/upvoteData.json","r") as f:
-      file= json.load(f)
   
-    try:
-      d = {str(ctx.author.id): file[str(ctx.author.id)]+30}
 
-      file.update(d)
-    except KeyError:
-      file[str(ctx.author.id)] = 30
+  @app_commands.command(name="anime", description="Sends a pic of an anime woman")
+  @app_commands.describe(type="Type of picture you want to see")
+  async def anime(self, interaction: discord.Interaction, type: Literal['waifu', 'neko','shinobu', "megumin","bully","cuddle", "cry", "hug","kiss","lick","blush","smile","wave","happy","dance"]):
+    pic = WaifuClient().sfw(category=type)
+    em = anime_embed(type,interaction.user, pic)
     
     
-    with open("./json/upvoteData.json","w") as f:
-      json.dump(file,f)
-      f.close
-
-
-  @commands.command()
-  async def iplookup(self,ctx,ip: str):
-    color = int(await colorSetup(ctx.author.id),16)
+    await interaction.response.send_message(embed = em, view = nerd(em))
+    
+  
+    
+  
+  @app_commands.command(name = "iplookup", description="Finds the location of a given ip")
+  @app_commands.describe(ip="The ip you want to find the location of")
+  async def iplookup(self, interaction: discord.Interaction,ip: str):
+    color = colorSetup(interaction.user.id)
     url = f"http://ip-api.com/json/{ip}"
     res = requests.get(url).json()
     
-    for item in res.items():
-      if item[0] == "status":
-        if item[1] =="success":
+    
+    
+    if res['status'] != "success":
           
-          pass
-        else:
-          
-          await ctx.send("Thats not a valid ip, idiot.")
+      await interaction.response.send_message("❌ Thats not a valid ip, idiot.", ephemeral=True)
+      return
           
           
     try:
@@ -438,34 +283,48 @@ class Misc(commands.Cog):
       latitude = res['lat'] or "Unknown"  
       longitude = res['lon'] or "Unknown" 
       provider = res['isp'] or "Unknown" 
-    except:
-      await ctx.send("An unspecified error occured, the ip address probably is private. What a loser lmao.")
-    await ctx.send(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
+    except KeyError:
+      await interaction.response.send_message("❌ An unspecified error occured, the ip address probably is private. What a loser lmao.")
+      return
+    await interaction.response.send_message(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
       
 
-  @commands.command()
-  @commands.check(CustomCooldown(1, 10, 1, 5, commands.BucketType.user, elements=getUserUpvoted()))
-  async def textwall(self,ctx,num:int,*content):
-    #print(len(content))
-    #print(content)
-    if len(content) == 0:
-      await ctx.send("You forgot to say what you want to textwall! You're such an idiot.")
-      raise Exception("no args passed into textwall")
-    sents=""
-    for word in content:
-      sents = sents+ f" {word}"
-
-    sents = sents[1:]
-    toSend= ""
+  @app_commands.command(name="textwall", description="Sends a wall of repeated text in a single message")
+  @app_commands.describe(num = "The number of times to spam", content="What to spam")
+  async def textwall(self, interaction: discord.Interaction, num:int, content: str):
+    
+    toSend = ''
     for i in range(num):
-      toSend = toSend + f" {sents}"
-
+      toSend += f'{content.strip()} '
     if len(toSend) > 2000:
-      await ctx.send("Your text wall is too long (>2000 characters), you moron. ")
-      raise Exception("textwall too long")
-    if await familyFriendlySetup(ctx.author.id):
-      toSend = await changeff(toSend)
-    await ctx.send(toSend)
+      await interaction.response.send_message("❌ Your text wall is too long (>2000 characters), you moron.")
+      return
+    if bool(getDataU(interaction.user.id)['familyFriendly']):
+      toSend = changeff(toSend)
+    await interaction.response.send_message(toSend)
+
+  @app_commands.command(name="urbandict", description="Looks up a term in urban dictionary")
+  @app_commands.describe(term = "The term you want to search")
+  async def urbandict(self, interaction: discord.Interaction, term: str):
+    
+  
+    url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+    
+    querystring = {"term":term}
+    
+    headers = {
+        'x-rapidapi-key': "eb9abc1708msh9ff61d9af0e2802p1a89dejsncd366a92c2b6",
+        'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com"
+        }
+    
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    color = colorSetup(interaction.user.id)
+    try:
+      em = discord.Embed(color = color, title=f"Urban Dictionary result for {term}", description = "Definition: "+response.json()['list'][0]["definition"]+"\n\nExamples: "+response.json()['list'][0]["example"])
+      await interaction.response.send_message(embed = em)
+    except IndexError:
+      await interaction.response.send_message("❌ there were no results returned, actually search for a real word next time, you moron.")
+    
   
 async def setup(bot):
   await bot.add_cog(Misc(bot))
