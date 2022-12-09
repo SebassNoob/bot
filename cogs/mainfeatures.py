@@ -25,6 +25,7 @@ class MainFeatures(commands.Cog):
   @app_commands.describe(user="The person you wanna roast")
   async def roast(self,interaction: discord.Interaction ,user: Optional[Union[discord.Member, discord.User]] = None):
     if user: addDataU(user.id)
+    addDataU(interaction.user.id)
     with open('./json/roast.txt', 'r') as f:
       roast = random.choice([r.replace('\n','') for r in f.readlines()])
         
@@ -46,6 +47,7 @@ class MainFeatures(commands.Cog):
   @app_commands.describe(user="Someone to insult")
   async def insult(self, interaction: discord.Interaction, user: Optional[Union[discord.Member, discord.User]] = None):
     if user: addDataU(user.id)
+    addDataU(interaction.user.id)
     sentence_starter=[
       "You",
       "Go fuck yourself, you",
@@ -114,6 +116,7 @@ class MainFeatures(commands.Cog):
   @app_commands.describe(user = "User to threaten", customThreat="A custom message")
   async def dmthreaten(self, interaction: discord.Interaction, user: Union[discord.Member, discord.User], customThreat: Optional[app_commands.Range[str,1, None]] = None):
     addDataU(user.id)
+    addDataU(interaction.user.id)
     with open('./json/dmthreaten.txt', 'r') as f:
       
       threat = random.choice([r.replace('\n','') for r in f.readlines()])
@@ -154,6 +157,7 @@ class MainFeatures(commands.Cog):
   @app_commands.describe(user="Someone who will suffer the dumb death")
   async def dumbdeath(self,interaction: discord.Interaction, user: Union[discord.Member, discord.User]):
     addDataU(user.id)
+    addDataU(interaction.user.id)
     color = colorSetup(interaction.user.id)
     
     if isinstance(interaction.channel, discord.abc.GuildChannel):
@@ -199,6 +203,7 @@ class MainFeatures(commands.Cog):
 
   @app_commands.command(name="darkjoke", description="Sends a dark joke. May be insensitive.")
   async def darkjoke(self, interaction: discord.Interaction):
+    addDataU(interaction.user.id)
     with open('./json/darkjoke.txt', 'r') as f:
       
       joke = random.choice([r.replace('\n','') for r in f.readlines()])

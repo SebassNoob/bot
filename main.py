@@ -22,7 +22,7 @@ sys.path.insert(1,'./other')
 
 from sqliteDB import get_db_connection
 from os import system
-system("pip install spacy")
+
 system("python -m spacy download en_core_web_sm")
 
 
@@ -52,15 +52,11 @@ class Bot(commands.AutoShardedBot):
     servers = len(self.guilds)
     print("\033[0;36;48m-----------------------------------------")
     print(f" * {self.user} connected to {servers} servers")
-    members = 0
+    members = sum([len(guild.members) for guild in self.guilds])
     count = {}
     for i, guild in enumerate(self.guilds):
       addData(guild.id)
-      a = await self.fetch_guild(guild.id)
-      members += a.approximate_member_count
-      #prevent instant ratelimiting
-      if i%30 == 0:
-        await asyncio.sleep(0.5)
+      
       if guild.shard_id not in count:
         count[guild.shard_id] = 1
       else:
@@ -176,8 +172,12 @@ class Bot(commands.AutoShardedBot):
   
   
     data = conn.execute('SELECT autoresponse, autoresponse_content FROM serverSettings WHERE id = (?)', (message.guild.id, )).fetchone()
-      
+    if data is None:
+
+      addData(message.guild.id)
+      return
     conn.close()
+
     if bool(dict(data)['autoresponse']) and message.content in eval(dict(data)['autoresponse_content']).keys():
       await message.channel.send(eval(dict(data)['autoresponse_content'])[message.content])
         
@@ -228,12 +228,16 @@ Thread(target=clearSnipe).start()
 keep_alive() 
 
 try:
-    bot.run(os.getenv('TOKEN'))
-except discord.errors.HTTPException as e:
-  print(e) 
-  print("restarting in 10s...")
-  time.sleep(10)
-  system("python restart.py")
+  bot.run(os.getenv('TOKEN'))
+except Exception as err:
+  if hasattr(err, 'status') and err.status == 429:
+    print('Rate-limit detected. Restarting repl')
+    os.kill(1, 1)
+
+  print(err)
+
+
+
     
 
 
