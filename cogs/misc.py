@@ -73,7 +73,7 @@ class Misc(commands.Cog):
   @utils.command(name="pick", description="Picks a random option from a list of given words.")
   @app_commands.describe(arguments="The hex code of the color you want in your embeds.")
   async def pick(self,interaction: discord.Interaction, arguments: str):
-    
+    addDataU(interaction.user.id)
     choice = random.choice([arg.strip() for arg in arguments.split(',')])
     
     insult = changeff(insults.random_insult()) if bool(getDataU(interaction.user.id).get("familyFriendly")) else insults.random_insult()
@@ -87,7 +87,7 @@ class Misc(commands.Cog):
   @utils.command(name = "8ball", description="Gives you a yes/no answer based on a given question")
   @app_commands.describe(question="The yes/no question you want to ask")
   async def predict(self, interaction: discord.Interaction, question: str):
-        
+    addDataU(interaction.user.id)
     predictions = ["hmm yes i think so.","nah mate sry.","You DARE ask me this question?! Well i'm not going to give ya an answer",'not too sure about this one. try again.','Your short answer: NO',"answer's no, gtfo of here scrub.","omg YES","Are you actually stupid? Its NO.","Are you actually stupid? Its YES moron.","you gotta be kidding right, its yes.", "this question is too difficult even for my huge brain. However, at least I have one.","no.",'yes, stupid.',"you're rather stupid aren't you, answer is yes.", "You moronic bastard, its kinda obious isn't it?! NO!"]
         
     prediction = changeff(random.choice(predictions)) if bool(getDataU(interaction.user.id).get("familyFriendly")) else random.choice(predictions)
@@ -107,7 +107,7 @@ class Misc(commands.Cog):
 
   @autoresponse.command(name = "menu", description= "A list of words the bot will respond to in your server.")
   async def auto_menu(self, interaction: discord.Interaction):
-    
+
     key_values = eval(serverSettings.get(interaction.guild_id)['autoresponse_content']).items()
     
     desc = "ID/Keyword: Response\n"

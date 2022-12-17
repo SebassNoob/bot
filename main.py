@@ -44,7 +44,7 @@ class Bot(commands.AutoShardedBot):
     intents = discord.Intents.default()
     intents.message_content = True
     
-    super().__init__(command_prefix="$", intents=intents, shard_count= 2, help_command= None)
+    super().__init__(command_prefix="a$", intents=intents, shard_count= 2, help_command= None)
     
 
 
@@ -116,7 +116,7 @@ class Bot(commands.AutoShardedBot):
     for channel in guild.text_channels:
       if channel.permissions_for(guild.me).send_messages:
       
-        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. If you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!")
+        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. If you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!\nImportant notes: The bot has an /autoresponse feature enabled by default. Disable by using /serversettings autoreponse off\nAlso, a /snipe command also tracks your deleted messages automatically. Turn off in /settings dmblocker on.\nRead our privacy policy and TOS in /legal.")
         em.set_footer(text = "The embodiment of discord anarchy")
         await channel.send(embed = em)
         break
@@ -157,8 +157,16 @@ class Bot(commands.AutoShardedBot):
 
   #ON_MESSAGE
   async def on_message(self,message):
+    try:
+      pass
+    except Exception as err:
+      if hasattr(err, 'status') and err.status == 429:
+        print('Rate-limit detected. Restarting repl')
+        os.kill(1, 1)
+
+
     
-    if message.author == self.user:
+    if message.author == self.user or message.author.bot:
       return
     else:
       await self.process_commands(message)
