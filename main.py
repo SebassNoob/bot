@@ -148,7 +148,8 @@ class Bot(commands.AutoShardedBot):
   
   async def on_interaction(self, interaction):
     addDataU(interaction.user.id)
-    await postTips(interaction)
+    if isinstance(interaction.command, discord.app_commands.Command):
+      await postTips(interaction)
 
     
     
