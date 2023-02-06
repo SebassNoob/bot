@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-
-import spacy
+from difflib import SequenceMatcher
 from typing import *
 import json
 import asyncio
@@ -270,9 +269,8 @@ class MemGame(discord.ui.View):
       return False
     async def levelup(self):
       self.level += 1
-      for i in range(self.level):
+      for _ in range(self.level):
         self.generate_pattern()
-      await asyncio.sleep(1)
       await self.instructions()
       
     async def start(self):
@@ -459,8 +457,7 @@ class Games(commands.Cog):
     
     leaderboards = {}
     def check_accuracy(input, text):
-      nlp = spacy.load('en_core_web_sm')
-      return nlp(input).similarity(nlp(text))
+      return SequenceMatcher(None, input, text).ratio()
       
     while thr.is_alive():
       try:

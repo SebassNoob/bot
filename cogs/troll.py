@@ -192,9 +192,11 @@ class Troll(commands.Cog):
     em.add_field(name="**Mute**",value=f"**Offender:** {user.mention}\n**Reason:** {reason}\n**Responsible mod:** {interaction.user.display_name}",inline=False)
 
     em.set_footer(text="imagine")
-
-    await user.timeout(datetime.timedelta(seconds= 3))
-              
+    try:
+      await user.timeout(datetime.timedelta(seconds= 2))
+    except:
+      await interaction.response.send_message("(user timeout failed, probably due to missing permissions)", embed=em)
+      return
     
     await interaction.response.send_message(embed=em)
 
@@ -204,16 +206,24 @@ class Troll(commands.Cog):
   @app_commands.guild_only()
   @app_commands.checks.bot_has_permissions(moderate_members = True, manage_nicknames=True)
   async def fakeban(self, interaction,user: discord.Member):
+
     color = colorSetup(interaction.user.id)
     em = discord.Embed(color =  color)
     
     em.add_field(name="**Ban**",value=f"**Offender:** {user.mention}\n**Responsible mod:** {interaction.user.display_name}",inline=False)
 
     em.set_footer(text="imagine")
-    await interaction.response.send_message(embed=em)
     await asyncio.sleep(0.1)
+    
     await user.edit(nick=f'!<{user.id}>')
-    await user.timeout(datetime.timedelta(seconds= 3))
+
+    try:
+      await user.timeout(datetime.timedelta(seconds= 2))
+    except:
+      await interaction.response.send_message("(user timeout failed, probably due to missing permissions)", embed=em)
+      return
+    
+    await interaction.response.send_message(embed=em)
     try:
       await self.bot.wait_for('message', check= lambda m: m.author == user, timeout = 180)
     except asyncio.TimeoutError:

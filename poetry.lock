@@ -39,17 +39,19 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "attrs"
-version = "22.1.0"
+version = "22.2.0"
 description = "Classes Without Boilerplate"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "mypy (>=0.900,!=0.940)", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
-docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "mypy (>=0.900,!=0.940)", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "mypy (>=0.900,!=0.940)", "pytest-mypy-plugins", "cloudpickle"]
+cov = ["attrs", "coverage-enable-subprocess", "coverage[toml] (>=5.3)"]
+dev = ["attrs"]
+docs = ["furo", "sphinx", "myst-parser", "zope.interface", "sphinx-notfound-page", "sphinxcontrib-towncrier", "towncrier"]
+tests = ["attrs", "zope.interface"]
+tests-no-zope = ["hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist", "cloudpickle", "mypy (>=0.971,<0.990)", "pytest-mypy-plugins"]
+tests_no_zope = ["hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist", "cloudpickle", "mypy (>=0.971,<0.990)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "blis"
@@ -121,7 +123,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
 
 [[package]]
 name = "confection"
-version = "0.0.3"
+version = "0.0.4"
 description = "The sweetest config system for Python"
 category = "main"
 optional = false
@@ -226,7 +228,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "importlib-metadata"
-version = "5.1.0"
+version = "6.0.0"
 description = "Read metadata from Python packages"
 category = "main"
 optional = false
@@ -236,7 +238,7 @@ python-versions = ">=3.7"
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["sphinx (>=3.5)", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "furo", "jaraco.tidelift (>=1.4)"]
+docs = ["sphinx (>=3.5)", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "furo", "sphinx-lint", "jaraco.tidelift (>=1.4)"]
 perf = ["ipython"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-cov", "pytest-enabler (>=1.3)", "packaging", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "pytest-flake8", "importlib-resources (>=1.3)"]
 
@@ -275,7 +277,7 @@ data = ["language-data (>=1.1,<2.0)"]
 
 [[package]]
 name = "markupsafe"
-version = "2.1.1"
+version = "2.1.2"
 description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
@@ -283,7 +285,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "multidict"
-version = "6.0.3"
+version = "6.0.4"
 description = "multidict implementation"
 category = "main"
 optional = false
@@ -318,15 +320,15 @@ numpy = ">=1.13.3"
 
 [[package]]
 name = "numpy"
-version = "1.23.5"
-description = "NumPy is the fundamental package for array computing with Python."
+version = "1.24.2"
+description = "Fundamental package for array computing in Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 
 [[package]]
 name = "packaging"
-version = "22.0"
+version = "23.0"
 description = "Core utilities for Python packages"
 category = "main"
 optional = false
@@ -373,14 +375,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pydantic"
-version = "1.10.2"
+version = "1.10.4"
 description = "Data validation and settings management using python type hints"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-typing-extensions = ">=4.1.0"
+typing-extensions = ">=4.2.0"
 
 [package.extras]
 dotenv = ["python-dotenv (>=0.10.4)"]
@@ -411,7 +413,7 @@ tests = ["pytest (>=3.2.1,!=3.3.0)", "hypothesis (>=3.27.0)"]
 
 [[package]]
 name = "requests"
-version = "2.28.1"
+version = "2.28.2"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
@@ -419,7 +421,7 @@ python-versions = ">=3.7, <4"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-charset-normalizer = ">=2,<3"
+charset-normalizer = ">=2,<4"
 idna = ">=2.5,<4"
 urllib3 = ">=1.21.1,<1.27"
 
@@ -429,24 +431,25 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "smart-open"
-version = "6.2.0"
+version = "6.3.0"
 description = "Utils for streaming large files (S3, HDFS, GCS, Azure Blob Storage, gzip, bz2...)"
 category = "main"
 optional = false
 python-versions = ">=3.6,<4.0"
 
 [package.extras]
-all = ["boto3", "google-cloud-storage (>=1.31.0)", "azure-storage-blob", "azure-common", "azure-core", "requests"]
+all = ["boto3", "google-cloud-storage (>=2.6.0)", "azure-storage-blob", "azure-common", "azure-core", "requests", "paramiko"]
 azure = ["azure-storage-blob", "azure-common", "azure-core"]
-gcs = ["google-cloud-storage (>=1.31.0)"]
+gcs = ["google-cloud-storage (>=2.6.0)"]
 http = ["requests"]
 s3 = ["boto3"]
-test = ["boto3", "google-cloud-storage (>=1.31.0)", "azure-storage-blob", "azure-common", "azure-core", "requests", "moto", "pathlib2", "responses", "paramiko", "pytest", "pytest-rerunfailures"]
+ssh = ["paramiko"]
+test = ["boto3", "google-cloud-storage (>=2.6.0)", "azure-storage-blob", "azure-common", "azure-core", "requests", "paramiko", "moto", "responses", "pytest", "pytest-rerunfailures"]
 webhdfs = ["requests"]
 
 [[package]]
 name = "spacy"
-version = "3.4.3"
+version = "3.5.0"
 description = "Industrial-strength Natural Language Processing (NLP) in Python"
 category = "main"
 optional = false
@@ -460,17 +463,18 @@ langcodes = ">=3.2.0,<4.0.0"
 murmurhash = ">=0.28.0,<1.1.0"
 numpy = ">=1.15.0"
 packaging = ">=20.0"
-pathy = ">=0.3.5"
+pathy = ">=0.10.0"
 preshed = ">=3.0.2,<3.1.0"
 pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<1.11.0"
 requests = ">=2.13.0,<3.0.0"
-spacy-legacy = ">=3.0.10,<3.1.0"
+smart-open = ">=5.2.1,<7.0.0"
+spacy-legacy = ">=3.0.11,<3.1.0"
 spacy-loggers = ">=1.0.0,<2.0.0"
 srsly = ">=2.4.3,<3.0.0"
 thinc = ">=8.1.0,<8.2.0"
 tqdm = ">=4.38.0,<5.0.0"
 typer = ">=0.3.0,<0.8.0"
-wasabi = ">=0.9.1,<1.1.0"
+wasabi = ">=0.9.1,<1.2.0"
 
 [package.extras]
 apple = ["thinc-apple-ops (>=0.1.0.dev0,<1.0.0)"]
@@ -497,11 +501,11 @@ ko = ["natto-py (>=0.9.0)"]
 lookups = ["spacy-lookups-data (>=1.0.3,<1.1.0)"]
 ray = ["spacy-ray (>=0.1.0,<1.0.0)"]
 th = ["pythainlp (>=2.0)"]
-transformers = ["spacy-transformers (>=1.1.2,<1.2.0)"]
+transformers = ["spacy-transformers (>=1.1.2,<1.3.0)"]
 
 [[package]]
 name = "spacy-legacy"
-version = "3.0.10"
+version = "3.0.12"
 description = "Legacy registered functions for spaCy backwards compatibility"
 category = "main"
 optional = false
@@ -528,7 +532,7 @@ catalogue = ">=2.0.3,<2.1.0"
 
 [[package]]
 name = "thinc"
-version = "8.1.5"
+version = "8.1.7"
 description = "A refreshing functional take on deep learning, compatible with your favorite libraries"
 category = "main"
 optional = false
@@ -541,10 +545,11 @@ confection = ">=0.0.1,<1.0.0"
 cymem = ">=2.0.2,<2.1.0"
 murmurhash = ">=1.0.2,<1.1.0"
 numpy = ">=1.15.0"
+packaging = ">=20.0"
 preshed = ">=3.0.2,<3.1.0"
 pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<1.11.0"
 srsly = ">=2.4.0,<3.0.0"
-wasabi = ">=0.8.1,<1.1.0"
+wasabi = ">=0.8.1,<1.2.0"
 
 [package.extras]
 cuda = ["cupy (>=5.0.0b4)"]
@@ -625,7 +630,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "urllib3"
-version = "1.26.13"
+version = "1.26.14"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
@@ -650,11 +655,14 @@ requests = "*"
 
 [[package]]
 name = "wasabi"
-version = "0.10.1"
+version = "1.1.1"
 description = "A lightweight console printing and formatting toolkit"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
+
+[package.dependencies]
+colorama = {version = ">=0.4.6", markers = "sys_platform == \"win32\" and python_version >= \"3.7\""}
 
 [[package]]
 name = "werkzeug"
@@ -684,14 +692,14 @@ multidict = ">=4.0"
 
 [[package]]
 name = "zipp"
-version = "3.11.0"
+version = "3.12.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["sphinx (>=3.5)", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "furo", "jaraco.tidelift (>=1.4)"]
+docs = ["sphinx (>=3.5)", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "furo", "sphinx-lint", "jaraco.tidelift (>=1.4)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-cov", "pytest-enabler (>=1.3)", "jaraco.itertools", "func-timeout", "jaraco.functools", "more-itertools", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "pytest-flake8"]
 
 [metadata]

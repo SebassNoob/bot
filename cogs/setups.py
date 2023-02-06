@@ -29,7 +29,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.8.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.8.2", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
     buttons = [
       discord.ui.Button(
@@ -50,7 +50,20 @@ class Setups(commands.Cog):
     
     ] 
     async def cl(interaction: discord.Interaction):
-      em = discord.Embed(color = color, title = "1.8.1", description = "Small patch.\n-Readded tips, which are less common\n-added 3 new options to /playnoise\n-fixed /earrape, /meme, /dmtroll, /dmthreaten bug")
+      em = discord.Embed(color = color, title = "1.8.2", description = '''
+      1.8.2\n
+      Small additions.\n
+      - Added message commands. Rightclick on a message and navigate to apps>(command) to access.\n
+      - Currently there are 2 out of a discord hardlimit of 5 (dm me ideas)\n
+      - make uwu: Converts a message into a mEsSaGe\n
+      - spam emojis: adds reactions of random emojis to a message\n
+      - fixed 'Voice' object has no attribute 'response'\n
+      - fix edgecase in which memorygame would error out if the buttons are clicked too quickly.\n
+      - tips no longer appear after button presses.\n
+      - permission errors on /fakeban now fail verbosely\n
+      - timeout duration on /fakeban aand /fakemute 3 => 2
+      
+      ''')
       await interaction.response.send_message(embed=em)
 
     pn = discord.ui.Button(style = discord.ButtonStyle.primary, label = "Patch Notes")
@@ -138,7 +151,13 @@ class Setups(commands.Cog):
       embedVar7.add_field(name = "``playnoise scream``", value = "Joins your VC and screams into it.",inline = False)
       embedVar7.add_field(name = "``playnoise rickroll``", value = "plays the legendary rick astley song and force everyone to listen.",inline = False)
 
-      return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7]
+      embedVar8 = discord.Embed(color = color, description = "Right click on any message and navigate to apps>(command) to access these.")
+      embedVar8.set_author(name="Annoybot commands (message)")
+      embedVar8.add_field(name = "``'spam emojis'``", value = "Reacts to the selected message with random emojis",inline = False)
+      embedVar8.add_field(name = "``'uwuify'``", value = "Transforms your message into a MeSsAgE",inline = False)
+      
+
+      return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7,embedVar8]
 
 
     
@@ -151,7 +170,8 @@ class Setups(commands.Cog):
           discord.SelectOption(label= "Voice", description="Commands used in voice channels to be annoying", emoji="🎤"),
           discord.SelectOption(label="Games", description="Games you can play with friends", emoji ="🎲"),
           discord.SelectOption(label="Misc", description="Contains some random features.", emoji="🌎"),
-          discord.SelectOption(label="Setup", description = "Commands to aid in configuration of the bot", emoji = "⚙️")
+          discord.SelectOption(label="Setup", description = "Commands to aid in configuration of the bot", emoji = "⚙️"),
+          discord.SelectOption(label="Message", description = "Commands modify/change messages", emoji = "💬")
         ]
         super().__init__(placeholder='Choose a category.', min_values=1, max_values=1, options=options)
       async def callback(self, interaction: discord.Interaction):
@@ -166,7 +186,8 @@ class Setups(commands.Cog):
           "Troll": pages[2],
           "Voice": pages[5],
           "Games": pages[3],
-          "Misc": pages[1]
+          "Misc": pages[1],
+          "Message": pages[6]
           
         }
         
@@ -184,43 +205,7 @@ class Setups(commands.Cog):
     view.add_item(item=options())
     await interaction.response.send_message(content = "The values in brackets are additional arguments you're supposed to give.\n* denotes an optional argument.\nAll commands have a ratelimit of 10 commands per 30 seconds", embed = contents()[0], view = view )
 
-    #legacy code
-    '''
-    instruct = await ctx.send(embed = discord.Embed(color = color, description = "The values in brackets are additional arguments you're supposed to give. * denotes an optional argument."))
-    mainMessage = await ctx.send(
-        
-        embed = paginationList[current],
-        components = [ 
-          Select(placeholder="Other pages", options=[SelectOption(label="Main features", value="0"), SelectOption(label="Misc", value="1"), SelectOption(label="Trolls", value="2"), SelectOption(label="Games", value="3"), SelectOption(label="Setup", value="4"), SelectOption(label="Voice", value="5")])]
-        
-    )
     
-    while True:
-        
-        try:
-            
-            
-            interaction = await self.bot.wait_for(
-                "select_option", 
-                check = lambda i: True,
-                timeout = 60.0 
-            )
-            
-            
-
-            current = int(interaction.values[0])
-            await interaction.respond(
-                type = 7,
-                embed = paginationList[current],
-              
-            )
-        except asyncio.TimeoutError:
-          await mainMessage.delete()
-          await instruct.delete()
-          break
-'''
-
-
 
   settings_group = app_commands.Group(name="settings", description="Shows your settings for the bot")
   

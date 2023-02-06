@@ -106,7 +106,7 @@ class Voice(commands.Cog):
       await interaction.response.send_message(embed = discord.Embed(color = color, description = "❌ You are not in a VC, stupid."))
       return
     except discord.ClientException:
-      await self.response(False, "❌ The bot is already playing something.")
+      await interaction.response.send_message("❌ The bot is already playing something.")
       return
     
     

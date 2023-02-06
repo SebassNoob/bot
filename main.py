@@ -24,7 +24,6 @@ sys.path.insert(1,'./other')
 from sqliteDB import get_db_connection
 from os import system
 
-system("python -m spacy download en_core_web_sm")
 
 
 async def blacklist_check(interaction: discord.Interaction):
@@ -52,7 +51,7 @@ class Bot(commands.AutoShardedBot):
     servers = len(self.guilds)
     print("\033[0;36;48m-----------------------------------------")
     print(f" * {self.user} connected to {servers} servers")
-    members = sum([len(guild.members) for guild in self.guilds])
+    
     count = {}
     for i, guild in enumerate(self.guilds):
       addData(guild.id)
@@ -66,7 +65,7 @@ class Bot(commands.AutoShardedBot):
       print(f"   - Shard {t[0]}: {t[1]} servers")
     print("\033[0;36;48m-----------------------------------------")
 
-    await self.change_presence(activity=discord.Game(name=f"/help | annoying {servers} servers ({members} members)"))
+    await self.change_presence(activity=discord.Game(name=f"/help | annoying {servers} servers"))
 
     
 
