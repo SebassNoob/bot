@@ -17,8 +17,13 @@ class Message(commands.Cog):
       name = 'mAkE uWu',
       callback = self.uwuify
     )
+    self.ratio = app_commands.ContextMenu(
+      name = 'ratio',
+      callback = self.ratio
+    )
     self.bot.tree.add_command(self.emojispam)
     self.bot.tree.add_command(self.uwuify)
+    self.bot.tree.add_command(self.ratio)
 
   @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
   async def emojispam(self, interaction: discord.Interaction, message: discord.Message):
@@ -59,6 +64,25 @@ class Message(commands.Cog):
     
 
     await interaction.response.send_message(out)
+  @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
+  async def ratio(self, interaction: discord.Interaction, message: discord.Message):
+    accompany = (
+      "No one cares",
+      "Shut the fuck up",
+      "L",
+      "Who asked?",
+      "Your opinion is invalid",
+      "No one gives 2 shits about your opinion",
+      "Get good",
+      "Uninstall discord mate",
+      "Really? nobody asked"
+    )
+    em = discord.Embed(color = 0x000000, description = f" ➥➥{message.content}")
+    em.add_field(name=random.choice(accompany) + "+ratio", value = '\u200b')
+    em.set_author(name=f"Replying to {message.author.name}", icon_url=message.author.display_avatar)
+    await interaction.response.send_message(embed = em)
+    
+    await (await interaction.original_response()).add_reaction("👍")
 
 async def setup(bot):
   await bot.add_cog(Message(bot))

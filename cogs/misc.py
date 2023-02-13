@@ -9,7 +9,7 @@ import random
 import json
 import base64
 import aiohttp
-
+import io
 
 import requests
 from waifu import WaifuClient
@@ -22,6 +22,9 @@ import asyncio
 import csv
 sys.path.insert(1,'./other')
 from sqliteDB import create_db, get_db_connection
+
+
+
 
 class anime_embed(discord.Embed):
   def __init__(self, pic_type: str, interaction_user: discord.Interaction.user, image_url: str):
@@ -102,44 +105,62 @@ class Misc(commands.Cog):
     
     await interaction.response.send_message(embed=em)
 
-
+  
   autoresponse = app_commands.Group(name="autoresponse", description="The bot will respond to a list of predetermined words", guild_only=True)
+
+  def autoresponse_ui_handler(self, interaction: discord.Interaction, key_values) -> Tuple[discord.Embed, Optional[discord.File]]:
+  
+    desc = "ID/Keyword: Response\n"
+    desc +=''.join([f'\n{i} {row[0]}: {row[1]}' for i, row in enumerate(key_values)])
+    
+    
+    f = discord.File(io.StringIO(desc), 'table') if len(desc)>4000 else None
+      
+        
+    color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color,description = f"``{desc if len(desc) <= 4000 else 'The autoresponse table is too large. The table will be sent as an attachment'}``")
+    em.set_author(name = "Autoresponse keywords")
+    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
+    return em, f
+    
+
 
   @autoresponse.command(name = "menu", description= "A list of words the bot will respond to in your server.")
   async def auto_menu(self, interaction: discord.Interaction):
-
+    
     key_values = eval(serverSettings.get(interaction.guild_id)['autoresponse_content']).items()
     
-    desc = "ID/Keyword: Response\n"
-    for i, row in enumerate(key_values):
-      desc=desc+f'\n{i} {row[0]}: {row[1]}'
-    color = colorSetup(interaction.user.id)
-    em = discord.Embed(color = color,description = f"``{desc}``")
-    em.set_author(name = "Autoresponse keywords")
-    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
-    await interaction.response.send_message(embed=em)
+    em, f = self.autoresponse_ui_handler(interaction, key_values)
+    if not f:
+      await interaction.response.send_message(embed=em)
+      return
+    await interaction.response.send_message(embed=em, file = f)
     
 
   @autoresponse.command(name="add", description="Add autoresponse keywords")
   @app_commands.checks.has_permissions(manage_guild=True)
   @app_commands.describe(word="The word you want the bot to respond to", response="The resulting response to the aforementioned word")
-  async def add(self, interaction: discord.Interaction, word: str, response: str):
+  async def add(self, interaction: discord.Interaction, word: app_commands.Range[str, 1, 1500], response: app_commands.Range[str, 1, 1500]):
+    
     to_update = serverSettings.get(interaction.guild_id)
     key_values = eval(to_update['autoresponse_content'])
+
+    
     key_values.update({word: response})
     
     to_update['autoresponse_content']= f'{key_values}'
     
-    serverSettings.update(interaction.guild_id, to_update)
     
-    desc = "ID/Keyword: Response\n"
-    for i, row in enumerate(key_values.items()):
-      desc=desc+f'\n{i} {row[0]}: {row[1]}'
-    color = colorSetup(interaction.user.id)
-    em = discord.Embed(color = color,description = f"``{desc}``")
-    em.set_author(name = "Autoresponse keywords")
-    em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
-    await interaction.response.send_message(content = f"✅ Added ``{word} : {response}``. Here is the new list.",embed=em)
+    serverSettings.update(interaction.guild_id, to_update)
+
+
+    key_values = key_values.items() #ensures consistency
+    em, f = self.autoresponse_ui_handler(interaction, key_values)
+    if not f:
+      await interaction.response.send_message(content = f"✅ Added ``{word} : {response}``. Here is the new list.",embed=em)
+      return
+    await interaction.response.send_message(content = f"✅ Added ``{word} : {response}``. Here is the new list.",embed=em, file=f)
+    
     
   @autoresponse.command(name="remove", description="Remove autoresponse keywords")
   @app_commands.checks.has_permissions(manage_guild=True)
@@ -147,35 +168,119 @@ class Misc(commands.Cog):
   async def remove(self, interaction: discord.Interaction, id: int):
     
     to_update = serverSettings.get(interaction.guild_id)
+
+    #a list of tuples with autoresponse k-v pairs
     key_values = list(eval(to_update['autoresponse_content']).items())
     try:
       removed = key_values.pop(id)
     except IndexError:
       await interaction.response.send_message(content="❌ Enter a proper id, idiot. Use /autoresponse menu to check the id.", ephemeral = True)
       return
-    #id is equal to the index of the k-v pair in items()
-    res = {}
-    for (k,v) in key_values:
-     res[k] = v
+
+      
+    res = {k:v for k,v in key_values}
+    
+
+    
     to_update['autoresponse_content']= f'{res}'
     serverSettings.update(interaction.guild_id, to_update)
     
     
-    desc = "ID/Keyword: Response\n"
-    for i, row in enumerate(key_values):
-      desc=desc+f'\n{i} {row[0]}: {row[1]}'
+    em, f = self.autoresponse_ui_handler(interaction, key_values)
+    if not f:
+      await interaction.response.send_message(content = f"✅ Removed ``{removed[0]} : {removed[1]}``. Here is the new list.",embed=em)
+      return
+    await interaction.response.send_message(content = f"✅ Removed ``{removed[0]} : {removed[1]}``. Here is the new list.",embed=em, file = f)
+    
+  @autoresponse.command(name="resetdb", description="Reset the autoresponse menu to it's default state.")
+  @app_commands.checks.has_permissions(manage_guild=True)
+  async def resetdb(self, interaction: discord.Interaction):
+
+    #confirmation
     color = colorSetup(interaction.user.id)
+    em = discord.Embed(color = color, description="Are you certain you want to reset this server's autoresponse settings?")
+    
+    class Confirm(discord.ui.View):
+      def __init__(self, interaction: discord.Interaction):
+        super().__init__()
+        self.value = None
+        self.interaction = interaction
+
+    
+      @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+      async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.interaction.user.id:
+        
+          await interaction.response.send_message('Not your button, dumbass', ephemeral=True)
+          return
+        await interaction.response.send_message('Confirming', ephemeral=True)
+
+        
+        self.value = True
+        
+        self.stop()
+
+    
+      @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
+      async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.interaction.user.id:
+          await interaction.response.send_message('Not your button, dumbass', ephemeral=True)
+          return
+        await interaction.response.send_message('Cancelling', ephemeral=True)
+        self.value = False
+        self.stop()
+
+
+    
+    view = Confirm(interaction)
+    await interaction.response.send_message(embed = em, view = view )
+
+
+    await view.wait()
+    original = await interaction.original_response()
+    if not view.value:
+      await original.edit(view = discord.ui.View()
+                          .add_item(item = discord.ui.Button(style = discord.ButtonStyle.success, label = "Confirm", disabled = True))
+                          .add_item(item = discord.ui.Button(style = discord.ButtonStyle.grey, label = "Cancel", disabled = True))
+                          )
+      return
+
+      
+    
+
+
+    
+    with open("./json/autoresponse.csv",newline="") as file:
+      reader = list(csv.DictReader(file))
+      #getting default
+      autores = {i['word']: i['response'] for i in reader}
+
+      
+    to_update = serverSettings.get(interaction.guild_id)
+    
+
+    #resetting the db
+    to_update['autoresponse_content'] = f'{autores}'
+    
+    
+    serverSettings.update(interaction.guild.id, to_update)
+
+    #UI
+    desc = "ID/Keyword: Response\n"
+    desc +=''.join([f'\n{i} {row[0]}: {row[1]}' for i, row in enumerate(list(autores.items()))])
+    
+    
     em = discord.Embed(color = color,description = f"``{desc}``")
     em.set_author(name = "Autoresponse keywords")
     em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
-    await interaction.response.send_message(content = f"✅ Removed ``{removed[0]} : {removed[1]}``. Here is the new list.",embed=em)
     
+    await original.edit(content = f"✅ Resetted database to default. Here is the new list.",embed=em, view = None)
+     
     
+  
   
   @app_commands.command(name="meme", description="Sends a top meme from reddit")
   async def meme(self, interaction: discord.Interaction):
-  
-
 
 
     subreddits = ['https://www.reddit.com/r/dankmemes/new.json?sort=hot','https://www.reddit.com/r/okbuddyretard/new.json?sort=hot','https://www.reddit.com/r/memes/new.json?sort=hot',

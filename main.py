@@ -4,14 +4,16 @@ import random
 import discord
 import nacl
 from discord import app_commands
+from cogs.misc import Misc
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
+import inspect
 
 from discord.ext import commands
 from keep_alive import keep_alive
 import datetime
 import asyncio
 import json
-
+import traceback
 from other.customCooldown import CustomCooldown
 
 
@@ -72,6 +74,7 @@ class Bot(commands.AutoShardedBot):
     for cmd in self.tree.walk_commands():
       
       cmd = app_commands.checks.dynamic_cooldown(CustomCooldown)(cmd)
+      
       if not isinstance(cmd, app_commands.Group):
         cmd.add_check(blacklist_check)
         
@@ -79,6 +82,11 @@ class Bot(commands.AutoShardedBot):
 
     
     async def err_handler(interaction: discord.Interaction, error: app_commands.AppCommandError):
+
+
+      
+        
+      
       if isinstance(error, app_commands.MissingPermissions):
         em = discord.Embed(color = 0x000000, description = f"❌ You need the ``{error.missing_permissions}`` permission to use that command.")
         await interaction.response.send_message(embed = em)
@@ -95,7 +103,7 @@ class Bot(commands.AutoShardedBot):
         pass
       else:
       
-        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it. \nFull traceback:\n```py\n{error}```")
+        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it. \nFull traceback:\n```{error}```")
         await interaction.response.send_message(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
@@ -224,8 +232,10 @@ class Bot(commands.AutoShardedBot):
     for filename in os.listdir('./cogs'):
       if filename.endswith('.py'):
 
-    
-        await bot.load_extension(f'cogs.{filename[:-3]}')
+        try:
+          await bot.load_extension(f'cogs.{filename[:-3]}')
+        except Exception:
+          print(traceback.format_exc())
         print(f"\033[0;32;49m{filename} loaded")
   
 

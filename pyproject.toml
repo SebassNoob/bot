@@ -18,7 +18,6 @@ ffmpeg = "^1.4"
 mutagen = "^1.45.1"
 topggpy = "^1.3.0"
 waifu-py = "^1.0.3"
-spacy = "^3.4.3"
 
 [tool.poetry.dev-dependencies]
 

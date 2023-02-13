@@ -40,10 +40,8 @@ def addData(guildId: int) -> bool:
     reader = list(csv.DictReader(file))
     #reader is List[Dict[str, str]]
     #construct dict of shape Dict[str, str]
-    autores = {}
+    autores = {i['word']: i['response'] for i in reader}
           
-    x = list(map(lambda i: {i['word']:i['response']}, reader))
-    x = list(map(lambda i: autores.update(i),x))
     
   if serverSettings.get(guildId) is None:
     serverSettings.insert({

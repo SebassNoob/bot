@@ -23,6 +23,8 @@ def insert(data : Dict[str, Any]) -> None:
 
 def update(id: int, data : Dict[str, Any]) -> None:
   conn = get_db_connection("./other/serverSettings.db")
+
+  assert isinstance(data, dict)
   #data looks like:
   '''
   data = {

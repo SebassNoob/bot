@@ -29,7 +29,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.8.2", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.8.3", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
     buttons = [
       discord.ui.Button(
@@ -50,19 +50,16 @@ class Setups(commands.Cog):
     
     ] 
     async def cl(interaction: discord.Interaction):
-      em = discord.Embed(color = color, title = "1.8.2", description = '''
-      1.8.2\n
-      Small additions.\n
-      - Added message commands. Rightclick on a message and navigate to apps>(command) to access.\n
-      - Currently there are 2 out of a discord hardlimit of 5 (dm me ideas)\n
-      - make uwu: Converts a message into a mEsSaGe\n
-      - spam emojis: adds reactions of random emojis to a message\n
-      - fixed 'Voice' object has no attribute 'response'\n
-      - fix edgecase in which memorygame would error out if the buttons are clicked too quickly.\n
-      - tips no longer appear after button presses.\n
-      - permission errors on /fakeban now fail verbosely\n
-      - timeout duration on /fakeban aand /fakemute 3 => 2
+      em = discord.Embed(color = color, title = "1.8.3", description = '''
+      - autoresponse changes\n
+      - /autoresponse resetdb - resets your server's autoresponse settings to default\n
+      - /autoresponse add now only accepts a maximum of 1500 characters per argument\n
+      - autoresponse menus with length > 4000 will now include a .tmp file for the autoresponse settings\n
       
+      
+      - small consistency improvements\n
+      - added 'ratio' (message command) - ratios a specific message\n
+      - reminder: to use message commands, right click on a message and navigate to apps\n
       ''')
       await interaction.response.send_message(embed=em)
 
@@ -155,6 +152,8 @@ class Setups(commands.Cog):
       embedVar8.set_author(name="Annoybot commands (message)")
       embedVar8.add_field(name = "``'spam emojis'``", value = "Reacts to the selected message with random emojis",inline = False)
       embedVar8.add_field(name = "``'uwuify'``", value = "Transforms your message into a MeSsAgE",inline = False)
+      
+      embedVar8.add_field(name = "``'ratio'``", value = "Ratios someone's message for you",inline = False)
       
 
       return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7,embedVar8]
