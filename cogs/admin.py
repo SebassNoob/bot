@@ -4,6 +4,7 @@ from discord.ext import commands
 import asyncio
 import sys
 import os
+import io
 
 
 #dangerous admin-only commands
@@ -16,9 +17,11 @@ class Admin(commands.Cog):
   @commands.command()
   @commands.is_owner()
   async def servers(self, ctx):
-    for server in self.bot.guilds:
-      await asyncio.sleep(0.2)
-      await ctx.send(f"{server.name}: {server.id}")
+    servers = ''.join([f"{s.name}: {s.id}\n" for s in self.bot.guilds])
+    
+    f = discord.File(io.StringIO(servers), 'servers')
+    
+    await ctx.send("file created", file = f)
   
     
   
