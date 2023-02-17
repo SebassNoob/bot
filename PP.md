@@ -1,3 +1,7 @@
 ## Privacy policy
 
-We collect some data for the following commands: $snipe, $settings,$autoresponse as well as for a fun easter egg;). Rest assured that this data will not be transmitted, copied or sent to 3rd parties. Only your user id and not your username is collected in all these instances. If there are any concerns regarding how this data is used, you may contact me on discord via: https://discord.gg/UCGAuRXmBD.
+By using this bot, you agree that:
+
+- We are entitled to store, but not distribute user data related to the following commands: autoresponse, settings, serversettings
+- You may remove your data through the following command: removedata
+- Any queries should be directed to (the support server)[https://discord.gg/ScuwSHrPTS]
