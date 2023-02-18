@@ -1,4 +1,5 @@
 ## Annoybot
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=SebassNoob_bot)](https://sonarcloud.io/summary/new_code?id=SebassNoob_bot)
 
 A discord.py bot primarily used to annoy your friends, harmlessly.
 

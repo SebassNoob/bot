@@ -334,12 +334,11 @@ class Misc(commands.Cog):
 
     
     if nsfw:
-      if isinstance(interaction.channel, discord.abc.GuildChannel) and not interaction.channel.nsfw:
+      if isinstance(interaction.channel, (discord.abc.GuildChannel,discord.Thread)) and not interaction.channel.nsfw:
         await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
         return
-      elif isinstance(interaction.channel, discord.Thread) and not interaction.channel.parent.nsfw:
-        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
-        return
+      
+    
     
     color = colorSetup(interaction.user.id)
       
@@ -385,14 +384,14 @@ class Misc(commands.Cog):
       country = res["country"] or "Unknown" 
       region = res["regionName"] or "Unknown" 
       city = res["city"] or "Unknown"  
-      zip= res["zip"] or "Unknown" 
+      zip_code= res["zip"] or "Unknown" 
       latitude = res['lat'] or "Unknown"  
       longitude = res['lon'] or "Unknown" 
       provider = res['isp'] or "Unknown" 
     except KeyError:
       await interaction.response.send_message("❌ An unspecified error occured, the ip address probably is private. What a loser lmao.")
       return
-    await interaction.response.send_message(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
+    await interaction.response.send_message(embed =discord.Embed(color = color, title = ip,description = f"**country**:{country}\n**region**:{region}\n**city**:{city}\n**zip code**:{zip_code}\n**coordinates**: ({latitude},{longitude})\n**ISP**:{provider}"))
       
 
   @app_commands.command(name="textwall", description="Sends a wall of repeated text in a single message")

@@ -44,7 +44,7 @@ class Message(commands.Cog):
       "🥰",
       "🤞",
       "🖕",
-      "💀"
+      "💀",
       "🔥"
     ]
     random.shuffle(emojis)

@@ -315,8 +315,8 @@ class Games(commands.Cog):
     
 
     await interaction.response.defer(thinking=True)
-    file = open("./json/words.txt","r")
-    words = [w.lower().replace('\n','') for w in file.readlines()]
+    f = open("./json/words.txt","r")
+    words = [w.lower().replace('\n','') for w in f.readlines()]
     
 
     vowels = ["a","e","i","o","u"]
