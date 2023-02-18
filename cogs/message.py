@@ -58,11 +58,12 @@ class Message(commands.Cog):
 
     
   async def uwuify(self, interaction: discord.Interaction, message: discord.Message):
+    if message.content == "":
+      await interaction.response.send_message("This message is empty?", ephemeral = True)
+      return
     to_mod = message.content.lower()
     out = ''.join([char.upper() if pos%2==0 else char for pos, char in enumerate(to_mod)])
     
-    
-
     await interaction.response.send_message(out)
   @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
   async def ratio(self, interaction: discord.Interaction, message: discord.Message):
@@ -77,8 +78,8 @@ class Message(commands.Cog):
       "Uninstall discord mate",
       "Really? nobody asked"
     )
-    em = discord.Embed(color = 0x000000, description = f" ➥➥{message.content}")
-    em.add_field(name=random.choice(accompany) + "+ratio", value = '\u200b')
+    em = discord.Embed(color = 0x000000, description = f" '{message.content}'")
+    em.add_field(name=random.choice(accompany) + " + ratio", value = '\u200b')
     em.set_author(name=f"Replying to {message.author.name}", icon_url=message.author.display_avatar)
     await interaction.response.send_message(embed = em)
     

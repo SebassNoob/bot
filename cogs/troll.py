@@ -80,7 +80,7 @@ class Troll(commands.Cog):
   @app_commands.command(name = "nicktroll", description = "Generates a temporary nickname for a user")
   @app_commands.checks.bot_has_permissions(manage_nicknames = True)
   @app_commands.describe(member="The member to troll", name = "A nick to give")
-  async def nicktroll(self, interaction: discord.Interaction, member: discord.Member, name: Optional[str]=None):
+  async def nicktroll(self, interaction: discord.Interaction, member: discord.Member, name: Optional[app_commands.Range[str,1,32]]=None):
     addDataU(member.id)
     bot_member = interaction.guild.get_member(self.bot.user.id)
     if bot_member.top_role <= member.top_role or member == interaction.guild.owner:

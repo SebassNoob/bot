@@ -175,6 +175,11 @@ class Voice(commands.Cog):
   async def rickroll(self, interaction: discord.Interaction):
     to_play = noise(interaction, "./voice/rick_astley.mp3", 210)
     await to_play.play()
+
+  @playnoise.command(name="indianinsult", description="Plays the voice of an indian dude insulting your cock into your VC")
+  async def indian(self, interaction: discord.Interaction):
+    to_play = noise(interaction, "./voice/indian_shitpost.mp3", 40)
+    await to_play.play()
     
 async def setup(bot):
   await bot.add_cog(Voice(bot))

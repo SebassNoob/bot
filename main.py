@@ -33,7 +33,7 @@ async def blacklist_check(interaction: discord.Interaction):
     return True
   if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):
     em = discord.Embed(color = 0x000000, description = f"You have been banned from using this bot in this server: {interaction.guild.name}\nAsk the mods to unban you (/serversettings) or use this bot in another server.")
-    await interaction.response.send_message(embed = em)
+    await interaction.response.send_message(embed = em, ephemeral = True)
     return False
 
   return True
@@ -85,7 +85,7 @@ class Bot(commands.AutoShardedBot):
 
 
       
-        
+      
       
       if isinstance(error, app_commands.MissingPermissions):
         em = discord.Embed(color = 0x000000, description = f"❌ You need the ``{error.missing_permissions}`` permission to use that command.")
@@ -102,8 +102,9 @@ class Bot(commands.AutoShardedBot):
       if isinstance(error, app_commands.errors.CheckFailure):
         pass
       else:
+        
       
-        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it. \nFull traceback:\n```{error}```")
+        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it. \nFull traceback:\n```{error.command.name if hasattr(error, 'command') else ''} raised: {error}```")
         await interaction.response.send_message(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
