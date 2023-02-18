@@ -1,22 +1,46 @@
 ## Annoybot
 
-just know that this bot will annoy your friends within small servers with
-- roasts
-- trolling
-- uninspirational quotes
-- memes
-- bad jokes
-- math
-- games
+A discord.py bot primarily used to annoy your friends, harmlessly.
 
-add the bot here please i beg:
-https://top.gg/bot/844757192313536522
+### Highlights (Most used)
 
-support:
-https://discord.gg/UCGAuRXmBD
+- roast: roast your friends with some dank roasts
+- ghosttroll: ghost ping your friends in 3 different channels
+- playnoise: play a stupid noise into your voice channel
+- autoresponse: automatically respond to certain keywords
+- ratio: produces a classic twitter ratio to ratio your friends
 
-### Instructions to operate
-1. Install the discord client on any supported device
-2. Create a guild/server and follow the invite link to add the bot to said guild/server
-3. Use $help to see the list of commands.
+And so much more! We have games, trolling, memes, dark jokes, we have it!
+
+Why wait? Piss your friends off now!
+
+
+
+
+#### updating bot checklist
+1. write patch notes
+2. update /help
+3. git commit and push to origin on dev repl
+4. turn off prod (a$sysexit)
+5. download .db files from prod locally
+6. git pull from origin
+7. paste .db
+
+##### contributing
+uhh just open a pr, thanks
+
+##### reverting
+1. git checkout <commit_id>
+2. git reset --hard <commit_id>
+
+##### versioning
+
+- Most recent: 1.8.4
+- History: >1.5.0
+
+When using github releases, format versions as: 'v(version_name)-(alpha/beta/rc).(id)'
+
+eg: v1.8.0-beta.2
+
+
 
