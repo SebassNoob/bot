@@ -100,7 +100,7 @@ class Setups(commands.Cog):
       embedVar3.set_author(name="Annoybot commands (misc)")
       embedVar3.add_field(name = "``utils pick (list)``", value = "Randomly chooses from a list of arguments the user provides.",inline = False)
       embedVar3.add_field(name = "``utils predict (question)``", value = "Predicts the answer to a yes/no question.",inline = False)
-      embedVar3.add_field(name = "``autoresponse menu/add/remove``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
+      embedVar3.add_field(name = "``autoresponse menu/add/remove/resetdb``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
       embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
       embedVar3.add_field(name = "``meme``", value = "Sends a meme.",inline = False)
       embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.",inline = False)
@@ -112,16 +112,17 @@ class Setups(commands.Cog):
       embedVar4 = discord.Embed(color = color)
       embedVar4.set_author(name="Annoybot commands (trolls)")
       
-      embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **manage_channels** permission.",inline = False)
+      embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **send_messages_in_threads, create_public_threads,  manage_threads** permissions.",inline = False)
       embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
       embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
   
       embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
+      embedVar4.add_field(name = "``roletroll (user, name, *colour)``", value = "Creates a new temporary unique role with a shitty name and colour for the user.\nRequires bot to have **manage_roles** permission.",inline = False)
       
   
-      embedVar4.add_field(name = "``fakeban (user)``", value = "Times out a user for 3s, nicks them to their id (to give the illusion of being banned) and sends a fake ban reason",inline = False)
+      embedVar4.add_field(name = "``fakeban (user)``", value = "Times out a user for 2s, nicks them to their id (to give the illusion of being banned) and sends a fake ban reason.\nRequires bot to have **moderate_members, manage_nicknames** permission.",inline = False)
   
-      embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user, timing them out for 3s. If no reason is given, a random one will be generated. ",inline = False)
+      embedVar4.add_field(name = "``fakemute (user,*reason)``", value = "Fakes a mute for the trolled user, timing them out for 2s. If no reason is given, a random one will be generated. \nRequires bot to have **moderate_members** permission.",inline = False)
       embedVar4.add_field(name = "``nitrotroll``",value = "Fakes a nitro gift in chat. Clicking on claim will produce a rickroll. Requires **manage_messages** permissions.")
       
       embedVar5 = discord.Embed(color = color)
