@@ -287,7 +287,7 @@ class Misc(commands.Cog):
     'https://www.reddit.com/r/wholesomememes/new.json?sort=hot', 'https://www.reddit.com/r/meme/new.json?sort=hot', 'https://www.reddit.com/r/PrequelMemes/new.json?sort=hot','https://www.reddit.com/r/deepfriedmemes/new.json?sort=hot', 'https://www.reddit.com/r/nukedmemes/new.json?sort=hot']
     async with aiohttp.ClientSession() as cs:
 
-      async with cs.get(subreddits[random.randint(0,len(subreddits)-1)]) as r:
+      async with cs.get(random.choice(subreddits)) as r:
         res = await r.json()
         
         color = colorSetup(interaction.user.id)
@@ -298,6 +298,35 @@ class Misc(commands.Cog):
           embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
         
           embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
+          
+
+        except KeyError as e:
+          await interaction.response.send_message("❌ An unknown error occured, try again.")
+          raise e
+            
+        
+
+    await interaction.response.send_message(embed=embed)
+
+  @app_commands.command(name="copypasta", description="pastes a copypasta from r/copypasta")
+  async def copypasta(self, interaction: discord.Interaction):
+
+
+    
+    async with aiohttp.ClientSession() as cs:
+
+      async with cs.get('https://www.reddit.com/r/copypasta/new.json?sort=hot') as r:
+        res = await r.json()
+        
+        color = colorSetup(interaction.user.id)
+        
+        
+        try:
+          
+          randomn = random.randint(0,10)
+          embed = discord.Embed(color = color, title = res['data']['children'] [randomn]["data"]["title"], description = res['data']['children'][randomn]['data']['selftext'])
+        
+          
           
 
         except KeyError as e:
@@ -396,17 +425,16 @@ class Misc(commands.Cog):
 
   @app_commands.command(name="textwall", description="Sends a wall of repeated text in a single message")
   @app_commands.describe(num = "The number of times to spam", content="What to spam")
-  async def textwall(self, interaction: discord.Interaction, num:int, content: str):
+  async def textwall(self, interaction: discord.Interaction, num:int, content: str, tts: Optional[bool] = False):
     
-    toSend = ''
-    for i in range(num):
-      toSend += f'{content.strip()} '
+    toSend = ' '.join([content.strip() for i in range(num)])
+    
     if len(toSend) > 2000:
       await interaction.response.send_message("❌ Your text wall is too long (>2000 characters), you moron.")
       return
     if bool(getDataU(interaction.user.id)['familyFriendly']):
       toSend = changeff(toSend)
-    await interaction.response.send_message(toSend)
+    await interaction.response.send_message(toSend, tts = tts)
 
   @app_commands.command(name="urbandict", description="Looks up a term in urban dictionary")
   @app_commands.describe(term = "The term you want to search")
