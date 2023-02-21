@@ -29,7 +29,7 @@ class Setups(commands.Cog):
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
     embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.8.3", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
+    embedVar3.add_field(name = "Annoybot 1.8.4", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.1.0\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
     buttons = [
       discord.ui.Button(
@@ -51,7 +51,22 @@ class Setups(commands.Cog):
     ] 
     async def cl(interaction: discord.Interaction):
       em = discord.Embed(color = color, title = "1.8.4", description = '''
-      
+      changes:\n
+
+    -server bans are now ephemeral\n
+    -nickroll name input is restricted to 32 characters\n
+    -fixed uwuify failing on blank messages\n
+    -tweak ui for 'ratio'\n
+    -improved error messages -> allows for better bug identification/fixing\n
+    -show required permissions for troll commands in /help\n
+    -updated help menu of /fakeban and /fakemute with the changes of last update\n
+    -re-added an accidentally removed /playnoise command. Sorry illiyasiya!\n
+    -this has been renamed to /playnoise indianinsult\n
+    -/textwall has a really annoying tts option\n
+    -/roletroll generates a stupid unique temporary role\n
+    -/copypasta adds copypasta from r/copypasta\n
+
+
       ''')
       await interaction.response.send_message(embed=em)
 
