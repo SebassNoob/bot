@@ -19,7 +19,7 @@ class Admin(commands.Cog):
   async def servers(self, ctx):
     servers = ''.join([f"{s.name}: {s.id}\n" for s in self.bot.guilds])
     
-    f = discord.File(io.StringIO(servers), 'servers')
+    f = discord.File(io.StringIO(servers), 'servers.txt')
     
     await ctx.send("file created", file = f)
   

@@ -114,7 +114,7 @@ class Misc(commands.Cog):
     desc +=''.join([f'\n{i} {row[0]}: {row[1]}' for i, row in enumerate(key_values)])
     
     
-    f = discord.File(io.StringIO(desc), 'table') if len(desc)>4000 else None
+    f = discord.File(io.StringIO(desc), 'table.txt') if len(desc)>4000 else None
       
         
     color = colorSetup(interaction.user.id)
