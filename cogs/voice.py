@@ -31,6 +31,10 @@ class noise_view(discord.ui.View):
       await interaction.response.send_message("❌ The bot isn't in a voice channel, idiot.", ephemeral = True)
       self.stop()
       return
+    except:
+      await interaction.response.send_message("❌ Yikes! something went wrong.", ephemeral = True)
+      self.stop()
+      return
   @classmethod
   def disabled_button(cls):
     view = discord.ui.View()
