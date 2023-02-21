@@ -50,16 +50,8 @@ class Setups(commands.Cog):
     
     ] 
     async def cl(interaction: discord.Interaction):
-      em = discord.Embed(color = color, title = "1.8.3", description = '''
-      - autoresponse changes\n
-      - /autoresponse resetdb - resets your server's autoresponse settings to default\n
-      - /autoresponse add now only accepts a maximum of 1500 characters per argument\n
-      - autoresponse menus with length > 4000 will now include a .tmp file for the autoresponse settings\n
+      em = discord.Embed(color = color, title = "1.8.4", description = '''
       
-      
-      - small consistency improvements\n
-      - added 'ratio' (message command) - ratios a specific message\n
-      - reminder: to use message commands, right click on a message and navigate to apps\n
       ''')
       await interaction.response.send_message(embed=em)
 
@@ -101,8 +93,9 @@ class Setups(commands.Cog):
       embedVar3.add_field(name = "``utils pick (list)``", value = "Randomly chooses from a list of arguments the user provides.",inline = False)
       embedVar3.add_field(name = "``utils predict (question)``", value = "Predicts the answer to a yes/no question.",inline = False)
       embedVar3.add_field(name = "``autoresponse menu/add/remove/resetdb``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
-      embedVar3.add_field(name = "``textwall(num,content)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
-      embedVar3.add_field(name = "``meme``", value = "Sends a meme.",inline = False)
+      embedVar3.add_field(name = "``textwall(num,content,*tts)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
+      embedVar3.add_field(name = "``meme``", value = "Sends a meme from reddit",inline = False)
+      embedVar3.add_field(name = "``copypasta``", value = "Sends a copypasta from r/copypasta.",inline = False)
       embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.",inline = False)
       embedVar3.add_field(name = "``anime (type)``", value = "Shows a picture of an anime girl.",inline = False)
       embedVar3.add_field(name = "``iplookup(ip)``", value = "Looks up somebody's ip LOL.",inline = False)
@@ -114,6 +107,7 @@ class Setups(commands.Cog):
       
       embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **send_messages_in_threads, create_public_threads,  manage_threads** permissions.",inline = False)
       embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
+      embedVar4.add_field(name = "``nicktroll (user,name, *colour)``", value = "Gives the user a temporary role with a name and an optional colour provided/generated.\nRequires bot to have **manage_roles** permission.",inline = False)
       embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
   
       embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)
