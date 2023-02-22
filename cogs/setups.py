@@ -65,7 +65,8 @@ class Setups(commands.Cog):
     -/textwall has a really annoying tts option\n
     -/roletroll generates a stupid unique temporary role\n
     -/copypasta adds copypasta from r/copypasta\n
-
+    -fix overflow for /utils (found by stupid idiot)
+    -fix /playnoise stoppage failure
 
       ''')
       await interaction.response.send_message(embed=em)
