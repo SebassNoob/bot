@@ -151,7 +151,7 @@ python-versions = "*"
 
 [[package]]
 name = "flask"
-version = "2.2.2"
+version = "2.2.3"
 description = "A simple framework for building complex web applications."
 category = "main"
 optional = false
@@ -315,17 +315,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
-name = "topggpy"
-version = "1.4.0"
-description = "A simple API wrapper for Top.gg written in Python."
-category = "main"
-optional = false
-python-versions = ">= 3.6"
-
-[package.dependencies]
-"discord.py" = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.14"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -352,7 +341,7 @@ requests = "*"
 
 [[package]]
 name = "werkzeug"
-version = "2.2.2"
+version = "2.2.3"
 description = "The comprehensive WSGI web application library."
 category = "main"
 optional = false
@@ -378,7 +367,7 @@ multidict = ">=4.0"
 
 [[package]]
 name = "zipp"
-version = "3.13.0"
+version = "3.14.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "main"
 optional = false
@@ -391,7 +380,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "22e7071f23778d3350998c3bfdaf80579d5b2d4516bc7557af4d9986948a90c8"
+content-hash = "1011f26cd1b592dbc2f5ff04a555525d645fd119cedfe2801dc27cf7b2589b82"
 
 [metadata.files]
 aiohttp = []
@@ -422,7 +411,6 @@ pycparser = []
 pyinsults = []
 pynacl = []
 requests = []
-topggpy = []
 urllib3 = []
 waifu-py = []
 werkzeug = []
