@@ -3,3 +3,13 @@ other/*.db
 __pycache__
 .replit
 .breakpoints
+
+
+# java ignores
+.mtj.tmp/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*

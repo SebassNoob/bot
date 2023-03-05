@@ -27,6 +27,18 @@ Why wait? Piss your friends off now!
 6. git pull from origin
 7. paste .db
 
+#### setup
+
+Require:
+1. python >= 3.10
+2. sqlite3
+3. java 8
+
+To install:
+1. ``poetry install``
+2. ``mvn -f src/config/pom.xml install``
+3. ``python3 main.py``
+
 ##### contributing
 uhh just open a pr, thanks
 
