@@ -6,7 +6,7 @@ import nacl
 from discord import app_commands
 from cogs.misc import Misc
 from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
-import inspect
+from logging.handlers import TimedRotatingFileHandler
 
 from discord.ext import commands
 from keep_alive import keep_alive
@@ -25,6 +25,7 @@ import sys
 sys.path.insert(1,'./other')
 from sqliteDB import get_db_connection
 from os import system
+
 
 
 
@@ -246,10 +247,12 @@ bot = Bot()
 
 Thread(target=clearSnipe).start()
 
-keep_alive() 
+keep_alive()
+
+handler = TimedRotatingFileHandler(filename='discord.log', when='h', encoding='utf-8')
 
 try:
-  bot.run(os.getenv('TOKEN'))
+  bot.run(os.getenv('TOKEN'), log_handler=handler)
 except Exception as err:
   if hasattr(err, 'status') and err.status == 429:
     print('Rate-limit detected. Restarting repl')

@@ -1,0 +1,34 @@
+[2023-03-05 09:22:35] [INFO    ] discord.client: logging in using static token
+[2023-03-05 09:22:35] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: b0698ae8c20c7423f59f5e24b436f6e3).
+[2023-03-05 09:22:40] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 9f6da8d78cada8fec1341311674557f7).
+[2023-03-05 09:37:27] [INFO    ] discord.client: logging in using static token
+[2023-03-05 09:37:28] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: d29e08d1aca4b56c38e62df361907bca).
+[2023-03-05 09:37:33] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: ee9a1dd303d7388d41046025aaf7c209).
+[2023-03-05 09:37:39] [INFO    ] discord.client: logging in using static token
+[2023-03-05 09:37:40] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: e3f5d16e65660a882b03dd204d63e91b).
+[2023-03-05 09:37:45] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: d886cc7f54df502a0c508791bcbeeadf).
+[2023-03-05 09:38:11] [INFO    ] discord.voice_client: Connecting to voice...
+[2023-03-05 09:38:11] [INFO    ] discord.voice_client: Starting voice handshake... (connection attempt 1)
+[2023-03-05 09:38:12] [INFO    ] discord.voice_client: Voice handshake complete. Endpoint found singapore5872.discord.media
+[2023-03-05 09:39:02] [INFO    ] discord.voice_client: The voice handshake is being terminated for Channel ID 844725130466689038 (Guild ID 844725129983557673)
+[2023-03-05 09:39:02] [INFO    ] discord.voice_client: Disconnecting from voice normally, close code 1000.
+[2023-03-05 09:39:05] [INFO    ] discord.voice_client: Connecting to voice...
+[2023-03-05 09:39:05] [INFO    ] discord.voice_client: Starting voice handshake... (connection attempt 1)
+[2023-03-05 09:39:05] [INFO    ] discord.voice_client: Voice handshake complete. Endpoint found singapore5872.discord.media
+[2023-03-05 09:39:12] [INFO    ] discord.voice_client: The voice handshake is being terminated for Channel ID 844725130466689038 (Guild ID 844725129983557673)
+[2023-03-05 09:39:12] [INFO    ] discord.voice_client: Disconnecting from voice normally, close code 1000.
+[2023-03-05 09:39:12] [INFO    ] discord.player: ffmpeg process 5984 has not terminated. Waiting to terminate...
+[2023-03-05 09:39:12] [INFO    ] discord.player: ffmpeg process 5984 should have terminated with a return code of -9.
+[2023-03-05 09:39:16] [INFO    ] discord.voice_client: Connecting to voice...
+[2023-03-05 09:39:16] [INFO    ] discord.voice_client: Starting voice handshake... (connection attempt 1)
+[2023-03-05 09:39:16] [INFO    ] discord.voice_client: Voice handshake complete. Endpoint found singapore5872.discord.media
+[2023-03-05 09:39:23] [INFO    ] discord.player: ffmpeg process 6033 successfully terminated with return code of -9.
+[2023-03-05 09:39:23] [INFO    ] discord.voice_client: The voice handshake is being terminated for Channel ID 844725130466689038 (Guild ID 844725129983557673)
+[2023-03-05 09:39:23] [INFO    ] discord.voice_client: Disconnecting from voice normally, close code 1000.
+[2023-03-05 09:39:25] [INFO    ] discord.voice_client: Connecting to voice...
+[2023-03-05 09:39:25] [INFO    ] discord.voice_client: Starting voice handshake... (connection attempt 1)
+[2023-03-05 09:39:26] [INFO    ] discord.voice_client: Voice handshake complete. Endpoint found singapore5872.discord.media
+[2023-03-05 09:39:29] [INFO    ] discord.voice_client: The voice handshake is being terminated for Channel ID 844725130466689038 (Guild ID 844725129983557673)
+[2023-03-05 09:39:29] [INFO    ] discord.voice_client: Disconnecting from voice normally, close code 1000.
+[2023-03-05 09:39:29] [INFO    ] discord.player: ffmpeg process 6070 has not terminated. Waiting to terminate...
+[2023-03-05 09:39:29] [INFO    ] discord.player: ffmpeg process 6070 should have terminated with a return code of -9.
