@@ -249,7 +249,7 @@ Thread(target=clearSnipe).start()
 
 keep_alive()
 
-handler = TimedRotatingFileHandler(filename='discord.log', when='h', encoding='utf-8')
+handler = TimedRotatingFileHandler(filename='logs/discord.log', when='h', encoding='utf-8')
 
 try:
   bot.run(os.getenv('TOKEN'), log_handler=handler)
