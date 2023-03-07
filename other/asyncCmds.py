@@ -32,7 +32,7 @@ def addDataU(uid: int) -> bool:
     return False
   
 def getDataU(uid: int) -> Union[Dict[str, Any], None]:
-  
+  addDataU(uid)
   return userSettings.get(uid)
 
 def addData(guildId: int) -> bool:
