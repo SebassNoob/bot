@@ -30,12 +30,16 @@ Why wait? Piss your friends off now!
 #### setup
 
 Require:
-1. python >= 3.10
-2. sqlite3
-3. java 8
+1. python >= 3.8
+2. java >=8
+3. poetry
 
 To install:
-- bash setup.sh
+
+- modify setup.sh to include bot token and your id.
+- check to see if prerequisites stated above are installed.
+- check to see if commands ``poetry``, ``javac``, ``java``, ``python3`` are installed.
+- ``bash setup.sh``
 
 ##### contributing
 uhh just open a pr, thanks
@@ -46,7 +50,7 @@ uhh just open a pr, thanks
 
 ##### versioning
 
-- Most recent: 1.8.4
+- Most recent: 1.9.0
 - History: >1.5.0
 
 When using github releases, format versions as: 'v(version_name)-(alpha/beta/rc).(id)'
