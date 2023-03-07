@@ -8,8 +8,3 @@ __pycache__
 # java ignores
 .mtj.tmp/
 *.class
-*.jar
-*.war
-*.ear
-*.nar
-hs_err_pid*

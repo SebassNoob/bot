@@ -36,7 +36,7 @@ Require:
 
 To install:
 1. ``poetry install``
-2. ``mvn -f src/config/pom.xml install``
+2. `` java -classpath sqlite-jdbc-3.41.0.0.jar:. SetupDb``
 3. ``python3 main.py``
 
 ##### contributing

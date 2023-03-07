@@ -1,3 +1,4 @@
+
 CREATE TABLE userSettings(
   id INTEGER PRIMARY KEY,
   color TEXT,
