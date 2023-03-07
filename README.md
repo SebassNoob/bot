@@ -35,9 +35,7 @@ Require:
 3. java 8
 
 To install:
-1. ``poetry install``
-2. `` java -classpath sqlite-jdbc-3.41.0.0.jar:. SetupDb``
-3. ``python3 main.py``
+- bash setup.sh
 
 ##### contributing
 uhh just open a pr, thanks
