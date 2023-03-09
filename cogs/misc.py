@@ -311,7 +311,8 @@ class Misc(commands.Cog):
   @app_commands.command(name="copypasta", description="pastes a copypasta from r/copypasta")
   async def copypasta(self, interaction: discord.Interaction):
 
-
+    
+      
     
     async with aiohttp.ClientSession() as cs:
 
@@ -324,7 +325,9 @@ class Misc(commands.Cog):
         try:
           
           randomn = random.randint(0,10)
-          embed = discord.Embed(color = color, title = res['data']['children'] [randomn]["data"]["title"], description = res['data']['children'][randomn]['data']['selftext'])
+          shit_that_matters = res['data']['children'] [randomn]["data"]
+          
+          embed = discord.Embed(color = color, title = shit_that_matters["title"], description = shit_that_matters['selftext'] if not bool(getDataU(interaction.user.id).get("familyFriendly")) else changeff(shit_that_matters['selftext']))
         
           
           

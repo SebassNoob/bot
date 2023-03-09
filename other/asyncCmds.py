@@ -132,17 +132,17 @@ async def postTips(interaction):
     tips = [
       "If you encounter any errors, you may join the support server here.\nhttps://discord.gg/UCGAuRXmBD",
       "Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!",
-      "Find the latest patch notes with the command ``$patchnotes``!",
+      "Find the latest patch notes with the command ``/patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``$settings color [preferred color]``!",
       "Enabling ``$autoresponse`` will make the bot respond in a certain way to some words!",
-      "Check the bot's ping with ``$ping``.",
+      "Check the bot's ping with ``/ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
       "Try pinging the bot multiple times! They won't like it though...",
-      "Getting destroyed in chat? Use ``$roast`` to crush their argument!",
-      "Don't want to be DMed? Use ``$settings dmblocker on``!",
-      "Find creative curse words with ``$swear``!",
-      "Find some good memes on reddit with ``$meme``!",
+      "Getting destroyed in chat? Use ``/roast`` to crush their argument!",
+      "Don't want to be DMed? Use ``/settings dmblocker on``!",
+      "Find creative curse words with ``/swear``!",
+      "Find some good memes on reddit with ``/meme``!",
       "If you see this, hope you're having a great day! 😉"
       ]
     randomchance_normal = random.randint(0,10)
