@@ -9,7 +9,7 @@ Excluding any User Content that you may provide, you are aware that all the inte
 
 #### **User Content. **
 
-“User Content” means any and all information and content that a user submits to the bot. You are exclusively responsible for your User Content. You bear all risks associated with use of your User Content.  You may not represent or imply to others that your User Content is in any way provided, sponsored or endorsed by Company. Because you alone are responsible for your User Content, you may expose yourself to liability. We are not obliged to backup any User Content that you post; also, your User Content may be deleted at any time without prior notice to you. You are solely responsible for making your own backup copies of your User Content if you desire. You hereby give us the right to store and transmit your User Content to 3rd party organisations, and otherwise utilise the information you store with us.
+“User Content” means any and all information and content that a user submits to the bot. You are exclusively responsible for your User Content. You bear all risks associated with use of your User Content.  You may not represent or imply to others that your User Content is in any way provided, sponsored or endorsed by Company. Because you alone are responsible for your User Content, you may expose yourself to liability. We are not obliged to backup any User Content that you post; also, your User Content may be deleted at any time without prior notice to you. You are solely responsible for making your own backup copies of your User Content if you desire. You hereby give us the right to utilise the information you store with us to improve operations.
 
 
-Queries are directed to our support server here: https://discord.gg/UCGAuRXmBD
+Queries should be directed to our support server here: https://discord.gg/UCGAuRXmBD
