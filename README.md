@@ -13,7 +13,8 @@ A discord.py bot primarily used to annoy your friends, harmlessly.
 
 And so much more! We have games, trolling, memes, dark jokes, we have it!
 
-Why wait? Piss your friends off now!
+Why wait? Piss your friends off [now](
+https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=1507264163186&scope=bot%20applications.commands)!
 
 
 
@@ -39,14 +40,18 @@ To install:
 - modify setup.sh to include bot token and your id.
 - check to see if prerequisites stated above are installed.
 - check to see if commands ``poetry``, ``javac``, ``java``, ``python3`` are installed.
-- ``bash setup.sh``
+- run ``bash setup.sh``
+
+#### info
+built with python3, with the help of free hosting via: https://replit.com. For more information on terms of use, licence and privacy policy, go to /legal
+
+##### replit pingers
+https://downtimemonkey.com
+https://uptimerobot.com
+
 
 ##### contributing
 uhh just open a pr, thanks
-
-##### reverting
-1. git checkout <commit_id>
-2. git reset --hard <commit_id>
 
 ##### versioning
 
