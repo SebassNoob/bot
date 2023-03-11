@@ -294,8 +294,7 @@ class Misc(commands.Cog):
         
         
         try:
-          randomn = random.randint(0,15)
-          embed = discord.Embed(color = color,title = res['data']['children'] [randomn]["data"]["title"])
+          embed = discord.Embed(color = color,title = res['data']['children'] [random.randint(0,15)]["data"]["title"])
         
           embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
           
@@ -323,14 +322,10 @@ class Misc(commands.Cog):
         
         
         try:
-          
-          randomn = random.randint(0,15)
-          shit_that_matters = res['data']['children'][randomn]["data"]
+          #filters the data to ensure length of selftext <= 4000
+          #which is discord hardlimit
+          shit_that_matters = random.choice(list(filter(lambda txt: len(txt['selftext'])<= 4000,[res['data']['children'][i]["data"] for i in range(15)])))
 
-          #reroll if text exceeds limit == 4096
-          while len(shit_that_matters['selftext']) >=4000:
-            randomn = random.randint(0,15)
-            shit_that_matters = res['data']['children'][randomn]["data"]
           
           
           embed = discord.Embed(color = color, title = shit_that_matters["title"], description = shit_that_matters['selftext'] if not bool(getDataU(interaction.user.id).get("familyFriendly")) else changeff(shit_that_matters['selftext']))
