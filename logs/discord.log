@@ -1,5 +1,24 @@
-[2023-03-10 12:48:39] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session de011b232459a84723ead28a2a807813.
-[2023-03-10 13:03:07] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session cdcff2809bd449156100dfc6672dd96a.
-[2023-03-10 13:12:01] [INFO    ] discord.client: logging in using static token
-[2023-03-10 13:12:02] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: c32f6bff3e4f9ac8cdac50331663addc).
-[2023-03-10 13:12:07] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 8e26ffb6a31d6dab335fd375485e0bcd).
+[2023-03-11 11:14:41] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:14:43] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 429a1875d1df8ff8b7e1156f9930ec98).
+[2023-03-11 11:14:48] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: d2eb2740e40ccc580b2a74f88d1f1dea).
+[2023-03-11 11:20:42] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:20:44] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: a8160f5137c907071bb25f3cd9fb838e).
+[2023-03-11 11:20:49] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: a0860af51a20dae6e579698c5420ec7b).
+[2023-03-11 11:21:02] [ERROR   ] discord.ext.commands.bot: Ignoring exception in command restart
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 229, in wrapped
+    ret = await coro(*args, **kwargs)
+  File "/home/runner/dev-bot/cogs/admin.py", line 44, in restart
+    os.execv(sys.argv[0])
+TypeError: execv expected 2 arguments, got 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py", line 1349, in invoke
+    await ctx.command.invoke(ctx)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 1023, in invoke
+    await injected(*ctx.args, **ctx.kwargs)  # type: ignore
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 238, in wrapped
+    raise CommandInvokeError(exc) from exc
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: execv expected 2 arguments, got 1

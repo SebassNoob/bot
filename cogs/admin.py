@@ -40,8 +40,8 @@ class Admin(commands.Cog):
   async def restart(self, ctx):
 
     await ctx.send("Bot is restarting...")
-    os.system("python restart.py")
-
+    os.execv(sys.argv[0])
+    
     
   
   @commands.command()
