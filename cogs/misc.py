@@ -324,8 +324,14 @@ class Misc(commands.Cog):
         
         try:
           
-          randomn = random.randint(0,10)
-          shit_that_matters = res['data']['children'] [randomn]["data"]
+          randomn = random.randint(0,15)
+          shit_that_matters = res['data']['children'][randomn]["data"]
+
+          #reroll if text exceeds limit == 4096
+          while len(shit_that_matters['selftext']) >=4000:
+            randomn = random.randint(0,15)
+            shit_that_matters = res['data']['children'][randomn]["data"]
+          
           
           embed = discord.Embed(color = color, title = shit_that_matters["title"], description = shit_that_matters['selftext'] if not bool(getDataU(interaction.user.id).get("familyFriendly")) else changeff(shit_that_matters['selftext']))
         
@@ -428,7 +434,7 @@ class Misc(commands.Cog):
 
   @app_commands.command(name="textwall", description="Sends a wall of repeated text in a single message")
   @app_commands.describe(num = "The number of times to spam", content="What to spam")
-  async def textwall(self, interaction: discord.Interaction, num:int, content: str, tts: Optional[bool] = False):
+  async def textwall(self, interaction: discord.Interaction, num:app_commands.Range[int,1, None], content: app_commands.Range[str,1, None], tts: Optional[bool] = False):
     
     toSend = ' '.join([content.strip() for i in range(num)])
     
