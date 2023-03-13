@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips, getData, addData
+from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips, getData, addData, bool_to_int
 from discord import app_commands
 from typing import List
 import json
@@ -10,7 +10,7 @@ import asyncio
 import re
 from typing import *
 import other.userSettings as userSettings
-
+import asyncio
 
 import datetime
 import other.serverSettings as serverSettings
@@ -233,10 +233,10 @@ class Setups(commands.Cog):
       
     em = discord.Embed(color = color)
     em.set_author(name = 'Annoybot User Settings')
-    em.add_field(name = "Preferred embed colour (color)",value = f"Current: **{settings.get('color')}**\nChanges the colour of embed sent through the bot to a specific colour." ,inline= False)
+    em.add_field(name = "Preferred embed colour (color)",value = f"Current: **#{settings.get('color')}**\nChanges the colour of embed sent through the bot to a specific colour." ,inline= False)
     em.add_field(name = "Family Friendly (familyfriendly)", value = f"Current: **{bool(settings.get('familyFriendly'))}**\nCensors some swear words. " ,inline= False)
     em.add_field(name = "Can be sniped (sniped)", value = f"Current: **{bool(settings.get('sniped'))}**\nDetermines if you can be sniped by others." ,inline= False)
-    em.add_field(name = "Can be dm'ed (dmblocker)", value = f"Current: **{bool(settings.get('dmblocker'))}**\nDetermines if you can be dm'ed by the bot." ,inline= False)
+    em.add_field(name = "Can be dm'ed (dmblocker)", value = f"Current: **{bool(settings.get('dmblocker'))}**\nIf true, this blocks incoming DMs from the bot, and sends an error message to anyone trying to DM you with the bot." ,inline= False)
     
     await interaction.response.send_message(embed =em, ephemeral=True)
     
@@ -254,26 +254,28 @@ class Setups(commands.Cog):
     await interaction.response.send_message(f"✅ Colour setting updated to **{color}**", ephemeral=True)
     
   @settings_group.command(name = "familyfriendly", description="Censors some swear words.")
-  async def ff(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+  @app_commands.describe(onoff = "On or off")
+  async def ff(self, interaction: discord.Interaction, onoff: bool):
     settings = getDataU(interaction.user.id)
     
-    settings['familyFriendly'] = 1 if onoff =='on' else 0
+    settings['familyFriendly'] = bool_to_int(onoff)
     userSettings.update(interaction.user.id, settings)
     await interaction.response.send_message(f"✅ familyfriendly setting updated to **{onoff}**", ephemeral=True)
 
   @settings_group.command(name = "sniped", description="Allows your messages to be stored to be sniped by /snipe")
-  async def sniped(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+  @app_commands.describe(onoff = "On or off")
+  async def sniped(self, interaction: discord.Interaction, onoff: bool):
     settings = getDataU(interaction.user.id)
     
-    settings['sniped'] = 1 if onoff =='on' else 0
+    settings['sniped'] = bool_to_int(onoff)
     userSettings.update(interaction.user.id, settings)
     await interaction.response.send_message(f"✅ sniped setting updated to **{onoff}**")
     
   @settings_group.command(name = "dmblocker", description="Blocks the bot from sending private messages to you.")
-  async def dmblocker(self, interaction: discord.Interaction, onoff: Literal['on', 'off']):
+  async def dmblocker(self, interaction: discord.Interaction, onoff: bool):
     settings = getDataU(interaction.user.id)
     
-    settings['dmblocker'] = 1 if onoff =='on' else 0
+    settings['dmblocker'] = bool_to_int(onoff)
     userSettings.update(interaction.user.id, settings)
     await interaction.response.send_message(f"✅ dmblocker setting updated to **{onoff}**")
     
@@ -365,20 +367,19 @@ class Setups(commands.Cog):
       view.add_item(button)
     await interaction.response.send_message(content="Here are our legal documents, nerd.", view=view)
     
-  server_group = app_commands.Group(name="serversettings", description="Shows the settings for this server")
+  server_group = app_commands.Group(name="serversettings", description="Shows the settings for this server", guild_only = True)
 
   @server_group.command(name = "menu", description="Shows the menu for server settings")
   @app_commands.checks.has_permissions(manage_guild=True)
   async def s_menu(self, interaction: discord.Interaction):
     settings = getData(interaction.guild.id)
     blacklist_ids = [userid for userid in eval(settings.get('blacklist'))]
-    blacklist = []
-    for uid in blacklist_ids:
-      a=await interaction.client.fetch_user(uid)
-      blacklist.append(a.name)
+
+    blacklist = await asyncio.gather(*[interaction.client.fetch_user(uid) for uid in blacklist_ids])
+    
 
     color = colorSetup(interaction.user.id)
-    blacklist = ', '.join(blacklist) or None 
+    blacklist = ', '.join([usr.mention for usr in blacklist]) or None 
     em = discord.Embed(color = color)
     em.set_author(name = 'Annoybot Server Settings')
     em.add_field(name = "Autoresponse (autoresponse)",value = f"Current: **{bool(settings.get('autoresponse'))}**\nTurns /autoresponse on/off" ,inline= False)
@@ -390,10 +391,10 @@ class Setups(commands.Cog):
   @server_group.command(name = "autoresponse", description="Turns /autoresponse on or off")
   @app_commands.describe(onoff = "On or off")
   @app_commands.checks.has_permissions(manage_guild=True)
-  async def s_auto(self, interaction: discord.Interaction, onoff : Literal['on','off']):
+  async def s_auto(self, interaction: discord.Interaction, onoff : bool):
     settings = getData(interaction.guild.id)
     
-    settings['autoresponse'] = 1 if onoff =='on' else 0
+    settings['autoresponse'] = bool_to_int(onoff)
     serverSettings.update(interaction.guild.id, settings)
 
     
