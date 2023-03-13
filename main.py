@@ -246,6 +246,9 @@ bot = Bot()
 
 Thread(target=clearSnipe).start()
 
+os.system("javac Backups.java")
+os.system("java Backups")
+
 keep_alive()
 
 handler = TimedRotatingFileHandler(filename='logs/discord.log', when='h', encoding='utf-8')
