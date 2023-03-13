@@ -30,6 +30,7 @@ from os import system
 
 
 async def blacklist_check(interaction: discord.Interaction):
+  
   if not interaction.guild:
     return True
   if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):

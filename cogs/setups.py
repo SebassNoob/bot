@@ -409,13 +409,24 @@ class Setups(commands.Cog):
     
     blacklist= eval(settings['blacklist']) #List[discord.Member]
     if modify =="add":
+
+      #cant ban yourself
+      if user.id == interaction.user.id:
+        await interaction.response.send_message(f"❌ You can't blacklist yourself, dumb.",ephemeral=True)
+        return
+
+      #cant blacklist twice
+      if user.id in blacklist:
+        await interaction.response.send_message(f"❌ This person is already blacklisted? Get good next time.",ephemeral=True)
+        return
+      
       blacklist.append(user.id)
       await interaction.response.send_message(f"✅ Added {user.display_name} to blacklist",ephemeral=True)
 
     elif modify == "remove":
       try:
         blacklist.remove(user.id)
-        await interaction.response.send_message(f"✅ Removed {user.display_name} to blacklist",ephemeral=True)
+        await interaction.response.send_message(f"✅ Removed {user.display_name} from blacklist",ephemeral=True)
       except ValueError:
         await interaction.response.send_message("❌ This user is not currently blacklisted????",ephemeral=True)
         return
