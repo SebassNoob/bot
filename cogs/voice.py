@@ -4,7 +4,7 @@ from discord import app_commands
 import random
 import asyncio
 from discord import FFmpegPCMAudio
-from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
+from other.utilities import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
 
 
 from mutagen.mp3 import MP3

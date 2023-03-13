@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 import os 
-from other.asyncCmds import colorSetup ,addDataU,getDataU, postTips, getData, addData, bool_to_int
+from other.utilities import colorSetup ,addDataU,getDataU, postTips, getData, addData, bool_to_int
 from discord import app_commands
 from typing import List
 import json

@@ -4,7 +4,7 @@ from discord import app_commands
 from discord.ext.commands import has_permissions
 from typing import *
 import re
-from other.asyncCmds import colorSetup,addData,getDataU,addDataU,postTips
+from other.utilities import colorSetup,addData,getDataU,addDataU,postTips
 
 import random
 import asyncio

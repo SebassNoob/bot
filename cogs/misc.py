@@ -4,7 +4,7 @@ from discord.ext.commands import has_permissions
 from discord import app_commands
 import os
 import sys
-from other.asyncCmds import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
+from other.utilities import colorSetup,getData,getDataSnipe,getDataU,postTips, changeff, addDataU
 import random
 import json
 import base64

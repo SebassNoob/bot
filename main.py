@@ -5,7 +5,7 @@ import discord
 import nacl
 from discord import app_commands
 from cogs.misc import Misc
-from other.asyncCmds import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
+from other.utilities import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
 from logging.handlers import TimedRotatingFileHandler
 
 from discord.ext import commands
@@ -18,7 +18,6 @@ from other.customCooldown import CustomCooldown
 
 
 from threading import Thread
-from other.asyncCmds import egg
 import time
 from other.snipeTimeout import clearSnipe
 import sys
@@ -30,7 +29,6 @@ from os import system
 
 
 async def blacklist_check(interaction: discord.Interaction):
-  
   if not interaction.guild:
     return True
   if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):

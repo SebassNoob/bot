@@ -7,7 +7,7 @@ import json
 import asyncio
 import random
 import string
-from other.asyncCmds import colorSetup
+from other.utilities import colorSetup
 
 
 import threading

@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 
 import csv
-from other.asyncCmds import colorSetup,changeff,getDataU,addDataU,postTips
+from other.utilities import colorSetup,changeff,getDataU,addDataU,postTips
 
 import random
 
