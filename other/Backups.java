@@ -15,9 +15,10 @@ public class Backups{
 
   // send post to these links
   // ref: https://discord.com/developers/docs/resources/webhook#execute-webhook
-  private static final String dbBackupLink = "https://discord.com/api/webhooks/1085040146061197393/f-sPxenaaRSV-p4L65j4oTzvfAb-twDX1ktGWDeEEYxsT4G9TytTvymVg6TkpzXQ7J5t";
-  private static final String logsLink = "https://discord.com/api/webhooks/1085042745095229480/mJWhNxILzBDdpPxXVyWZz1bC3trOlbUj3G1x577hNnqCQE9__E0WEDMhfunP28-brVxQ";
+  private static final String dbBackupLink = System.getenv("dbBackupLink");
+  private static final String logsLink = System.getenv("logsBackupLink");
 
+  
 
   public static TrustManager[] trustAllCerts = new TrustManager[]{
     new X509TrustManager() {
@@ -86,6 +87,7 @@ public class Backups{
     }
     public int build() throws Exception{
       if ((url == null) || (filePaths == new LinkedList<String>()) || (content == null)){
+        System.out.println(url + filePaths + content);
         throw new RuntimeException("Set url, fp and content properly!!");
       }
       return sendReq(this);
