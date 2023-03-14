@@ -16,7 +16,7 @@ import json
 import traceback
 from other.customCooldown import CustomCooldown
 
-
+import threading
 from threading import Thread
 import time
 from other.snipeTimeout import clearSnipe
@@ -244,14 +244,25 @@ class Bot(commands.AutoShardedBot):
 bot = Bot()
 
 
-Thread(target=clearSnipe).start()
 
-os.system("javac Backups.java")
-os.system("java Backups")
+
+def backups():
+  
+  os.system("javac other/Backups.java")
+  os.system("java other.Backups")
+  
+
+
+    
+Thread(target=clearSnipe, name = "clearsnipe").start()
+Thread(target=backups, name = "backups").start()
+
+
+
 
 keep_alive()
 
-handler = TimedRotatingFileHandler(filename='logs/discord.log', when='h', encoding='utf-8')
+handler = TimedRotatingFileHandler(filename='logs/discord.log', when='D', encoding='utf-8')
 
 try:
   bot.run(os.getenv('TOKEN'), log_handler=handler)
