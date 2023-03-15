@@ -1,7 +1,6 @@
 
 import discord
 from discord.ext import commands
-import asyncio
 import sys
 import os
 import io
@@ -50,6 +49,12 @@ class Admin(commands.Cog):
     await ctx.channel.send("attempting to sync...")
     await self.bot.tree.sync()
     await ctx.channel.send("synced!")
+
+  @commands.command()
+  @commands.is_owner()
+  async def manualbackup(self, ctx):
+    os.system("java other.Backups -u")
+    await ctx.channel.send("sent. check #database in support server")
 
 
 async def setup(bot):

@@ -94,10 +94,30 @@ public class Backups{
     }
   }
 
+  // for updating purposes only
+  // sends a copy of the databases to #database
+  // called with cmd line arg -u
+  public static void dbTransfer() throws Exception{
+    SendReqBuilder sbDB = new SendReqBuilder();
+    int res1 = sbDB.setURL(dbBackupLink)
+              .setContent("Manual backup at "+new Date().toString())
+              .setFilePaths(new LinkedList<String>(Arrays.asList("other/serverSettings.db", "other/snipe2.db", "other/userSettings.db")))
+              .build();
+    
+  }
   
   
   public static void main(String[] args){
     try{
+
+      // for manual backup only
+      for(int i=0;i<args.length;i++){
+        if (args[i].equals("-u")){
+          dbTransfer();
+          return;
+        }
+      }
+    
 
       Runnable r = new Runnable() {
 
