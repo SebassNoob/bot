@@ -1,0 +1,25 @@
+
+
+Key points to note:
+- backups of your user data are now sent to the support server in a private channel
+- the privacy policy and terms of use has been updated to reflect this
+- github events are now available in #github in the support server
+- this creates greater transparency as to what's going on with the bot
+- early leaks and plans will be available
+- will add contributing guidelines later on
+
+
+New!
+- emojitts 
+- more /playnoise cmds (five nights at freddys scream, thomas the train earrape)
+- member commands! (randomly move member around voicechannels?)
+- /legal has been removed. /info now contains the information previously found in /legal
+
+bugs:
+- /settings dmblocker meaning is more clear, hopefully.
+- overflow error for /copypasta has been fixed
+- fix /settings dmblocker none type assignment 
+- /copypasta censors words correctly if family friendly mode is turned on
+- /textwall throws an error at you if you try to generate a 0-length text wall
+- tips have been updated to slash commands, can't believe people didn't notice lol
+
