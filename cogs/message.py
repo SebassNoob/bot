@@ -28,25 +28,8 @@ class Message(commands.Cog):
   @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
   async def emojispam(self, interaction: discord.Interaction, message: discord.Message):
     await interaction.response.send_message("attempting to spam emojis...")
-    emojis = [
-      "😛",
-      "🤭",
-      "🤨",
-      "🙄",
-      "🤥",
-      "😴",
-      "🤮",
-      "🐵",
-      "🦍",
-      "🍆",
-      "🍒",
-      "🍑",
-      "🥰",
-      "🤞",
-      "🖕",
-      "💀",
-      "🔥"
-    ]
+    with open("./json/emojis.txt", 'r', encoding = "utf-8") as file:
+      emojis = [i.decode(encoding = 'utf-8') for i in bytes(file.read(), 'utf-8').split(b" ")]
     random.shuffle(emojis)
     try:
       for e in range(7):

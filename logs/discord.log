@@ -230,3 +230,117 @@
 [2023-03-15 09:20:44] [INFO    ] discord.client: logging in using static token
 [2023-03-15 09:20:46] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 64b1c910ed9ecc098b851718ceb4fc86).
 [2023-03-15 09:20:51] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: fbe38d5d15e23a7ac85caabbb0b81eff).
+[2023-03-15 09:38:37] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:38:39] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 16ffbc25b15e0d8ae5f7bdad4bee91de).
+[2023-03-15 09:38:45] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 32220aa32f068a71e9e1e78ea44fd012).
+[2023-03-15 09:39:21] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:39:23] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 96a3397a1053bc1857dd85682519145d).
+[2023-03-15 09:39:28] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 7a9cb4d1d35d6fc712c3cedb8d5937ae).
+[2023-03-15 09:39:48] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:39:50] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 25e3f4014ee626f45ea261eddba502be).
+[2023-03-15 09:39:55] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: e9106395c45f85c7bc477de4b881a85d).
+[2023-03-15 09:44:49] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:44:51] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 67365238ec783dfb4a8e935788096f5e).
+[2023-03-15 09:44:56] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: f5f6b78878257b92586db069826a07ca).
+[2023-03-15 09:45:03] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:45:05] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 26bdcce7ee393dce08e6c21d23115ced).
+[2023-03-15 09:45:10] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 30179dcea268d58ceb4a624b1cc41ac9).
+[2023-03-15 09:50:32] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:50:34] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 5368f9b16f4b2937dacde60a8f480617).
+[2023-03-15 09:50:34] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'emojitts'
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 861, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+  File "/home/runner/dev-bot/cogs/misc.py", line 472, in emojitts
+    a = [i.decode(encoding = 'utf-8') for i in str(bytes(file.read(), 'utf-8')).split(" ")]
+  File "/home/runner/dev-bot/cogs/misc.py", line 472, in <listcomp>
+    a = [i.decode(encoding = 'utf-8') for i in str(bytes(file.read(), 'utf-8')).split(" ")]
+AttributeError: 'str' object has no attribute 'decode'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/tree.py", line 1242, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 887, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 880, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'emojitts' raised an exception: AttributeError: 'str' object has no attribute 'decode'
+[2023-03-15 09:50:39] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: bfa4df9db4f16b25f1936eab461dd914).
+[2023-03-15 09:51:56] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:51:58] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 481ec6e32040175f4d5b7c6214880e3c).
+[2023-03-15 09:52:03] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'emojitts'
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 861, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+  File "/home/runner/dev-bot/cogs/misc.py", line 472, in emojitts
+    a = [i.decode(encoding = 'utf-8') for i in bytes(file.read(), 'utf-8').split(" ")]
+TypeError: a bytes-like object is required, not 'str'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/tree.py", line 1242, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 887, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'emojitts' raised an exception: TypeError: a bytes-like object is required, not 'str'
+[2023-03-15 09:52:03] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 33e24978c56f01957e164252bab74a18).
+[2023-03-15 09:52:44] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:52:46] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 97d7d6acc5710777227ec6f75a0f232a).
+[2023-03-15 09:52:51] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 174230b901b8c497a9ccedf029d1347b).
+[2023-03-15 09:53:13] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:53:15] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 877c3d157bbe8baedc72259a3d859931).
+[2023-03-15 09:53:20] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 0ada84db94f227781e5700771be5564d).
+[2023-03-15 09:56:00] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:56:01] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 0ae73206c7cd5701734db4ff98ba4911).
+[2023-03-15 09:56:07] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 2609a3aed8897b27f1b45e6b808f5916).
+[2023-03-15 09:56:56] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:56:58] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 6add82c12c01bf04f93dc40de08a2b37).
+[2023-03-15 09:57:01] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'emojitts'
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 861, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+  File "/home/runner/dev-bot/cogs/misc.py", line 474, in emojitts
+    a = [i.decode(encoding = 'utf-8') for i in bytes(file.read(), 'utf-8').split(" ")]
+TypeError: a bytes-like object is required, not 'str'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/tree.py", line 1242, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 887, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'emojitts' raised an exception: TypeError: a bytes-like object is required, not 'str'
+[2023-03-15 09:57:04] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: f18eafb0257d5d05266a2dcf00ed2bb6).
+[2023-03-15 09:58:34] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:58:36] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 3a834a8bea247434311d96854e6dd559).
+[2023-03-15 09:58:42] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: c259bdc341a5e2f34d8af1dcadafbf22).
+[2023-03-15 09:58:57] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:58:59] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: fa3e314e03e83171ecde8ae8b8bf9428).
+[2023-03-15 09:59:04] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: a675ea5e26087cb4a2defa392971814b).
+[2023-03-15 09:59:34] [INFO    ] discord.client: logging in using static token
+[2023-03-15 09:59:46] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ffdc227fff90917f1dbdaa440924421d).
+[2023-03-15 09:59:52] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 9b608c826bf5c539c6cb60ff4663d939).
+[2023-03-15 10:00:11] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:00:14] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 8389dfe4c81886ee79017ddeeee5f103).
+[2023-03-15 10:00:19] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: f00d654de05f1f72074bcf7eba2a09f4).
+[2023-03-15 10:04:36] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:04:38] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 73d4e0b9dcd2c2bab78ab0d876623553).
+[2023-03-15 10:04:43] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: a19f4e340e594aaf44743882d6d8d8f4).
+[2023-03-15 10:04:56] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:04:57] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 3e790bb4e91248ef868e5988fec70bb7).
+[2023-03-15 10:05:03] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: f747409a9c00b6b14afa97e07ca7796c).
+[2023-03-15 10:05:36] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:05:45] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:05:48] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ee356ce1d333d38b2f494a7fffc8ce4e).
+[2023-03-15 10:05:53] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 76a66861c89e8f90612a613920b4d013).
+[2023-03-15 10:11:54] [INFO    ] discord.client: logging in using static token
+[2023-03-15 10:11:56] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 4cccaa9a6c5379ff008d458bd6a6e2c7).
+[2023-03-15 10:12:02] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: fdf8ba3875abcb1631c92f4efaa1a1a7).

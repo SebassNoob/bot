@@ -462,7 +462,31 @@ class Misc(commands.Cog):
     except IndexError:
       await interaction.response.send_message("❌ there were no results returned, actually search for a real word next time, you moron.")
     
-  
+  @app_commands.command(name="emojitts", description="Reads out loud a long string of emojis")
+  @app_commands.describe(length="The length of the string of emojis to read")
+  async def emojitts(self, interaction: discord.Interaction, length: app_commands.Range[int, 1,75]):
+    with open("./json/emojis.txt", 'r', encoding = "utf-8") as file:
+    
+      
+
+      #returns a list of emojis (length 200)
+      a = [i.decode(encoding = 'utf-8') for i in bytes(file.read(), 'utf-8').split(b" ")]
+      i = random.randint(0,75-length)
+
+      #generates random sub array of emojis
+      #turning it into a string to be sent
+      res = ''.join(a[i:i+length])
+      
+    
+    await interaction.response.send_message(res, tts = True)
+
+
+
+
+
+
+
+    
 async def setup(bot):
   await bot.add_cog(Misc(bot))
 

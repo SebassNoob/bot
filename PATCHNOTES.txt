@@ -10,7 +10,7 @@ Key points to note:
 
 
 New!
-- emojitts 
+- emojitts -> generates a string of emojis and reads them out to a text channel as tts. 
 - more /playnoise cmds (five nights at freddys scream, thomas the train earrape)
 - member commands! (randomly move member around voicechannels?)
 - /legal has been removed. /info now contains the information previously found in /legal
