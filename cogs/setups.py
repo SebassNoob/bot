@@ -25,42 +25,63 @@ class Setups(commands.Cog):
   @app_commands.command(name = "info", description="Shows general information and support links.")
   async def credit(self, interaction: discord.Interaction):
     view = discord.ui.View() 
-    guilds = len(self.bot.guilds)
+    guilds = str(len(self.bot.guilds))
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
-    embedVar3 = discord.Embed(color = color)
-    embedVar3.add_field(name = "Annoybot 1.9.0", value = "Developed by " +str(username)+"\nLibrary: discord.py 2.2.2\n[dbl link](https://discordbotlist.com/bots/annoybot-4074)\n[AYB link](https://ayblisting.com/bots/844757192313536522)\nServer count: "+ str(guilds),inline = False)
 
-    buttons = [
-      discord.ui.Button(
-        style=discord.ButtonStyle.link, 
-        label="top.gg", 
-        url="https://top.gg/bot/844757192313536522"
-      ),
-      discord.ui.Button(
-        style=discord.ButtonStyle.link, 
-        label="invite", 
-        url="https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=1490084293971&scope=bot%20applications.commands"
-      ),
-      discord.ui.Button(
+    
+    embedVar3 = discord.Embed(color = color)
+    embedVar3.add_field(name = "Annoybot 1.9.0", value = f"""Developed by {str(username)}
+    Library: discord.py 2.2.2
+    [invite link](https://discord.com/api/oauth2/authorize?client_id=844757192313536522&permissions=1507264163186&scope=applications.commands%20bot)\n
+    Support us!!
+    [top.gg](https://top.gg/bot/844757192313536522)
+    [dbl link](https://discordbotlist.com/bots/annoybot-4074)
+    [AYB link](https://ayblisting.com/bots/844757192313536522)
+    Server count: {guilds}""",inline = False)
+
+    
+      
+      
+    
+
+    class Info(discord.ui.View):
+      def __init__(self):
+        super().__init__()
+
+      @discord.ui.button(label="Patch notes", style=discord.ButtonStyle.green)
+      async def cl(self, interaction: discord.Interaction, button: discord.ui.Button):
+        print("hi")
+        with open("./PATCHNOTES.txt", 'r') as patchnotes:
+          em = discord.Embed(color = color, title = "1.9.0", description = patchnotes.read())
+        await interaction.response.send_message(embed=em)
+
+      @discord.ui.button(label="Terms of use", style=discord.ButtonStyle.primary)
+      async def tos(self, interaction: discord.Interaction, button: discord.ui.Button):
+        with open("./legal_docs/terms_of_use.txt", 'r') as doc:
+          em = discord.Embed(color = color, description = doc.read())
+        await interaction.response.send_message(embed=em)
+
+      @discord.ui.button(label="Privacy policy", style=discord.ButtonStyle.primary)
+      async def privacy_pol(self, interaction: discord.Interaction, button: discord.ui.Button):
+        with open("./legal_docs/priv_policy.txt", 'r') as doc:
+          em = discord.Embed(color = color, description = doc.read())
+        await interaction.response.send_message(embed=em)
+
+      @discord.ui.button(label="License", style=discord.ButtonStyle.primary)
+      async def lic(self, interaction: discord.Interaction, button: discord.ui.Button):
+        with open("./legal_docs/LICENCE.txt", 'r') as doc:
+          em = discord.Embed(color = color, description = doc.read())
+        await interaction.response.send_message(embed=em)
+
+    
+    
+    
+    await interaction.response.send_message(embed = embedVar3, view= Info().add_item(discord.ui.Button(
         style=discord.ButtonStyle.link, 
         label="support server", 
         url="https://discord.gg/UCGAuRXmBD"
-      ),
-    
-    ] 
-    async def cl(interaction: discord.Interaction):
-      with open("./PATCHNOTES.txt", 'r') as patchnotes:
-        em = discord.Embed(color = color, title = "1.9.0", description = patchnotes.read())
-      await interaction.response.send_message(embed=em)
-
-    pn = discord.ui.Button(style = discord.ButtonStyle.primary, label = "Patch Notes")
-    pn.callback = cl
-    view.add_item(pn)
-    for button in buttons:
-      view.add_item(item=button)
-    
-    await interaction.response.send_message(embed = embedVar3, view=view)
+      )))
 
 
 
@@ -314,41 +335,7 @@ class Setups(commands.Cog):
     
         
     
-  @app_commands.command(name="legal", description="Shows the licence, privacy policy and TOS.")
-  async def legal(self, interaction: discord.Interaction):
-    view = discord.ui.View() 
-
-    components = [ 
-      discord.ui.Button(
-        label = "licence",
-        url = "https://pastebin.com/7rGBHDCU",
-        style = discord.ButtonStyle.link
-                      
-      ),
-      discord.ui.Button(
-        label = "privacy policy",
-        url = "https://pastebin.com/fS86u0Hw",
-        style = discord.ButtonStyle.link
-                      
-      ),
-      discord.ui.Button(
-        label = "terms of service",
-        url = "https://pastebin.com/43VFzdJx",
-        style = discord.ButtonStyle.link
-                      
-                      
-      ),
-      discord.ui.Button(
-        label = "README.md",
-        url = "https://pastebin.com/e7jLvVHr",
-        style = discord.ButtonStyle.link
-                      
-                      
-      )
-    ]
-    for button in components:
-      view.add_item(button)
-    await interaction.response.send_message(content="Here are our legal documents, nerd.", view=view)
+  
     
   server_group = app_commands.Group(name="serversettings", description="Shows the settings for this server", guild_only = True)
 
