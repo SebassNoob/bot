@@ -398,7 +398,7 @@ class Setups(commands.Cog):
         blacklist.remove(user.id)
         await interaction.response.send_message(f"✅ Removed {user.display_name} from blacklist",ephemeral=True)
       except ValueError:
-        await interaction.response.send_message("❌ This user is not currently blacklisted????",ephemeral=True)
+        await interaction.response.send_message(f"❌ {user.display_name} is not currently blacklisted????",ephemeral=True)
         return
     settings['blacklist'] = f'{blacklist}'
 

@@ -40,7 +40,7 @@ class Troll(commands.Cog):
 
       
 
-    await interaction.response.send_message(f"A new thread {channel.mention} was created. The bot will ping this user to annoy them.")
+    await interaction.response.send_message(f"A new thread {channel.mention} was created. The bot will ping {user.display_name} to annoy them.")
       
           
       
@@ -109,7 +109,7 @@ class Troll(commands.Cog):
   async def dmtroll(self, interaction: discord.Interaction, user : discord.Member):
     addDataU(user.id)
     if bool(getDataU(user.id).get("dmblocker")) or user.bot:
-      await interaction.response.send_message(content="❌ The user you mentioned is either a bot, or does not want to be DM'ed. Bet you look stupid now.", ephemeral=True)
+      await interaction.response.send_message(content=f"❌ {user.display_name} that you mentioned is either a bot, or does not want to be DM'ed. Bet you look stupid now.", ephemeral=True)
       return 
   
     channel = await user.create_dm()
@@ -117,7 +117,7 @@ class Troll(commands.Cog):
     try:
       await channel.send(f"{user.mention} hey 😏, did u like the ping sound?\n/dmtroll from {interaction.user.display_name} in {interaction.guild.name}")
     except:
-      await interaction.response.send_message("❌ The user blocked this bot from sending messages to them, lol pussy")
+      await interaction.response.send_message(f"❌ {user.display_name} blocked this bot from sending messages to them, lol pussy")
       
       
       
@@ -146,7 +146,7 @@ class Troll(commands.Cog):
         allowedChannels.append(channel.id)
 
     if len(allowedChannels) != 0:
-      await interaction.response.send_message("The user will be ghost pinged in 3 channels to annoy them.")   
+      await interaction.response.send_message(f"{user.display_name} will be ghost pinged in 3 channels to annoy them.")   
     else: 
       await interaction.response.send_message("That user can't access any channels, bruh wtf")  
 

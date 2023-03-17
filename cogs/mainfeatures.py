@@ -137,8 +137,9 @@ class MainFeatures(commands.Cog):
     try:
       await channel.send(embed = em)
     except:
-      await interaction.response.send_message("❌ The user blocked my message, what a pussy")
-    await interaction.response.send_message(content = "✅ The user has been sent this in DMs:", embed = em)
+      await interaction.response.send_message(f"❌ {user.display_name} blocked my message, what a pussy")
+      return
+    await interaction.response.send_message(content = f"✅ {user.display_name} has been sent this in DMs:", embed = em)
     
     
 

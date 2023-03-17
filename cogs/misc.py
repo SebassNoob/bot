@@ -348,7 +348,7 @@ class Misc(commands.Cog):
   async def snipe(self,interaction: discord.Interaction, user: discord.Member):
     addDataU(user.id)
     if not bool(getDataU(user.id)['sniped']):
-      await interaction.response.send_message("❌ This guy can't be sniped, what a loser. (/settings sniped off)")
+      await interaction.response.send_message("❌ This guy can't be sniped, what a loser. (/settings sniped False)")
       return
     #implement nsfw check
     
@@ -368,7 +368,7 @@ class Misc(commands.Cog):
     
     if nsfw:
       if isinstance(interaction.channel, (discord.abc.GuildChannel,discord.Thread)) and not interaction.channel.nsfw:
-        await interaction.response.send_message("The user you mentioned last deleted their message in a nsfw channel. 🔞")
+        await interaction.response.send_message(f"{user.display_name} last deleted their message in a nsfw channel. 🔞")
         return
       
     
