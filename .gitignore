@@ -4,7 +4,10 @@ __pycache__
 .replit
 .breakpoints
 
+logs/**
+
 
 # java ignores
 .mtj.tmp/
 *.class
+
