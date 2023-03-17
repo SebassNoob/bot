@@ -456,3 +456,67 @@ TypeError: cl() takes 1 positional argument but 3 were given
 [2023-03-16 17:44:54] [INFO    ] discord.client: logging in using static token
 [2023-03-16 17:44:56] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 4d9be2398429fde3bbee879ade066aeb).
 [2023-03-16 17:45:01] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 7b1d7b9f8ae643528ade1ae1bc7e5ef0).
+[2023-03-16 18:18:42] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 4d9be2398429fde3bbee879ade066aeb.
+[2023-03-16 18:20:18] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 4d9be2398429fde3bbee879ade066aeb.
+[2023-03-16 18:30:10] [INFO    ] discord.client: logging in using static token
+[2023-03-16 18:30:12] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 71e1ebf31f6fb50348069410285e98ca).
+[2023-03-16 18:30:17] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 5c36ae56538d5bed3fc4b797eadbb073).
+[2023-03-16 19:07:14] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 19:10:21] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 19:20:06] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 20:37:55] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 20:53:24] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 20:54:15] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 22:06:23] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 22:09:48] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 22:46:24] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 22:47:02] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 23:05:41] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 23:16:48] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-16 23:30:13] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-16 23:34:20] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-17 00:22:42] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-17 00:24:33] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-17 00:46:53] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-17 01:21:39] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-17 02:43:33] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-17 02:58:58] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-17 03:27:10] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-17 05:11:16] [INFO    ] discord.gateway: Shard ID 0 has successfully RESUMED session 71e1ebf31f6fb50348069410285e98ca.
+[2023-03-17 06:32:12] [INFO    ] discord.gateway: Shard ID 1 has successfully RESUMED session 5c36ae56538d5bed3fc4b797eadbb073.
+[2023-03-17 08:40:41] [INFO    ] discord.client: logging in using static token
+[2023-03-17 08:40:43] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 3b0ab23418b582640a63142c48fc4833).
+[2023-03-17 08:40:49] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 267819e79bd3aa073e40df8d031daeb9).
+[2023-03-17 08:56:32] [INFO    ] discord.client: logging in using static token
+[2023-03-17 08:56:34] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: c86f9c4f44d4adf73a4c548bf5a846d3).
+[2023-03-17 08:56:39] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 360c93b37a5839099a1afb202b1e1929).
+[2023-03-17 08:56:41] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'gtfo from VC'
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 1302, in _invoke
+    await self._callback(interaction, arg)
+  File "/home/runner/dev-bot/cogs/member.py", line 24, in voicemove
+    await user.move_to(random.choice(allowed_vcs))
+  File "/usr/lib/python3.8/random.py", line 288, in choice
+    i = self._randbelow(len(seq))
+TypeError: object of type 'filter' has no len()
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/tree.py", line 1190, in _call_context_menu
+    await ctx_menu._invoke(interaction, value)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 1306, in _invoke
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'gtfo from VC' raised an exception: TypeError: object of type 'filter' has no len()
+[2023-03-17 08:57:18] [INFO    ] discord.client: logging in using static token
+[2023-03-17 08:57:20] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 4619d11f4617ea8b2b37cda2585a5e36).
+[2023-03-17 08:57:25] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: e9c32914ef0a07de95c0fcad35e30e2b).
+[2023-03-17 09:07:09] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:07:10] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 059e527e3d9aaec4c71635b5f0a0ad40).
+[2023-03-17 09:07:16] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 6ccd7df852d2cae7a116e4d0e4ca2ad7).
+[2023-03-17 09:09:18] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:09:20] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: a57f72f4cde425bd6923a5098ec35394).
+[2023-03-17 09:09:26] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: ec7092adad6943bfc791aa8abf378b4e).
+[2023-03-17 09:18:35] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:18:37] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: aef8fa71366ec8a9c8844bca1533dff9).
+[2023-03-17 09:18:42] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: d7551eb902ccdb836478267d737a7b31).

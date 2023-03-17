@@ -35,8 +35,8 @@ class noise_view(discord.ui.View):
       await interaction.response.send_message("❌ Yikes! something went wrong.", ephemeral = True)
       self.stop()
       return
-  @classmethod
-  def disabled_button(cls):
+  @staticmethod
+  def disabled_button():
     view = discord.ui.View()
     view.add_item(discord.ui.Button(style = discord.ButtonStyle.grey, disabled = True,label="⬜"))
     return view
