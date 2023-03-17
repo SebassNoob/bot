@@ -97,9 +97,10 @@ class Bot(commands.AutoShardedBot):
         return
       if isinstance(error, app_commands.CommandOnCooldown):
         em = discord.Embed(color = 0x000000,description = "You have exceeded this command's ratelimits. Try again in **%.1fs** cooldown." % error.retry_after)
-        return 
+        
         
         await interaction.response.send_message(embed= em)
+        return 
       if isinstance(error, app_commands.errors.CheckFailure):
         pass
 
