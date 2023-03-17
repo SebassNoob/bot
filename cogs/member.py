@@ -29,7 +29,7 @@ class Member(commands.Cog):
         await user.move_to(random.choice(allowed_vcs))
         await asyncio.sleep(0.7)
         attempts -= 1
-      except discord.Forbidden or discord.HTTPException:
+      except (discord.Forbidden,discord.HTTPException):
         continue
     
     

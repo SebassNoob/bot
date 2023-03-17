@@ -274,7 +274,7 @@ class Misc(commands.Cog):
     em.set_author(name = "Autoresponse keywords")
     em.set_footer(text="Mods can turn this off in /serversettings and edit with /autoresponse add or /autoresponse remove")
     
-    await original.edit(content = f"✅ Resetted database to default. Here is the new list.",embed=em, view = None)
+    await original.edit(content = "✅ Resetted database to default. Here is the new list.",embed=em, view = None)
      
     
   
@@ -303,7 +303,7 @@ class Misc(commands.Cog):
           
 
         except KeyError:
-          await interaction.response.send_message(f"❌ An error occured, try again.")
+          await interaction.response.send_message("❌ An error occured, try again.")
           print(sub)
           return
             
@@ -435,7 +435,7 @@ class Misc(commands.Cog):
   @app_commands.describe(num = "The number of times to spam", content="What to spam")
   async def textwall(self, interaction: discord.Interaction, num:app_commands.Range[int,1, None], content: app_commands.Range[str,1, None], tts: Optional[bool] = False):
     
-    toSend = ' '.join([content.strip() for i in range(num)])
+    toSend = ' '.join([content.strip() for _ in range(num)])
     
     if len(toSend) > 2000:
       await interaction.response.send_message("❌ Your text wall is too long (>2000 characters), you moron.")

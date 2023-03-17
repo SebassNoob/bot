@@ -173,11 +173,11 @@ class MemButton(discord.ui.Button['Mem']):
 
           #edit the button properties
           self.style=discord.ButtonStyle.success
-          self.label = "✓" #TODO: replace witha unicode tick
+          self.label = "✓" 
           
         else:
           self.style = discord.ButtonStyle.danger
-          self.label = "✗" #TODO: replace with unicode cross
+          self.label = "✗" 
           for child in view.children:
             child.disabled = True
           view.stop()

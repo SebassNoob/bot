@@ -97,6 +97,7 @@ class Bot(commands.AutoShardedBot):
         return
       if isinstance(error, app_commands.CommandOnCooldown):
         em = discord.Embed(color = 0x000000,description = "You have exceeded this command's ratelimits. Try again in **%.1fs** cooldown." % error.retry_after)
+        return 
         
         await interaction.response.send_message(embed= em)
       if isinstance(error, app_commands.errors.CheckFailure):
@@ -106,6 +107,7 @@ class Bot(commands.AutoShardedBot):
         em = discord.Embed(color = 0x000000,description = "The bot is missing permissions. Check /help to see the required permissions. If the problem persists, contact the [support server](https://discord.gg/UCGAuRXmBD)")
         
         await interaction.response.send_message(embed= em)
+        return
       else:
         
       
@@ -113,6 +115,7 @@ class Bot(commands.AutoShardedBot):
         await interaction.response.send_message(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
+        return
 
 
 

@@ -24,7 +24,7 @@ class Setups(commands.Cog):
     
   @app_commands.command(name = "info", description="Shows general information and support links.")
   async def credit(self, interaction: discord.Interaction):
-    view = discord.ui.View() 
+    
     guilds = str(len(self.bot.guilds))
     username = await self.bot.fetch_user(int(os.environ['uid']))
     color = colorSetup(interaction.user.id)
@@ -292,7 +292,6 @@ class Setups(commands.Cog):
     
     await interaction.response.send_message(embed = em)
 
-  #TODO: after all json 'db' have been rewritten
   @app_commands.command(name = "removedata", description="removes all your data from the bot")
   async def removedata(self, interaction: discord.Interaction):
     class rmdata(discord.ui.View):
