@@ -520,3 +520,30 @@ discord.app_commands.errors.CommandInvokeError: Command 'gtfo from VC' raised an
 [2023-03-17 09:18:35] [INFO    ] discord.client: logging in using static token
 [2023-03-17 09:18:37] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: aef8fa71366ec8a9c8844bca1533dff9).
 [2023-03-17 09:18:42] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: d7551eb902ccdb836478267d737a7b31).
+[2023-03-17 09:29:09] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:29:11] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: f6fc5a1004a4f726355a2badcb5bc54a).
+[2023-03-17 09:29:16] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 5fe4fcbdbefb2a8df006eb841ef5e3fd).
+[2023-03-17 09:34:47] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:34:49] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: d03d36f3c08d6dd03aa02cece2d615bc).
+[2023-03-17 09:34:54] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 1aa67a115e13d74ecc79de4d7e15ae44).
+[2023-03-17 09:34:56] [ERROR   ] discord.app_commands.tree: Ignoring exception in command 'meme'
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 861, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+  File "/home/runner/dev-bot/cogs/misc.py", line 310, in meme
+    await interaction.response.send_message(embed=embed)
+UnboundLocalError: local variable 'embed' referenced before assignment
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/tree.py", line 1242, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 887, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/app_commands/commands.py", line 880, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'meme' raised an exception: UnboundLocalError: local variable 'embed' referenced before assignment
+[2023-03-17 09:37:45] [INFO    ] discord.client: logging in using static token
+[2023-03-17 09:37:47] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 169c58936aa1a0e435a5d6b9be5b49c6).
+[2023-03-17 09:37:52] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 2cd4f5c51fef1e3b58a1511b0ba3156a).

@@ -284,28 +284,32 @@ class Misc(commands.Cog):
 
 
     subreddits = ['https://www.reddit.com/r/dankmemes/new.json?sort=hot','https://www.reddit.com/r/okbuddyretard/new.json?sort=hot','https://www.reddit.com/r/memes/new.json?sort=hot',
-    'https://www.reddit.com/r/wholesomememes/new.json?sort=hot', 'https://www.reddit.com/r/meme/new.json?sort=hot', 'https://www.reddit.com/r/PrequelMemes/new.json?sort=hot','https://www.reddit.com/r/deepfriedmemes/new.json?sort=hot', 'https://www.reddit.com/r/nukedmemes/new.json?sort=hot']
+    'https://www.reddit.com/r/wholesomememes/new.json?sort=hot', 'https://www.reddit.com/r/meme/new.json?sort=hot', 'https://www.reddit.com/r/shitposting/new.json?sort=hot', 'https://www.reddit.com/r/nukedmemes/new.json?sort=hot']
+    sub = random.choice(subreddits)
     async with aiohttp.ClientSession() as cs:
 
-      async with cs.get(random.choice(subreddits)) as r:
+      async with cs.get(sub) as r:
         res = await r.json()
         
         color = colorSetup(interaction.user.id)
-        
-        
+
         try:
-          embed = discord.Embed(color = color,title = res['data']['children'] [random.randint(0,15)]["data"]["title"])
+          
+          shit_that_matters = res['data']['children'] [random.randint(0,15)]["data"]
+          
+          embed = discord.Embed(color = color,title = shit_that_matters["title"])
         
-          embed.set_image(url=res['data']['children'] [randomn]['data']['url'])
+          embed.set_image(url=shit_that_matters['url'])
           
 
-        except KeyError as e:
-          await interaction.response.send_message("❌ An unknown error occured, try again.")
-          raise e
+        except KeyError:
+          await interaction.response.send_message(f"❌ An error occured, try again.")
+          print(sub)
+          return
             
         
 
-    await interaction.response.send_message(embed=embed)
+    await interaction.response.send_message(f"source: {sub}" ,embed=embed)
 
   @app_commands.command(name="copypasta", description="pastes a copypasta from r/copypasta")
   async def copypasta(self, interaction: discord.Interaction):
