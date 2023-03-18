@@ -1,0 +1,88 @@
+[2023-03-14 03:31:07] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:31:09] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 38e15a3015913129231b417f4ac28ec5).
+[2023-03-14 03:31:14] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 1de907f086126092c7efab91b5230db4).
+[2023-03-14 03:37:11] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:37:12] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 9f163c668f45e21ba3a819da4d20e346).
+[2023-03-14 03:37:18] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 50376db7ed84c3f5875f4adec6693de0).
+[2023-03-14 03:37:40] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:37:42] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 07aaf21b836dac58c49f7e4112c33672).
+[2023-03-14 03:37:47] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 7d2ea41f49ae52316d21c4152d7141ab).
+[2023-03-14 03:39:37] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:40:12] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:40:26] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:40:28] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 359297ed3e4e2898a606c444e9a3c175).
+[2023-03-14 03:41:18] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:41:19] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: d2bd5b12233a7dcf725fa11d50541145).
+[2023-03-14 03:42:28] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:42:30] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 892d1dd94dd65711bc2a60ccb47faab3).
+[2023-03-14 03:42:35] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: dbce74c2169f9198ae766857dd4ce969).
+[2023-03-14 03:53:26] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:53:28] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 1380b16b3ec5d79680ea59af9b9e2baa).
+[2023-03-14 03:53:33] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 356e8f772a7d27b69c5c23d40daff9e3).
+[2023-03-14 03:53:53] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:53:55] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: fe429d7e8f905df2b62f08205c06b989).
+[2023-03-14 03:54:00] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 691a0f27d3ed280cc2598570ca58ed62).
+[2023-03-14 03:54:37] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:54:38] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: e65ed8bc1bc60f65c4ca598aaad10bf7).
+[2023-03-14 03:54:59] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:55:01] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 3e0b363d2b2fc4fa1ca52421331f8afb).
+[2023-03-14 03:55:42] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:55:44] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: f1e1c89e53fdc4f827598d119fa3564b).
+[2023-03-14 03:58:58] [INFO    ] discord.client: logging in using static token
+[2023-03-14 03:59:00] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 145d17068968970baa6a1fe5f667aea2).
+[2023-03-14 03:59:05] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: c93784efc9abe2dc0e5fa37772210d5c).
+[2023-03-14 04:03:36] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:03:58] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:04:00] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 2ec2cf5b6cd2624cd14b3dd0ef38e833).
+[2023-03-14 04:04:05] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: eef1d2d1046f05cd0b765f7e66fb4016).
+[2023-03-14 04:05:18] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:05:20] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 58d1dded95d4b1cf32162f95de78ec36).
+[2023-03-14 04:06:21] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:06:23] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 27f5248d8096b04982a30d283a524ae6).
+[2023-03-14 04:06:50] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:06:52] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 74067e6cbe9ee6201e5f7c3b47d647e4).
+[2023-03-14 04:09:03] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:09:05] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 48c524a4d9ccab6eadc68f8fa10fd33b).
+[2023-03-14 04:09:10] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 235fcc892b049c094c03299601bb9c13).
+[2023-03-14 04:15:46] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:15:48] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ac1fa14536962298a369ea2084be32d8).
+[2023-03-14 04:16:09] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:16:11] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: a29ad26b636bbf5f6a259635e4aea2b9).
+[2023-03-14 04:16:16] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 7f02fa026e344d1100a7eaacefec590c).
+[2023-03-14 04:18:06] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:18:07] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: e640bb242d09d8b7557be430e8497b0b).
+[2023-03-14 04:18:12] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 79f6a7c89c40d6ad04042b596003a76d).
+[2023-03-14 04:18:32] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:18:34] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 6c7387d60a634f124e1026861f51cdfd).
+[2023-03-14 04:19:17] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:19:19] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ccdd81969fc0115817319a258cf070f1).
+[2023-03-14 04:19:24] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 149de64916b70258d23f02b0591da6b6).
+[2023-03-14 04:20:03] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:20:04] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: f55cbe599b17f718315844e0cfe11f92).
+[2023-03-14 04:20:10] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: a375a16fb64cd403a71f190c070add36).
+[2023-03-14 04:22:22] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:22:24] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 7da0c1961c47463350e2738c07ca5044).
+[2023-03-14 04:22:29] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: dc26335e9626266594c43519ab6ed71d).
+[2023-03-14 04:22:44] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:22:46] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 86476fcd9b55b7a9fb5f2c3e3190eccb).
+[2023-03-14 04:22:51] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 8b702ed56e6662d9e1b5b25613aba796).
+[2023-03-14 04:31:57] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:31:59] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: f8331e20e24dffe02f34277942112334).
+[2023-03-14 04:32:04] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 11f3a6372e0d7b87972ad7955fb6fec4).
+[2023-03-14 04:35:12] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:35:14] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: c4f9b05a4d5cd96cf29e281ac6f6e802).
+[2023-03-14 04:35:19] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: c732898e45df283574e6a4fe95eb9180).
+[2023-03-14 04:38:24] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:38:25] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 8298439f6bf18f7b111cd85c6f7b89a6).
+[2023-03-14 04:38:31] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 67fb5bd53b852afe3bf6ff09657a5481).
+[2023-03-14 04:38:56] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:38:58] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: ef34bd86f5cc514ea6d2832da920b0c3).
+[2023-03-14 04:39:03] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: beef2eb144e8379dd52936c18ec00b31).
+[2023-03-14 04:41:23] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:41:25] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 2b0c366527183f9c1263923fc6c35a4f).
+[2023-03-14 04:41:42] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:41:44] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 761d6105b417e0bf743125b5f2ed4d35).
+[2023-03-14 04:41:49] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 2bf86868b7a4e11aef54d44b27ad7216).
+[2023-03-14 04:44:05] [INFO    ] discord.client: logging in using static token
+[2023-03-14 04:44:06] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: c65fe4d5e1eadf58eca1f1d91e913847).
+[2023-03-14 04:44:12] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 82a68189595bbed9ab9fe623a15f472a).

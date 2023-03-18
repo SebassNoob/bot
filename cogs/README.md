@@ -5,6 +5,21 @@ This readme is to give a rundown on which commands can be found in which file in
 ### admin.py
 A cog dedicated to admin (ie. owner-only) commands. All commands in this cog are old prefixed commands. They are called with ``a${command_name}``.
 
+#### servers
+Generates a list of servers with their names mapped to their ids.
+
+#### sysexit
+Calls ``sys.exit()`` on all threads.
+
+#### restart
+Restarts main process via ``os.execv(sys.argv[0])``
+
+#### sync 
+Syncs current command tree to discord's command tree
+
+#### manualBackup
+Manually sends database files to the webhook for db backups. Usually for transferring databases between environments.
+
 ### games.py
 A cog dedicated to the games section of the bot. 
 
@@ -12,7 +27,10 @@ A cog dedicated to the games section of the bot.
 The original (core) set of commands that Annoybot launched with. These commands are typically very simple and short. 
 
 ### message.py
-Special "message" commands. These are accessed through discord's ui through right clicking and selecting to "apps" in order to run the commands. These commands typically do something with the message that is selected.
+Special "message" commands. (contextmenu) These are accessed through discord's ui through right clicking a message and selecting "apps" in order to run the commands. These commands typically do something with the message that is selected.
+
+### member.py
+Special "member" commands. (contextmenu) These are accessed through discord's ui through right clicking a member and selecting "apps" in order to run the commands. These commands typically do something with the member that is selected.
 
 ### misc.py
 Somewhat random commands that provide useful functionality to the bot. May not always be annoying, but they provide some value to interactions with other users.
