@@ -163,8 +163,12 @@ class MemButton(discord.ui.Button['Mem']):
         
         assert self.view is not None
         view: MemGame = self.view
+
+        
         if interaction.user.id != view.interaction.user.id:
-          await interaction.response.send_message("Not your game!", ephemeral = True)
+          
+          await interaction.response.send_message(content = f"This is not your game, {interaction.user.mention}, stupid fool.")
+          return
         for child in view.children:
           child.label = '\u200b'
           child.style = discord.ButtonStyle.secondary
@@ -191,6 +195,8 @@ class MemButton(discord.ui.Button['Mem']):
           em = discord.Embed(color=color)
           em.add_field(name="stats",value=f"Level: {view.level}\nTime bonus: \u00D7{round(bonus,2)}\n**Score: {math.ceil(score)}**",inline = False)
           await interaction.channel.send(embed = em)
+
+        #hacky way to edit a deferred message
         await interaction.response.edit_message(content = f"Memory Game: Level {view.level}\nReplicate the sequence of highlighted squares to the best of your memory.", view=view)
         if view.pattern == []:
           await view.levelup()

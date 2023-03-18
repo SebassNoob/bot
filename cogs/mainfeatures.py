@@ -135,11 +135,12 @@ class MainFeatures(commands.Cog):
     em.set_author(name = f"{interaction.user.display_name} from {interaction.guild.name}" if interaction.guild else interaction.user.display_name ,icon_url = interaction.user.avatar)
 
     try:
+      await interaction.response.defer()
       await channel.send(embed = em)
     except:
-      await interaction.response.send_message(f"❌ {user.display_name} blocked my message, what a pussy")
+      await interaction.followup.send(content = f"❌ {user.display_name} blocked my message, what a pussy")
       return
-    await interaction.response.send_message(content = f"✅ {user.display_name} has been sent this in DMs:", embed = em)
+    await interaction.followup.send(content = f"✅ {user.display_name} has been sent this in DMs:", embed = em)
     
     
 
@@ -186,23 +187,7 @@ class MainFeatures(commands.Cog):
     em = discord.Embed(color = color, description = choice[0]['content'].replace("#", user.name).replace(";",","))
     await interaction.response.send_message(content=user.mention, embed = em)
             
-  '''
-    def choose():
-      if ctx.channel.nsfw == False:
-        while True:
-          ran = arr[random.randint(0, len(arr)-1)]
-          if ran["nsfw"] == "1":
-            continue
-          elif ran["nsfw"] == "0":
-            return ran["content"]
-      elif ctx.channel.nsfw== True:
-      
-        return arr[random.randint(0, len(arr)-1)]["content"]
-    
-    em = discord.Embed(color = color, description =choose().replace("#", user.name).replace(";",","))
-    await ctx.send("{}".format(user.mention))
-    await ctx.send(embed =em)
-  '''
+  
 
   @app_commands.command(name="darkjoke", description="Sends a dark joke. May be insensitive.")
   async def darkjoke(self, interaction: discord.Interaction):

@@ -127,7 +127,7 @@ class Setups(commands.Cog):
       
       embedVar4.add_field(name = "``channeltroll (user)``", value = "Creates a private thread and pings the trolled user 3 times. When either the trolled user speaks in the channel or 2 minutes have passed, the thread is archived.\nRequires bot to have **send_messages_in_threads, create_public_threads,  manage_threads** permissions.",inline = False)
       embedVar4.add_field(name = "``nicktroll (user,*threat)``", value = "Changes the nickname of a user temporarily to either a random set of characters or a chosen nickname.\nRequires bot to have **manage_nicknames** permission.",inline = False)
-      embedVar4.add_field(name = "``nicktroll (user,name, *colour)``", value = "Gives the user a temporary role with a name and an optional colour provided/generated.\nRequires bot to have **manage_roles** permission.",inline = False)
+      
       embedVar4.add_field(name = "``dmtroll (user)``", value = "Ping the affected user 3 times in their dms, then deletes it.",inline = False)
   
       embedVar4.add_field(name = "``ghosttroll (user)``", value = "Ghost pings the user in 3 different channels.",inline = False)

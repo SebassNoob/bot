@@ -92,7 +92,7 @@ class Bot(commands.AutoShardedBot):
         await interaction.response.send_message(embed = em)
         return
       if isinstance(error, app_commands.BotMissingPermissions):
-        em = discord.Embed(color = 0x000000, description = f"❌ I don't have permissions for that! I need the {error.missing_permissions} permission(s).")
+        em = discord.Embed(color = 0x000000, description = f"❌ I don't have permissions for that! I need the ``{error.missing_permissions}`` permission(s).")
         await interaction.response.send_message(embed = em)
         return
       if isinstance(error, app_commands.CommandOnCooldown):
@@ -105,14 +105,14 @@ class Bot(commands.AutoShardedBot):
         pass
 
       if isinstance(error, discord.Forbidden):
-        em = discord.Embed(color = 0x000000,description = "The bot is missing permissions. Check /help to see the required permissions. If the problem persists, contact the [support server](https://discord.gg/UCGAuRXmBD)")
+        em = discord.Embed(color = 0x000000,description = f"The bot is missing permissions. Check /help to see the required permissions. If the problem persists, contact the [support server](https://discord.gg/UCGAuRXmBD)\nHTTP body:```{error.text}```")
         
         await interaction.response.send_message(embed= em)
         return
       else:
         
       
-        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it.\nCommand: {error.command.name if hasattr(error, 'command') else 'unknown'}\nFull traceback:\n```{error}```")
+        em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it.\nCommand: {error.command.name if hasattr(error, 'command') else 'unknown'}\nFull traceback:\n```{error}```\nHTTP response code: ``{error.status if hasattr(error, 'status') else 'unknown'}``\nHTTP body:```{error.text if hasattr(error, 'text') else 'unknown'}```")
         await interaction.response.send_message(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
@@ -207,7 +207,10 @@ class Bot(commands.AutoShardedBot):
     conn.close()
 
     if bool(dict(data)['autoresponse']) and message.content in eval(dict(data)['autoresponse_content']).keys():
+      if not message.channel.permissions_for(message.guild.me).send_messages:
+        return
       await message.channel.send(eval(dict(data)['autoresponse_content'])[message.content])
+      return 
         
       
       
