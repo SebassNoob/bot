@@ -51,7 +51,6 @@ class Setups(commands.Cog):
 
       @discord.ui.button(label="Patch notes", style=discord.ButtonStyle.green)
       async def cl(self, interaction: discord.Interaction, button: discord.ui.Button):
-        print("hi")
         with open("./PATCHNOTES.txt", 'r') as patchnotes:
           em = discord.Embed(color = color, title = "1.9.0", description = patchnotes.read())
         await interaction.response.send_message(embed=em)

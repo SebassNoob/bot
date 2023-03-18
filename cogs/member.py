@@ -16,7 +16,7 @@ class Member(commands.Cog):
     
     self.bot.tree.add_command(self.voicemove)
 
-  @app_commands.checks.has_permissions(move_members=True)
+  @app_commands.checks.bot_has_permissions(move_members=True)
   async def voicemove(self, interaction: discord.Interaction, user: discord.Member):
     if user.voice.channel is None:
       await interaction.response.send_message("❌ This member is not currently connected to a voice channel.")

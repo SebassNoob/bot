@@ -27,3 +27,4 @@ bugs:
 - dmthreaten fails if response takes too long
 - memorygame fails if some other random dude interacts with it...
 - autoresponse fails if channel perms are incorrect
+- ratio now checks for blank messages

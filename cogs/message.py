@@ -25,7 +25,7 @@ class Message(commands.Cog):
     self.bot.tree.add_command(self.uwuify)
     self.bot.tree.add_command(self.ratio)
 
-  @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
+  @app_commands.checks.bot_has_permissions(read_message_history=True, add_reactions=True)
   async def emojispam(self, interaction: discord.Interaction, message: discord.Message):
     await interaction.response.send_message("attempting to spam emojis...")
     with open("./json/emojis.txt", 'r', encoding = "utf-8") as file:
@@ -48,7 +48,8 @@ class Message(commands.Cog):
     out = ''.join([char.upper() if pos%2==0 else char for pos, char in enumerate(to_mod)])
     
     await interaction.response.send_message(out)
-  @app_commands.checks.has_permissions(read_message_history=True, add_reactions=True)
+    
+  @app_commands.checks.bot_has_permissions(read_message_history=True, add_reactions=True)
   async def ratio(self, interaction: discord.Interaction, message: discord.Message):
     accompany = (
       "No one cares",
@@ -61,7 +62,11 @@ class Message(commands.Cog):
       "Uninstall discord mate",
       "Really? nobody asked"
     )
+    if message.content == "":
+      await interaction.response.send_message("This message is empty?", ephemeral = True)
+      return
     em = discord.Embed(color = 0x000000, description = f" '{message.content}'")
+    
     em.add_field(name=random.choice(accompany) + " + ratio", value = '\u200b')
     em.set_author(name=f"Replying to {message.author.name}", icon_url=message.author.display_avatar)
     await interaction.response.send_message(embed = em)
