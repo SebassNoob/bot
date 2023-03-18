@@ -12,7 +12,8 @@ Key points to note:
 New!
 - emojitts -> generates a string of emojis and reads them out to a text channel as tts. 
 - more /playnoise cmds (five nights at freddys scream, thomas the train earrape)
-- member commands! (randomly move member around voicechannels?)
+- member commands!
+- The first member command "gtfo from VC" is here! You can access it by right clicking a user in a vc and selecting 'apps'. This particular command moves a selected user around thrice randomly.
 - /legal has been removed. /info now contains the information previously found in /legal
 
 bugs:
@@ -22,4 +23,7 @@ bugs:
 - /copypasta censors words correctly if family friendly mode is turned on
 - /textwall throws an error at you if you try to generate a 0-length text wall
 - tips have been updated to slash commands, can't believe people didn't notice lol
-
+- /meme fails on deepfriedmemes
+- dmthreaten fails if response takes too long
+- memorygame fails if some other random dude interacts with it...
+- autoresponse fails if channel perms are incorrect

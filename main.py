@@ -274,6 +274,8 @@ Thread(target=backups, name = "backups").start()
 
 keep_alive()
 
+if not os.path.exists("./logs"):
+    os.makedirs("./logs")
 handler = TimedRotatingFileHandler(filename='logs/discord.log', when='D', encoding='utf-8')
 
 try:
