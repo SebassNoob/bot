@@ -15,6 +15,7 @@ New!
 - member commands!
 - The first member command "gtfo from VC" is here! You can access it by right clicking a user in a vc and selecting 'apps'. This particular command moves a selected user around thrice randomly.
 - /legal has been removed. /info now contains the information previously found in /legal
+- /meme now shows which subreddit it originated from
 
 bugs:
 - /settings dmblocker meaning is more clear, hopefully.

@@ -82,16 +82,17 @@ class Troll(commands.Cog):
   @app_commands.describe(member="The member to troll", name = "A nick to give")
   async def nicktroll(self, interaction: discord.Interaction, member: discord.Member, name: Optional[app_commands.Range[str,1,32]]=None):
     addDataU(member.id)
-    bot_member = interaction.guild.get_member(self.bot.user.id)
-    if bot_member.top_role <= member.top_role or member == interaction.guild.owner:
+    bot_member = interaction.guild.me
+    if bot_member.top_role <= member.top_role or member.id == interaction.guild.owner_id:
       await interaction.response.send_message("❌ Can't do that, that member's top role is either equal to or higher than my top role.")
+      return
     else:
-      if not name:
+      if name is None:
          name = ''.join(random.choices(string.ascii_letters+string.digits,k=10))
         
       
         
-          
+      
       await member.edit(nick=name)
 
         
@@ -206,6 +207,10 @@ class Troll(commands.Cog):
   @app_commands.guild_only()
   @app_commands.checks.bot_has_permissions(moderate_members = True, manage_nicknames=True)
   async def fakeban(self, interaction,user: discord.Member):
+
+    if interaction.guild.me.top_role <= user.top_role or interaction.guild.owner_id == user.id:
+      await interaction.response.send_message("❌ Can't do that, that member's top role is either equal to or higher than my top role.")
+      return
 
     color = colorSetup(interaction.user.id)
     em = discord.Embed(color =  color)
