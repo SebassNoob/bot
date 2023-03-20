@@ -10,7 +10,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "<body style = 'background-color: black'><br><h2 style='color: rgb(0,0,256)'><center>bot online</center></h2></body>"
+    return "on"
     
 
 def run():
