@@ -113,7 +113,7 @@ class Bot(commands.AutoShardedBot):
         
       
         em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it.\nCommand: {error.command.name if hasattr(error, 'command') else 'unknown'}\nFull traceback:\n```{error}```\nHTTP response code: ``{error.status if hasattr(error, 'status') else 'unknown'}``\nHTTP body:```{error.text if hasattr(error, 'text') else 'unknown'}```")
-        await interaction.response.send_message(embed = em)
+        await interaction.followup.send(embed = em)
         channel = self.get_channel(953214132058992670)
         await channel.send(embed=em)
         return

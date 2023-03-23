@@ -31,12 +31,14 @@ class Troll(commands.Cog):
     
     addDataU(user.id)
     randomstr = ''.join(random.choices(string.ascii_lowercase+string.digits,k=10))
-    if isinstance(interaction.channel, discord.abc.GuildChannel):
+    if isinstance(interaction.channel, (discord.TextChannel, discord.ForumChannel)):
       channel = await interaction.channel.create_thread(name = randomstr, auto_archive_duration =1440)
     elif isinstance(interaction.channel, discord.Thread):
        channel = await interaction.channel.parent.create_thread(name = randomstr, auto_archive_duration =1440)
     else:
-      raise Exception("exception in channeltroll: channel is unknown")
+      await interaction.response.send_message("❌ This channel does not support threads. Try again in a text channel.")
+      return
+    
 
       
 
@@ -62,16 +64,26 @@ class Troll(commands.Cog):
       await channel.send(f"Hello, {user.mention}. {random.choice(message)}")
       
             
-      await self.bot.wait_for('message', check= lambda m: m.author == user and m.channel == channel, timeout = 180)
+      await self.bot.wait_for('message', check= lambda m: m.author == user and m.channel == channel, timeout = 10)
+
+      
+      
+      
       await channel.send(f"courtesy of {interaction.user.mention}. this thread has been automatically archived, but you can keep it around if you'd like")
       await asyncio.sleep(1)
       
           
 
     except asyncio.TimeoutError:
-      pass
-    finally:
-      await channel.edit(archived = True)
+      #check if channel does not exist
+      #ie. it was deleted manually
+      if self.bot.get_channel(channel.id) is None:
+        
+        return
+        
+    
+    
+    await channel.edit(archived = True)
     
 
 
@@ -112,19 +124,19 @@ class Troll(commands.Cog):
     if bool(getDataU(user.id).get("dmblocker")) or user.bot:
       await interaction.response.send_message(content=f"❌ {user.display_name} that you mentioned is either a bot, or does not want to be DM'ed. Bet you look stupid now.", ephemeral=True)
       return 
-  
+    await interaction.response.defer()
     channel = await user.create_dm()
       
     try:
       await channel.send(f"{user.mention} hey 😏, did u like the ping sound?\n/dmtroll from {interaction.user.display_name} in {interaction.guild.name}")
     except:
-      await interaction.response.send_message(f"❌ {user.display_name} blocked this bot from sending messages to them, lol pussy")
+      await interaction.followup.send(content = f"❌ {user.display_name} blocked this bot from sending messages to them, lol pussy")
       
       
       
       
     
-    await interaction.response.send_message("The trolled user has been pinged through dms lol.")
+    await interaction.followup.send(content = "The trolled user has been pinged through dms lol.")
       
         
         
