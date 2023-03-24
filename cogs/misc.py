@@ -438,7 +438,7 @@ class Misc(commands.Cog):
     toSend = ' '.join([content.strip() for _ in range(num)])
     
     if len(toSend) > 2000:
-      await interaction.response.send_message("❌ Your text wall is too long (>2000 characters), you moron.")
+      await interaction.response.send_message(f"❌ Your text wall ({len(toSend)} characters) is too long (>2000 characters), you moron.")
       return
     if bool(getDataU(interaction.user.id)['familyFriendly']):
       toSend = changeff(toSend)

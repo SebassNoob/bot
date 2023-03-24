@@ -100,7 +100,7 @@ class Voice(commands.Cog):
   @app_commands.command(name = "earrape", description="Plays an awful sound into your VC")
   @app_commands.guild_only()
   @app_commands.describe(seconds="The number of seconds to play the earrape sound")
-  async def earrape(self, interaction: discord.Interaction, seconds: Optional[int] = 5):
+  async def earrape(self, interaction: discord.Interaction, seconds: Optional[app_commands.Range[int,1]] = 5):
     color= colorSetup(interaction.user.id) 
     try:
       
@@ -114,13 +114,14 @@ class Voice(commands.Cog):
       return
     
     
-    paths = ("./voice/rickroll.mp3","./voice/fallguys.mp3","./voice/kahoot.mp3","./voice/thomas.mp3","./voice/wii.mp3")
+    paths = ("./voice/rickroll.mp3","./voice/fallguys.mp3","./voice/kahoot.mp3","./voice/thomas.mp3","./voice/wii.mp3", "./voice/android_earrape.mp3")
     source = paths[random.randint(0,len(paths)-1)]
     audio = MP3(source)
         
     if seconds > audio.info.length:
       seconds = int(math.floor(float(audio.info.length)))
       await interaction.response.send_message(f"(The track length is maxed at {seconds}s, so playing for that amount of time)\nNow playing a random earrape piece in your vc for {seconds}s. LOL", view = noise_view())
+      return
     await interaction.response.send_message("Now playing a random earrape piece in your vc for {}s. LOL".format(seconds), view = noise_view())
         
         
@@ -184,6 +185,17 @@ class Voice(commands.Cog):
   async def indian(self, interaction: discord.Interaction):
     to_play = noise(interaction, "./voice/indian_shitpost.mp3", 40)
     await to_play.play()
+
+  @playnoise.command(name="fnafscream", description="plays the scream of freddy fazbear from fnaf")
+  async def fnaf(self, interaction: discord.Interaction):
+    to_play = noise(interaction, "./voice/fnaf_scream.mp3", 6)
+    await to_play.play()
+
+  @playnoise.command(name="androidearrape", description="plays a bass boosted android notification sound")
+  async def android(self, interaction: discord.Interaction):
+    to_play = noise(interaction, "./voice/android_earrape.mp3", 4)
+    await to_play.play()
+  
     
 async def setup(bot):
   await bot.add_cog(Voice(bot))

@@ -113,6 +113,7 @@ class Setups(commands.Cog):
       embedVar3.add_field(name = "``utils predict (question)``", value = "Predicts the answer to a yes/no question.",inline = False)
       embedVar3.add_field(name = "``autoresponse menu/add/remove/resetdb``", value = "Responds to certain keywords guild-wide and sends a message in return. \nRequires user to have **manage_server** permission.",inline = False)
       embedVar3.add_field(name = "``textwall(num,content,*tts)``", value = "Sends a wall of text up to 2000 characters.",inline = False)
+      embedVar3.add_field(name = "``emojitts(length)``", value = "Sends a text to speech message of random emojis",inline = False)
       embedVar3.add_field(name = "``meme``", value = "Sends a meme from reddit",inline = False)
       embedVar3.add_field(name = "``copypasta``", value = "Sends a copypasta from r/copypasta.",inline = False)
       embedVar3.add_field(name = "``snipe (user)``", value = "Shows a user's recently deleted message.",inline = False)
@@ -152,7 +153,6 @@ class Setups(commands.Cog):
       embedVar6.add_field(name = "``settings (*option, *value)``", value = "Shows user settings. ",inline = False)
       embedVar6.add_field(name = "``info``", value = "Sends links to support this bot!",inline = False)
       embedVar6.add_field(name = "``resetdata``", value = "Resets and removes all your data from the bot.", inline = False)
-      embedVar6.add_field(name = "``legal``", value = "Shows legal stuff. eh.", inline = False)
   
       embedVar7 = discord.Embed(color = color)
       embedVar7.set_author(name="Annoybot commands (voice)")
@@ -165,16 +165,23 @@ class Setups(commands.Cog):
       embedVar7.add_field(name = "``playnoise micblow``", value = "Plays a breathing/blowing noise into your VC",inline = False)
       embedVar7.add_field(name = "``playnoise scream``", value = "Plays a female screaming noise into your VC",inline = False)
       embedVar7.add_field(name = "``playnoise rickroll``", value = "Plays Never Gonna Give You Up (Rick Astley, 1987) into your VC",inline = False)
+      embedVar7.add_field(name = "``playnoise fnafscream``", value = "Plays freddy fazbear's scream",inline = False)
+      embedVar7.add_field(name = "``playnoise androidearrape``", value = "Plays a bass boosted Android notification sound.",inline = False)
 
-      embedVar8 = discord.Embed(color = color, description = "Right click on any message and navigate to apps>(command) to access these.")
+      embedVar8 = discord.Embed(color = color, description = "Right click on any message and navigate to apps > (command) to access these.")
       embedVar8.set_author(name="Annoybot commands (message)")
       embedVar8.add_field(name = "``'spam emojis'``", value = "Reacts to the selected message with random emojis",inline = False)
       embedVar8.add_field(name = "``'uwuify'``", value = "Transforms your message into a MeSsAgE",inline = False)
       
       embedVar8.add_field(name = "``'ratio'``", value = "Ratios someone's message for you",inline = False)
+
+      
+      embedVar9 = discord.Embed(color = color, description = "Right click on any member and navigate to apps > (command) to access these.")
+      embedVar9.set_author(name="Annoybot commands (member)")
+      embedVar9.add_field(name = "``'gtfo from vc'``", value = "Randomly shifts the selected user to another voice channel, thrice.",inline = False)
       
 
-      return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7,embedVar8]
+      return [embedVar,embedVar3,embedVar4,embedVar5,embedVar6,embedVar7,embedVar8, embedVar9]
 
 
     
@@ -188,7 +195,8 @@ class Setups(commands.Cog):
           discord.SelectOption(label="Games", description="Games you can play with friends", emoji ="🎲"),
           discord.SelectOption(label="Misc", description="Contains some random features.", emoji="🌎"),
           discord.SelectOption(label="Setup", description = "Commands to aid in configuration of the bot", emoji = "⚙️"),
-          discord.SelectOption(label="Message", description = "Commands modify/change messages", emoji = "💬")
+          discord.SelectOption(label="Message", description = "Commands that modify/change messages", emoji = "💬"),
+          discord.SelectOption(label="Member", description = "Commands that affect users", emoji = "👨"),
         ]
         super().__init__(placeholder='Choose a category.', min_values=1, max_values=1, options=options)
       async def callback(self, interaction: discord.Interaction):
@@ -204,7 +212,8 @@ class Setups(commands.Cog):
           "Voice": pages[5],
           "Games": pages[3],
           "Misc": pages[1],
-          "Message": pages[6]
+          "Message": pages[6],
+          "Member": pages[7]
           
         }
         
