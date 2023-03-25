@@ -101,9 +101,7 @@ class Bot(commands.AutoShardedBot):
         
         await interaction.response.send_message(embed= em)
         return 
-      if isinstance(error, app_commands.errors.CheckFailure):
-        pass
-
+      
       if isinstance(error, discord.Forbidden):
         em = discord.Embed(color = 0x000000,description = f"The bot is missing permissions. Check /help to see the required permissions. If the problem persists, contact the [support server](https://discord.gg/UCGAuRXmBD)\nHTTP body:```{error.text}```")
         

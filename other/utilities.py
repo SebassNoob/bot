@@ -134,7 +134,7 @@ async def postTips(interaction):
       "Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!",
       "Find the latest patch notes with the command ``/patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
-      "You can change your preferred embed colour with ``$settings color [preferred color]``!",
+      "You can change your preferred embed colour with ``/settings color [preferred color]``!",
       "Enabling ``$autoresponse`` will make the bot respond in a certain way to some words!",
       "Check the bot's ping with ``/ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
@@ -145,18 +145,16 @@ async def postTips(interaction):
       "Find some good memes on reddit with ``/meme``!",
       "If you see this, hope you're having a great day! 😉"
       ]
-    randomchance_normal = random.randint(0,10)
-    randomchance_upvote = random.randint(0,20)
     #ez upvotes lol
-    randomMsg = tips[random.randint(0,len(tips)-1)]
-    if randomchance_normal == 0:
+    randomMsg = random.choice(tips)
+    if random.randint(0,10) == 0:
       await interaction.channel.send(f"**Tip:** {randomMsg}")
-      return
       
-    elif randomchance_upvote == 0:
-      await interaction.channel.send(f"**Tip:** Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!")
+      
+    elif random.randint(0,20) == 0:
+      await interaction.channel.send("**Tip:** Support the bot by upvoting on top.gg!\nhttps://top.gg/bot/84475719231353652!")
     
-      return
+      
     
       
       

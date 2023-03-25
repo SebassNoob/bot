@@ -1,10 +1,13 @@
 
 from other.sqliteDB import get_db_connection, create_db
-import typing
+
 from typing import Any, List, Dict, Union
 
+
+PATH = "./other/userSettings.db"
+
 def insert(data : Dict[str, Any]) -> None:
-  conn = get_db_connection("./other/userSettings.db")
+  conn = get_db_connection(PATH)
   #data looks like:
   '''
   data = {
@@ -23,7 +26,7 @@ def insert(data : Dict[str, Any]) -> None:
   conn.close()
 
 def update(id: int, data : Dict[str, Any]) -> None:
-  conn = get_db_connection("./other/userSettings.db")
+  conn = get_db_connection(PATH)
   #data looks like:
   '''
   data = {
@@ -43,7 +46,7 @@ def update(id: int, data : Dict[str, Any]) -> None:
 
 def delete(id: int) -> None:
 
-  conn = get_db_connection("./other/userSettings.db")
+  conn = get_db_connection(PATH)
   
   
   conn.execute('DELETE FROM userSettings WHERE id = (?)', (id, ))
@@ -53,7 +56,7 @@ def delete(id: int) -> None:
 
   
 def get(id: int) -> Union[Dict[str, Any], None] :
-  conn = get_db_connection("./other/userSettings.db")
+  conn = get_db_connection(PATH)
   
   
   data = conn.execute('SELECT * FROM userSettings WHERE id = (?)', (id, )).fetchone()

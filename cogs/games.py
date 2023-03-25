@@ -16,7 +16,7 @@ import datetime
 import math
 from pyinsults import insults
 import csv
-
+import collections
 
 
 
@@ -327,24 +327,17 @@ class Games(commands.Cog):
 
     vowels = ["a","e","i","o","u"]
     randomLetters = ''.join(random.choices(string.ascii_lowercase,k=9))
-    for i in range(3):
-      randomLetters = randomLetters + vowels[random.randint(0,4)]
+    for _ in range(3):
+      randomLetters += vowels[random.randint(0,4)]
       
     await interaction.followup.send(f"With the letters ``{randomLetters}`` type as many words as you can within 30s!")
     
-    reqLetters= list(randomLetters)
+    reqLetters= collections.Counter(randomLetters)
     
-    def check(str,set):
-      
-      try:
-        for c in list(str):
-          
-          set.remove(c)
-          set.append(c)
-      except ValueError:
-        
-        return False
-      return True
+    def check(in_val: str,req: collections.Counter) -> bool:
+      #returns true if in_val is a subset of req
+      #checks if the intersection is equal to the original in_val counter
+      return collections.Counter(in_val) & req == collections.Counter(in_val)
     
       
     
@@ -609,7 +602,7 @@ class Games(commands.Cog):
 
   @app_commands.command(name="truthordare", description="Generates a truth or dare question")
   async def truthordare(self, interaction: discord.Interaction):
-    color = colorSetup(interaction.user.id)
+    
     with open("./json/TorD.csv",newline="") as file:
       arr = list(csv.DictReader(file))
       #looks like List[Dict[str, Union[int, str]]]

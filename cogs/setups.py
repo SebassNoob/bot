@@ -389,12 +389,12 @@ class Setups(commands.Cog):
 
       #cant ban yourself
       if user.id == interaction.user.id:
-        await interaction.response.send_message(f"❌ You can't blacklist yourself, dumb.",ephemeral=True)
+        await interaction.response.send_message("❌ You can't blacklist yourself, dumb.",ephemeral=True)
         return
 
       #cant blacklist twice
       if user.id in blacklist:
-        await interaction.response.send_message(f"❌ This person is already blacklisted? Get good next time.",ephemeral=True)
+        await interaction.response.send_message("❌ This person is already blacklisted? Get good next time.",ephemeral=True)
         return
       
       blacklist.append(user.id)
