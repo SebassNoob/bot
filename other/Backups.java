@@ -58,7 +58,7 @@ public class Backups{
     }
       
     command.append(params.url);
-    System.out.println("Sent backup to "+params.url );
+    System.out.println("[INFO] Sent backup to "+params.url );
     ProcessBuilder processBuilder = new ProcessBuilder();
     processBuilder.command("bash", "-c", command.toString());
 

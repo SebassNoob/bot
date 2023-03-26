@@ -24,6 +24,7 @@ import sys
 sys.path.insert(1,'./other')
 from sqliteDB import get_db_connection
 from os import system
+import collections
 
 
 
@@ -52,19 +53,14 @@ class Bot(commands.AutoShardedBot):
   async def on_ready(self):
     servers = len(self.guilds)
     print("\033[0;36;48m-----------------------------------------")
-    print(f" * {self.user} connected to {servers} servers")
+    print(f"[INFO] * {self.user} connected to {servers} servers")
     
-    count = {}
-    for i, guild in enumerate(self.guilds):
-      addData(guild.id)
-      
-      if guild.shard_id not in count:
-        count[guild.shard_id] = 1
-      else:
-        count[guild.shard_id] += 1
+    count = collections.Counter([guild.shard_id for guild in self.guilds])
+    
+    
     for t in count.items():
     
-      print(f"   - Shard {t[0]}: {t[1]} servers")
+      print(f"[INFO]   - Shard {t[0]}: {t[1]} servers")
     print("\033[0;36;48m-----------------------------------------")
 
     await self.change_presence(activity=discord.Game(name=f"/help | annoying {servers} servers"))
@@ -127,16 +123,17 @@ class Bot(commands.AutoShardedBot):
     return
 
   async def on_guild_join(self,guild):
-    print(guild.name)
+    print('[INFO] joined '+ guild.name)
     addData(guild.id)
     for channel in guild.text_channels:
       if channel.permissions_for(guild.me).send_messages:
       
-        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. If you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!\nImportant notes: The bot has an /autoresponse feature enabled by default. Disable by using /serversettings autoreponse off\nAlso, a /snipe command also tracks your deleted messages automatically. Turn off in /settings dmblocker on.\nRead our privacy policy and TOS in /legal.")
+        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. If you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!\nImportant notes: The bot has an autoresponse feature enabled by default. Disable by using /serversettings autoreponse off\nAlso, a /snipe command also tracks your deleted messages automatically. Turn off in /settings dmblocker True.\nRead our privacy policy and TOS in /info.")
         em.set_footer(text = "The embodiment of discord anarchy")
         await channel.send(embed = em)
-        break
-
+        return
+    #if there is no channel where the bot is allowed to send the welcome message in, ignore and log the server
+    print('[WARNING] failed to send welcome to '+ guild.name)
 
   
 
@@ -179,7 +176,7 @@ class Bot(commands.AutoShardedBot):
       pass
     except Exception as err:
       if hasattr(err, 'status') and err.status == 429:
-        print('Rate-limit detected. Restarting repl')
+        print('[ERROR] Rate-limit detected. Restarting repl')
         os.kill(1, 1)
 
 
@@ -246,8 +243,8 @@ class Bot(commands.AutoShardedBot):
         try:
           await bot.load_extension(f'cogs.{filename[:-3]}')
         except Exception:
-          print(traceback.format_exc())
-        print(f"\033[0;32;49m{filename} loaded")
+          print('[ERROR] '+traceback.format_exc())
+        print(f"[INFO] \033[0;32;49m{filename} loaded")
   
 
 
@@ -280,10 +277,10 @@ try:
   bot.run(os.getenv('TOKEN'), log_handler=handler)
 except Exception as err:
   if hasattr(err, 'status') and err.status == 429:
-    print('Rate-limit detected. Restarting repl')
+    print('[ERROR] Rate-limit detected. Restarting repl')
     os.kill(1, 1)
 
-  print(err)
+  print('[ERROR] '+err)
 
 
 
