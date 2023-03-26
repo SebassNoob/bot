@@ -8,6 +8,7 @@ from typing import *
 import csv
 
 def bool_to_int(bool):
+  #although bad practice, this makes it readable
   if bool == True:
     return 1 
   elif bool == False:
@@ -111,20 +112,6 @@ def addDataSnipe(uid, message, date, nsfw=0):
 
 
 
-  
-
-
-  
-
-
-
-
-
-
-def getDataUpvote():
-  with open("./json/upvoteData.json","r") as f:
-    users = json.load(f)
-  return users
 
 
   
@@ -135,12 +122,14 @@ async def postTips(interaction):
       "Find the latest patch notes with the command ``/patchnotes``!",
       "Feeling bored? Troll your friends with all the commands in the 'troll' category! ",
       "You can change your preferred embed colour with ``/settings color [preferred color]``!",
-      "Enabling ``$autoresponse`` will make the bot respond in a certain way to some words!",
+      "Enabling ``/autoresponse`` will make the bot respond in a certain way to some words!",
       "Check the bot's ping with ``/ping``.",
       "Play a few fun games with your friend with the commands in the 'games' category!",
       "Try pinging the bot multiple times! They won't like it though...",
       "Getting destroyed in chat? Use ``/roast`` to crush their argument!",
       "Don't want to be DMed? Use ``/settings dmblocker on``!",
+      "Annoy your friends in VCs with voice commands!",
+      "Try our member/message commands! Right click on a message/member and navigate to apps to see the list.",
       "Find creative curse words with ``/swear``!",
       "Find some good memes on reddit with ``/meme``!",
       "If you see this, hope you're having a great day! 😉"
@@ -158,21 +147,4 @@ async def postTips(interaction):
     
       
       
-      
-      
-class egg:
-  def __init__(self,id,egg1):
-    self.id = id
-    self.egg1 = egg1
-    
-  def write(self):
-    with open("./json/egg.json","r") as f:
-      user = json.load(f)
-    
-    if str(self.id) not in user:
-      user[self.id] = {}
-      user[self.id][self.egg1] = 0 
-    
-    with open("./json/egg.json","w") as f:
-      json.dump(user,f)
     
