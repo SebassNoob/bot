@@ -1,0 +1,7 @@
+Hey, annoybot here, ready to annoy the heck out of your server. 
+Found any issues? Got any ideas? Visit the [support server](https://discord.gg/UCGAuRXmBD)
+
+Things to note! 
+Annoybot has an autoresponse feature enabled by default. Disable by using ``/serversettings autoreponse False``
+Also, a ``/snipe`` command also tracks your deleted messages automatically. Turn off in ``/settings dmblocker True``.
+Before using this bot, please read our privacy policy and TOS in ``/info``.

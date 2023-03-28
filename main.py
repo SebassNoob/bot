@@ -123,12 +123,12 @@ class Bot(commands.AutoShardedBot):
     return
 
   async def on_guild_join(self,guild):
-    print('[INFO] joined '+ guild.name)
+    print(f'[INFO] joined {guild.name}: {guild.id}')
     addData(guild.id)
     for channel in guild.text_channels:
       if channel.permissions_for(guild.me).send_messages:
-      
-        em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = "Hey, annoybot here. If you need any help, visit the [support server](https://discord.gg/UCGAuRXmBD)!\nImportant notes: The bot has an autoresponse feature enabled by default. Disable by using /serversettings autoreponse off\nAlso, a /snipe command also tracks your deleted messages automatically. Turn off in /settings dmblocker True.\nRead our privacy policy and TOS in /info.")
+        with open('./json/welcome_message.txt', 'r') as w:
+          em = discord.Embed(color = 0x000555,title="A very suitable welcome message", description = ''.join(w.readlines()))
         em.set_footer(text = "The embodiment of discord anarchy")
         await channel.send(embed = em)
         return
@@ -195,10 +195,7 @@ class Bot(commands.AutoShardedBot):
   
   
     data = conn.execute('SELECT autoresponse, autoresponse_content FROM serverSettings WHERE id = (?)', (message.guild.id, )).fetchone()
-    if data is None:
-
-      addData(message.guild.id)
-      return
+    
     conn.close()
 
     if bool(dict(data)['autoresponse']) and message.content in eval(dict(data)['autoresponse_content']).keys():
