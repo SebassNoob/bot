@@ -1,6 +1,7 @@
 
 
 Key points to note:
+- Added notable contributors to /info
 - backups of your user data are now sent to the support server in a private channel
 - the privacy policy and terms of use has been updated to reflect this
 - github events are now available in #github in the support server
@@ -17,6 +18,7 @@ New!
 - /legal has been removed. /info now contains the information previously found in /legal
 - /meme now shows which subreddit it originated from
 
+
 bugs:
 - /settings dmblocker meaning is more clear, hopefully.
 - overflow error for /copypasta has been fixed
@@ -29,3 +31,8 @@ bugs:
 - memorygame fails if some other random dude interacts with it...
 - autoresponse fails if channel perms are incorrect
 - ratio now checks for blank messages
+- fix invalid perms for /fakeban
+- fix /channeltroll failing on thread deletion
+- fix dmtroll timeout
+- fix negative number input in /textwall
+- updated server join message
