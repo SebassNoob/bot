@@ -1,0 +1,9 @@
+Notable contributors:
+
+♩♪♫♬#6960 : QA, testing. Caught many bugs in developmental versions
+𝑳𝒂𝒊𝒍𝒂#6666 : Contributed /indianinsult
+swordcutter0#8344 : Caught a bug involving /autoresponse
+Gigih#1976 : Contributed customisable /autoresponse
+一二三四#6616 : Contributed ideas in the very early development of the bot
+
+Did I miss you out? Let me know in the [support server](https://discord.gg/UCGAuRXmBD)

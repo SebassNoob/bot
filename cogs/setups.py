@@ -80,7 +80,7 @@ class Setups(commands.Cog):
         style=discord.ButtonStyle.link, 
         label="support server", 
         url="https://discord.gg/UCGAuRXmBD"
-      )))
+      )), file = discord.File('./json/contributors.txt', 'notable contributors.txt'))
 
 
 
