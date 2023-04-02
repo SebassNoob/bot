@@ -7,7 +7,7 @@ from discord import app_commands
 from cogs.misc import Misc
 from other.utilities import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
 from logging.handlers import TimedRotatingFileHandler
-
+import logging
 from discord.ext import commands
 from keep_alive import keep_alive
 import datetime
@@ -109,6 +109,7 @@ class Bot(commands.AutoShardedBot):
         em = discord.Embed(color = 0x000000,title = "Unknown error.", description = f"This has been reported to the [support server](https://discord.gg/UCGAuRXmBD). Please join and provide the context on what happened and how to reproduce it.\nCommand: {error.command.name if hasattr(error, 'command') else 'unknown'}\nFull traceback:\n```{error}```\nHTTP response code: ``{error.status if hasattr(error, 'status') else 'unknown'}``\nHTTP body:```{error.text if hasattr(error, 'text') else 'unknown'}```")
         await interaction.followup.send(embed = em)
         channel = self.get_channel(953214132058992670)
+        logging.log(40, f"[ERROR] Command: {error.command.name if hasattr(error, 'command') else 'unknown'}\nFull traceback:\n{error}")
         await channel.send(embed=em)
         return
 
