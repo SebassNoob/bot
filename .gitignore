@@ -1,5 +1,6 @@
 other/*.db
 .cache/replit/**
+.cache
 __pycache__
 .replit
 .breakpoints
