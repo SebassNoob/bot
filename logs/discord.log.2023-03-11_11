@@ -1,0 +1,33 @@
+[2023-03-11 11:14:41] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:14:43] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 429a1875d1df8ff8b7e1156f9930ec98).
+[2023-03-11 11:14:48] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: d2eb2740e40ccc580b2a74f88d1f1dea).
+[2023-03-11 11:20:42] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:20:44] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: a8160f5137c907071bb25f3cd9fb838e).
+[2023-03-11 11:20:49] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: a0860af51a20dae6e579698c5420ec7b).
+[2023-03-11 11:21:02] [ERROR   ] discord.ext.commands.bot: Ignoring exception in command restart
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 229, in wrapped
+    ret = await coro(*args, **kwargs)
+  File "/home/runner/dev-bot/cogs/admin.py", line 44, in restart
+    os.execv(sys.argv[0])
+TypeError: execv expected 2 arguments, got 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/bot.py", line 1349, in invoke
+    await ctx.command.invoke(ctx)
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 1023, in invoke
+    await injected(*ctx.args, **ctx.kwargs)  # type: ignore
+  File "/opt/virtualenvs/python3/lib/python3.8/site-packages/discord/ext/commands/core.py", line 238, in wrapped
+    raise CommandInvokeError(exc) from exc
+discord.ext.commands.errors.CommandInvokeError: Command raised an exception: TypeError: execv expected 2 arguments, got 1
+[2023-03-11 11:32:26] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:32:28] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: 93a0faea9c64b5426acbb7880966fcfc).
+[2023-03-11 11:32:33] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 2a2721537c702a774cf42a26d54b49b8).
+[2023-03-11 11:32:47] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:32:48] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: cc8d04714639720555621d527f99516d).
+[2023-03-11 11:32:54] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 605409d20a211b717be0fdd6fdbc6f8f).
+[2023-03-11 11:33:19] [INFO    ] discord.client: logging in using static token
+[2023-03-11 11:33:37] [INFO    ] discord.gateway: Shard ID 0 has connected to Gateway (Session ID: e85aa72a1239f8e7554df12addd61dfb).
+[2023-03-11 11:33:42] [INFO    ] discord.gateway: Shard ID 1 has connected to Gateway (Session ID: 9ab96c2a07dedbe1cc5efce5240da2dc).
