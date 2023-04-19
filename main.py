@@ -1,8 +1,9 @@
+from dotenv import load_dotenv
 
+load_dotenv()
 import os
 import random
 import discord
-import nacl
 from discord import app_commands
 from cogs.misc import Misc
 from other.utilities import addData,colorSetup,getData,addDataSnipe,getDataSnipe, addDataU, postTips
@@ -32,10 +33,15 @@ import collections
 async def blacklist_check(interaction: discord.Interaction):
   if not interaction.guild:
     return True
-  if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):
-    em = discord.Embed(color = 0x000000, description = f"You have been banned from using this bot in this server: {interaction.guild.name}\nAsk the mods to unban you (/serversettings) or use this bot in another server.")
-    await interaction.response.send_message(embed = em, ephemeral = True)
-    return False
+  try:
+    if interaction.user.id in eval(getData(interaction.guild.id)['blacklist']):
+      em = discord.Embed(color = 0x000000, description = f"You have been banned from using this bot in this server: {interaction.guild.name}\nAsk the mods to unban you (/serversettings) or use this bot in another server.")
+      await interaction.response.send_message(embed = em, ephemeral = True)
+      return False
+  except:
+    addDataU(interaction.user.id)
+    addData(interaction.guild.id)
+    return True
 
   return True
 

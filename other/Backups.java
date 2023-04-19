@@ -64,6 +64,17 @@ public class Backups{
 
     Process process = processBuilder.start();
     int exitCode = process.waitFor();
+    if (exitCode != 0){
+      System.out.println("[ERROR] Backup failed with exit code "+exitCode);
+      InputStream error = process.getErrorStream();
+      StringBuilder err = new StringBuilder();
+      for (int i = 0; i < error.available(); i++) {
+        err.append( (char) error.read());
+      }
+      System.out.println(err);
+      System.out.println("Command: "+ processBuilder.command());
+    }
+
     return exitCode;
     
   }
