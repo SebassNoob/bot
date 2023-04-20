@@ -1,0 +1,11 @@
+numexpr
+aiohttp
+discord.py[voice]
+flask
+
+dadjokes
+pyinsults
+PyNaCl
+ffmpeg
+mutagen
+waifu-py

@@ -7,7 +7,7 @@ __pycache__
 
 logs/**
 .env
-
+.bashrc
 # java ignores
 .mtj.tmp/
 *.class

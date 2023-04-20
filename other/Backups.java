@@ -52,13 +52,14 @@ public class Backups{
       System.out.println(e);
     }
     StringBuilder command = new StringBuilder();
-    command.append("curl -X POST -F 'payload_json={\"content\": \""+params.content+"\"}' ");
+    command.append("curl -X POST -F 'payload_json={\\\"content\\\": \\\""+params.content+"\\\"}' ");
     for (Integer i = 0; i< params.filePaths.size(); i++){
-      command.append("-F \"file"+i.toString()+"=@"+ params.filePaths.get(i)+"\" ");
+      File file = new File(params.filePaths.get(i));
+      command.append("-F \'file"+i.toString()+"=@"+ file.getPath()+"\' ");
     }
       
     command.append(params.url);
-    System.out.println("[INFO] Sent backup to "+params.url );
+    
     ProcessBuilder processBuilder = new ProcessBuilder();
     processBuilder.command("bash", "-c", command.toString());
 
@@ -73,8 +74,9 @@ public class Backups{
       }
       System.out.println(err);
       System.out.println("Command: "+ processBuilder.command());
+      
     }
-
+    System.out.println("[INFO] Sent backup to "+params.url );
     return exitCode;
     
   }
@@ -108,12 +110,30 @@ public class Backups{
   // for updating purposes only
   // sends a copy of the databases to #database
   // called with cmd line arg -u
-  public static void dbTransfer() throws Exception{
+  public static int dbTransfer() throws Exception{
     SendReqBuilder sbDB = new SendReqBuilder();
+    /* 
+    BufferedReader br = new BufferedReader(new FileReader("other/serverSettings.db"));
+    try {
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
+
+        while (line != null) {
+            sb.append(line);
+            sb.append(System.lineSeparator());
+            line = br.readLine();
+        }
+        String everything = sb.toString();
+        System.out.println(everything);
+      } finally {
+        br.close();
+      }
+    */
     int res1 = sbDB.setURL(dbBackupLink)
               .setContent("Manual backup at "+new Date().toString())
-              .setFilePaths(new LinkedList<String>(Arrays.asList("other/serverSettings.db", "other/snipe2.db", "other/userSettings.db")))
+              .setFilePaths(new LinkedList<String>(Arrays.asList("./other/serverSettings.db", "./other/snipe2.db", "./other/userSettings.db")))
               .build();
+    return res1;
     
   }
   

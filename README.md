@@ -41,6 +41,8 @@ To install:
 - check to see if commands ``poetry``, ``javac``, ``java``, ``python3`` are installed.
 - ``bash setup.sh``
 
+OR ``pip install -r REQUIREMENTS.txt`` then setup manually.
+
 ##### contributing
 uhh just open a pr, thanks
 
