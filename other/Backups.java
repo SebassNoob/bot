@@ -51,17 +51,25 @@ public class Backups{
     } catch (Exception e) {
       System.out.println(e);
     }
-    StringBuilder command = new StringBuilder();
-    command.append("curl -X POST -F 'payload_json={\\\"content\\\": \\\""+params.content+"\\\"}' ");
+    ArrayList<String> command = new ArrayList<String>();
+
+    command.add("curl");
+    command.add("-X");
+    command.add("POST");
+    command.add("-F");
+    command.add("'payload_json={\\\"content\\\": \\\""+params.content+"\\\"}'");
+    
     for (Integer i = 0; i< params.filePaths.size(); i++){
       File file = new File(params.filePaths.get(i));
-      command.append("-F \'file"+i.toString()+"=@"+ file.getPath()+"\' ");
+      command.add("-F");
+      command.add("\'file"+i.toString()+"=@"+ file.getPath()+"\'");
     }
-      
-    command.append(params.url);
+    
+    command.add(params.url);
     
     ProcessBuilder processBuilder = new ProcessBuilder();
-    processBuilder.command("bash", "-c", command.toString());
+    
+    processBuilder.command(command);
 
     Process process = processBuilder.start();
     int exitCode = process.waitFor();
@@ -100,8 +108,8 @@ public class Backups{
     }
     public int build() throws Exception{
       if ((url == null) || (filePaths == new LinkedList<String>()) || (content == null)){
-        System.out.println(url + filePaths + content);
-        throw new RuntimeException("Set url, fp and content properly!!");
+        
+        throw new RuntimeException("Set url, fp and content properly!!\n" + url + filePaths + content);
       }
       return sendReq(this);
     }
@@ -129,6 +137,7 @@ public class Backups{
         br.close();
       }
     */
+    System.out.println(dbBackupLink);
     int res1 = sbDB.setURL(dbBackupLink)
               .setContent("Manual backup at "+new Date().toString())
               .setFilePaths(new LinkedList<String>(Arrays.asList("./other/serverSettings.db", "./other/snipe2.db", "./other/userSettings.db")))

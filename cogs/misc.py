@@ -250,7 +250,7 @@ class Misc(commands.Cog):
 
 
     
-    with open("./json/autoresponse.csv",newline="") as file:
+    with open("./json/autoresponse.csv",newline="",encoding="utf-8") as file:
       reader = list(csv.DictReader(file))
       #getting default
       autores = {i['word']: i['response'] for i in reader}
